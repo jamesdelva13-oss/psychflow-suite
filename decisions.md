@@ -182,3 +182,17 @@ crosswalks, and summary constraints are loaded from `@suite/content`, so
 content can ship new versions without application changes. This is an
 enforceable review criterion for every application PR.
 **Status:** Accepted · 2026-07-15 · Proposed: ChatGPT (split concept, layer framing, no-hardcode rule) / Claude (contracts-vs-instances cut, taxonomy placement) · Ratified: JD
+
+## D-021 · Repo is an npm-workspace monorepo
+psychflow-suite ships a root package.json declaring workspaces for
+case-model, content, and referral-engine-core. It is the source of
+truth for local @suite/* resolution: install once at the root, never
+per-package (the @suite/* names are local, unpublished, and 404 against
+the registry). Cross-package test imports are by relative path.
+**Status:** Accepted · 2026-07-16 · Ratified: JD
+
+## D-022 · Per-package install flow superseded
+The standalone per-package `npm install` in docs/phase1-session1-brief.md
+is superseded by the workspace-root install (D-021). From the repo root:
+`npm install`, then `npm test --workspace <name>`.
+**Status:** Accepted · 2026-07-16 · Ratified: JD

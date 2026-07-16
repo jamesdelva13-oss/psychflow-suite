@@ -7,7 +7,7 @@ D-003 (single-psych tenancy), D-004 (retention), D-005 (scope cuts), D-007
 ## What already exists (do not rebuild)
 - `packages/case-model` — contracts + taxonomy. 23 tests green.
 - `packages/content` — teacher bank v1.1.2 (57 q), parent bank v1.2.1 (88 q),
-  crosswalk. 13 tests green.
+  crosswalk. 14 tests green.
 - `packages/referral-engine-core` — form runtime (visibility, branching,
   repeat groups, validation, completeness), invitation token service, QR
   generation, submission locking → canonical Source. **34 tests green against
@@ -22,7 +22,10 @@ teacher form renders from `@suite/content` with live branching → autosave →
 submit → a locked Source row with checksum exists → dashboard shows status.
 
 ## Build order (per D-015: database → API → backend → frontend → tests → docs)
-1. **Repo + Supabase**: restore repo from the bundle; `npm i` per package;
+1. **Repo + Supabase**: restore repo from the bundle; from the repo root run
+   `npm install` once (workspace root, D-021), then confirm the suites with
+   `npm test --workspace @suite/case-model`, `npm test --workspace @suite/content`,
+   and `npm test --workspace @suite/referral-engine-core`;
    create Supabase project; run `migrations/0001_init.sql` in the SQL editor;
    write `migrations/0002_rls.sql`: policies scoping every table to
    `psychologist_id = auth.uid()` via the case join; invitations/draft_responses
