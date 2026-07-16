@@ -1,0 +1,13 @@
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+
+# env — secrets never committed (service_role key lives here, server-only)
+.env
+.env.local
+.env*.local
+
+# build / test
+/coverage
+*.tsbuildinfo

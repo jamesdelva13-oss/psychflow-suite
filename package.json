@@ -5,6 +5,7 @@
   "workspaces": [
     "packages/case-model",
     "packages/content",
-    "packages/referral-engine-core"
+    "packages/referral-engine-core",
+    "apps/*"
   ]
 }
