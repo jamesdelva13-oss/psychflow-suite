@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getRespondentInvitationId } from "@/lib/respondent-session";
+import { authorizeRespondent } from "@/lib/respondent-guard";
 import {
   loadInvitationById,
   invitationUsable,
@@ -27,7 +28,7 @@ export async function PATCH(
 ) {
   const { invitationId } = await params;
   const sessionId = await getRespondentInvitationId();
-  if (!sessionId || sessionId !== invitationId) {
+  if (!authorizeRespondent(sessionId, invitationId)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

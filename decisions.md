@@ -202,3 +202,13 @@ Package export hygiene — referral-engine-core declares main; case-model index
 avoids duplicate star exports of ConstructId/Topography. Consumers import
 @suite/* by bare name.
 **Status:** Accepted · 2026-07-16 · Ratified: JD
+
+## D-024 · Respondent session model
+Respondents have no account. The invitation token is validated once at
+`/r/[token]` (`checkInvitation`) and exchanged for a **signed, HTTP-only
+session cookie bound to that one invitation**. All later autosave/submit calls
+are authorized by that cookie — never by re-presenting the token, never by a
+Supabase identity. A cookie minted for one invitation cannot act on another
+(`authorizeRespondent`). Because React Server Components cannot set cookies,
+`/r/[token]` is a route handler that sets the cookie and redirects to the form.
+**Status:** Accepted · 2026-07-16 · Ratified: JD

@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import {
-  generateToken,
-  hashToken,
-  invitationUrl,
-  qrDataUrl,
-} from "@/lib/engine";
+import { generateToken, invitationUrl, qrDataUrl } from "@/lib/engine";
+import { buildInvitationRow } from "@/lib/invitation-core";
 import { createClient } from "@/lib/supabase/server";
 import { bankForRole, SUPPORTED_ROLES } from "@/lib/banks";
 import { recordAudit } from "@/lib/audit";
@@ -59,21 +55,21 @@ export async function POST(
   }
 
   const rawToken = generateToken();
-  const tokenHash = hashToken(rawToken);
   const days = parsed.data.expiresInDays ?? 14;
   const expiresAt = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
 
   const { data: invite, error: invErr } = await supabase
     .from("invitations")
-    .insert({
-      case_id: caseId,
-      informant_id: informant.id,
-      respondent_role: role,
-      bank_id: bank.bankId,
-      bank_version: bank.version,
-      token_hash: tokenHash, // only the hash is stored; raw token never persisted
-      expires_at: expiresAt,
-    })
+    .insert(
+      buildInvitationRow({
+        caseId,
+        informantId: informant.id,
+        role,
+        bank,
+        rawToken,
+        expiresAt,
+      })
+    )
     .select("id")
     .single();
   if (invErr || !invite) {
