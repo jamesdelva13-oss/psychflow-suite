@@ -3,7 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import { ensurePsychologist } from "@/lib/psychologist";
 import { signOut } from "@/app/login/actions";
 import { NewCaseForm } from "@/components/new-case-form";
-import { InvitePanel } from "@/components/invite-panel";
+import {
+  InvitationsPanel,
+  type InvitationSummary,
+} from "@/components/invitations-panel";
 
 type CaseRow = {
   id: string;
@@ -34,6 +37,18 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false });
 
   const rows = (cases ?? []) as CaseRow[];
+
+  const { data: invRows } = await supabase
+    .from("invitations")
+    .select("id, case_id, respondent_role, status, expires_at, uses, max_uses")
+    .order("created_at", { ascending: false });
+
+  const invitationsByCase = new Map<string, InvitationSummary[]>();
+  for (const inv of (invRows ?? []) as (InvitationSummary & { case_id: string })[]) {
+    const list = invitationsByCase.get(inv.case_id) ?? [];
+    list.push(inv);
+    invitationsByCase.set(inv.case_id, list);
+  }
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-8">
@@ -88,7 +103,10 @@ export default async function DashboardPage() {
                 </span>
               )}
             </div>
-            <InvitePanel caseId={c.id} />
+            <InvitationsPanel
+              caseId={c.id}
+              invitations={invitationsByCase.get(c.id) ?? []}
+            />
           </article>
         ))}
       </section>
