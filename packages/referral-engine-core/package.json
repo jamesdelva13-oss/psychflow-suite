@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Framework-agnostic core of the Referral Intelligence Engine: form runtime (branching, visibility, repeat groups, validation, completeness), invitation service (tokens, hashing, validation state machine), QR generation, and canonical Source creation. No AI, no UI, no database - pure tested logic consumed by the Phase 1 application (decisions.md D-020 Layer 3 core).",
   "type": "module",
+  "main": "src/index.ts",
   "scripts": {
     "test": "tsx tests/run-all.ts"
   },

@@ -1,12 +1,5 @@
 import "server-only";
-// Import the schema from its specific submodule: the case-model index does
-// `export *` from several modules with overlapping names (ConstructId,
-// Topography), which is an ambiguous re-export that Next's typecheck rejects.
-// Not editing the manifest-locked index for an app concern.
-import {
-  QuestionBank,
-  type TQuestionBank,
-} from "@suite/case-model/src/question-bank.schema";
+import { QuestionBank, type TQuestionBank } from "@suite/case-model";
 import teacherForm from "@suite/content/banks/teacher-form.v1.json";
 import parentForm from "@suite/content/banks/parent-form.v1.json";
 

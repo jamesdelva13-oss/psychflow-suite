@@ -196,3 +196,9 @@ The standalone per-package `npm install` in docs/phase1-session1-brief.md
 is superseded by the workspace-root install (D-021). From the repo root:
 `npm install`, then `npm test --workspace <name>`.
 **Status:** Accepted · 2026-07-16 · Ratified: JD
+
+## D-023 · Package export hygiene
+Package export hygiene — referral-engine-core declares main; case-model index
+avoids duplicate star exports of ConstructId/Topography. Consumers import
+@suite/* by bare name.
+**Status:** Accepted · 2026-07-16 · Ratified: JD
