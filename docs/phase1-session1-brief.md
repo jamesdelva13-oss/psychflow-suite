@@ -5,7 +5,7 @@ D-003 (single-psych tenancy), D-004 (retention), D-005 (scope cuts), D-007
 (raw-before-AI), D-013 (bank version binding), D-020 (never hard-code content).
 
 ## What already exists (do not rebuild)
-- `packages/case-model` — contracts + taxonomy. 23 tests green.
+- `packages/case-model` — contracts + taxonomy. 17 tests green.
 - `packages/content` — teacher bank v1.1.2 (57 q), parent bank v1.2.1 (88 q),
   crosswalk. 14 tests green.
 - `packages/referral-engine-core` — form runtime (visibility, branching,
@@ -22,7 +22,8 @@ teacher form renders from `@suite/content` with live branching → autosave →
 submit → a locked Source row with checksum exists → dashboard shows status.
 
 ## Build order (per D-015: database → API → backend → frontend → tests → docs)
-1. **Repo + Supabase**: restore repo from the bundle; from the repo root run
+1. **Repo + Supabase**: clone from
+   https://github.com/jamesdelva13-oss/psychflow-suite.git; from the repo root run
    `npm install` once (workspace root, D-021), then confirm the suites with
    `npm test --workspace @suite/case-model`, `npm test --workspace @suite/content`,
    and `npm test --workspace @suite/referral-engine-core`;
