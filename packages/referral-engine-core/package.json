@@ -1,0 +1,19 @@
+{
+  "name": "@suite/referral-engine-core",
+  "version": "0.1.0",
+  "description": "Framework-agnostic core of the Referral Intelligence Engine: form runtime (branching, visibility, repeat groups, validation, completeness), invitation service (tokens, hashing, validation state machine), QR generation, and canonical Source creation. No AI, no UI, no database - pure tested logic consumed by the Phase 1 application (decisions.md D-020 Layer 3 core).",
+  "type": "module",
+  "scripts": {
+    "test": "tsx tests/run-all.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.4",
+    "qrcode": "^1.5.4",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5",
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0"
+  }
+}

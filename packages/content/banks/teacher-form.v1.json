@@ -1,0 +1,1585 @@
+{
+  "bankId": "teacher-intake",
+  "respondent": "teacher",
+  "version": "1.1.2",
+  "taxonomyVersion": "0.3",
+  "title": "Teacher Referral Questionnaire",
+  "estimatedMinutes": "8-12",
+  "intro": "We will ask about the student's strengths, current concerns, classroom performance, supports already tried, and how the concerns affect learning. Most teachers finish in about 8-12 minutes. Your answers are saved as you go, and you can return later using the same secure link.",
+  "modules": [
+    {
+      "id": "core",
+      "title": "Core Context",
+      "displayLabel": "About You and the Student",
+      "alwaysShown": true,
+      "questions": [
+        {
+          "id": "TCH-CORE-001",
+          "prompt": "What is your role with this student?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "gen_ed",
+              "label": "General education classroom teacher"
+            },
+            {
+              "value": "sped",
+              "label": "Special education teacher"
+            },
+            {
+              "value": "interventionist",
+              "label": "Interventionist / reading or math specialist"
+            },
+            {
+              "value": "specials",
+              "label": "Specials / elective teacher"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-CORE-002",
+          "prompt": "Which subject(s) or class do you teach this student?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-CORE-003",
+          "prompt": "How long have you taught or worked with this student?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "lt1m",
+              "label": "Less than 1 month"
+            },
+            {
+              "value": "1to3m",
+              "label": "1-3 months"
+            },
+            {
+              "value": "3to6m",
+              "label": "3-6 months"
+            },
+            {
+              "value": "6to12m",
+              "label": "6-12 months"
+            },
+            {
+              "value": "gt1y",
+              "label": "More than a year"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-CORE-005",
+          "prompt": "What supports or instructional settings is the student currently receiving, as far as you know?",
+          "helpText": "For example: small-group reading, MTSS/RTI intervention, ESOL services, counseling check-ins, none that you know of.",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-CORE-006",
+          "prompt": "Do you have concerns about the student's attendance or tardiness?",
+          "responseType": "yes_no",
+          "constructIds": [
+            "CTX.ATTENDANCE"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "TCH-CORE-006a",
+          "prompt": "Briefly describe the attendance pattern you have noticed.",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.ATTENDANCE"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-CORE-006",
+              "operator": "is_yes"
+            }
+          ]
+        },
+        {
+          "id": "TCH-CORE-007",
+          "prompt": "What are this student's strengths and interests?",
+          "helpText": "Academic, social, creative, or personal - anything the student does well or enjoys.",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "strength",
+          "required": true
+        },
+        {
+          "id": "TCH-CORE-008",
+          "prompt": "Which areas are currently concerning?",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "reading",
+              "label": "Reading",
+              "constructIds": [
+                "ACAD.READ"
+              ]
+            },
+            {
+              "value": "writing",
+              "label": "Written expression",
+              "constructIds": [
+                "ACAD.WRIT"
+              ]
+            },
+            {
+              "value": "math",
+              "label": "Mathematics",
+              "constructIds": [
+                "ACAD.MATH"
+              ]
+            },
+            {
+              "value": "self_regulation",
+              "label": "Attention, organization, or self-regulation",
+              "constructIds": [
+                "EF"
+              ]
+            },
+            {
+              "value": "behavior",
+              "label": "Behavior or emotional functioning",
+              "constructIds": [
+                "BEH"
+              ]
+            },
+            {
+              "value": "communication",
+              "label": "Speech or language",
+              "constructIds": [
+                "LANG"
+              ]
+            },
+            {
+              "value": "social",
+              "label": "Social interaction",
+              "constructIds": [
+                "BEH.SOCIAL"
+              ]
+            },
+            {
+              "value": "adaptive",
+              "label": "Daily living / self-help skills",
+              "constructIds": [
+                "ADAPT"
+              ]
+            },
+            {
+              "value": "fine_motor",
+              "label": "Fine motor (handwriting, cutting, pencil grip, small items)",
+              "constructIds": [
+                "MOTOR_SENS.FINE_MOTOR"
+              ]
+            },
+            {
+              "value": "gross_motor",
+              "label": "Gross motor (running, balance, stairs, PE, frequent bumping or falling)",
+              "constructIds": [
+                "MOTOR_SENS.GROSS_MOTOR"
+              ]
+            }
+          ],
+          "constructIds": [],
+          "elicits": "concern",
+          "required": true,
+          "notes": "Motor split into fine vs gross by JD's decision: the distinction dictates whether OT (fine) or PT (gross) is invited into evaluation planning, so it must be captured at selection, not inferred later. Each option creates distinctly tagged Evidence."
+        },
+        {
+          "id": "TCH-CORE-009",
+          "prompt": "You selected daily living and/or motor skills. Please describe what you observe.",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-CORE-008",
+              "operator": "includes_any",
+              "values": [
+                "adaptive",
+                "fine_motor",
+                "gross_motor"
+              ]
+            }
+          ],
+          "notes": "v1.1.2: visibility now expressed properly via includes_any (adaptive OR fine_motor OR gross_motor) instead of the earlier runtime-filter hack. Catch-all retained deliberately for length control; fine/gross distinction drives OT vs PT involvement.",
+          "helpText": "Daily living examples in the classroom: managing belongings and materials, toileting and handwashing routines, lunch/feeding routines, putting on coats or dressing for recess, general hygiene. For motor concerns, please note whether they are fine motor (handwriting, cutting with scissors, pencil grip, manipulating small items) or gross motor (running, balance, stairs, PE participation, frequent bumping or falling)."
+        },
+        {
+          "id": "TCH-CORE-010",
+          "prompt": "When did you first notice these concerns?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "this_month",
+              "label": "Within the past month"
+            },
+            {
+              "value": "this_term",
+              "label": "Earlier this grading period"
+            },
+            {
+              "value": "start_year",
+              "label": "Since the start of the school year"
+            },
+            {
+              "value": "prior_year",
+              "label": "They were reported by a prior teacher / previous year"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-CORE-011",
+          "prompt": "Have you noticed a marked change or decline in the student's skills, behavior, or mood at any point (for example, after a break, an illness, or a specific event)?",
+          "responseType": "yes_no",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "either",
+          "required": true,
+          "notes": "Teacher-side counterpart to the parent regression question (PAR-HLTH-009): within-year trajectory change is observable at school and catches acquired, event-linked, and emotional-onset patterns. Any yes is flagged for psychologist attention."
+        },
+        {
+          "id": "TCH-CORE-011a",
+          "prompt": "Describe what changed and roughly when you noticed it.",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "TCH-CORE-011",
+              "operator": "is_yes"
+            }
+          ]
+        },
+        {
+          "id": "TCH-CORE-012",
+          "prompt": "Have you noticed possible signs of vision or hearing difficulty?",
+          "helpText": "For example: squinting, sitting very close to the board or screen, frequently asking for directions to be repeated, turning one ear toward speakers.",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "vision",
+              "label": "Possible vision signs"
+            },
+            {
+              "value": "hearing",
+              "label": "Possible hearing signs"
+            },
+            {
+              "value": "both",
+              "label": "Possible signs of both"
+            }
+          ],
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "elicits": "either",
+          "required": true,
+          "notes": "Teacher-observation evidence for the vision/hearing exclusionary factor (SC SEED / NC 1503 require it be addressed); complements screening records rather than replacing them."
+        }
+      ]
+    },
+    {
+      "id": "reading",
+      "title": "Reading Module",
+      "displayLabel": "Reading",
+      "intro": "These questions focus on the reading concerns you selected.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-RDG-001",
+          "prompt": "Which reading skills appear most difficult for this student?",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "phon_awareness",
+              "label": "Hearing and playing with the sounds in words (rhyming, blending, breaking words apart)",
+              "constructIds": [
+                "ACAD.READ.PHONOLOGICAL_AWARENESS"
+              ]
+            },
+            {
+              "value": "decoding",
+              "label": "Sounding out unfamiliar words",
+              "constructIds": [
+                "ACAD.READ.DECODING"
+              ]
+            },
+            {
+              "value": "word_recognition",
+              "label": "Recognizing familiar words quickly and accurately",
+              "constructIds": [
+                "ACAD.READ.WORD_RECOGNITION"
+              ]
+            },
+            {
+              "value": "fluency",
+              "label": "Reading smoothly and at a comfortable pace",
+              "constructIds": [
+                "ACAD.READ.FLUENCY"
+              ]
+            },
+            {
+              "value": "vocabulary",
+              "label": "Knowing what words mean",
+              "constructIds": [
+                "ACAD.READ.VOCABULARY"
+              ]
+            },
+            {
+              "value": "comprehension",
+              "label": "Understanding and remembering what was read",
+              "constructIds": [
+                "ACAD.READ.COMPREHENSION"
+              ]
+            }
+          ],
+          "constructIds": [
+            "ACAD.READ"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "TCH-RDG-002",
+          "prompt": "Describe what you observe when the student encounters an unfamiliar word.",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.READ.DECODING",
+            "ACAD.READ.WORD_RECOGNITION"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-RDG-001",
+              "operator": "includes_any",
+              "values": [
+                "decoding",
+                "word_recognition",
+                "phon_awareness"
+              ]
+            }
+          ],
+          "notes": "v1.1.2: fires on any word-level reading selection via includes_any (replaces the decoding-only hack; CR-006 remains as belt-and-suspenders)."
+        },
+        {
+          "id": "TCH-RDG-003",
+          "prompt": "Describe the student's reading pace and expression compared with classmates.",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.READ.FLUENCY"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-RDG-001",
+              "operator": "includes",
+              "value": "fluency"
+            }
+          ]
+        },
+        {
+          "id": "TCH-RDG-004",
+          "prompt": "How does the student's understanding compare when they read text themselves versus when it is read aloud to them?",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.READ.COMPREHENSION"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-RDG-001",
+              "operator": "includes",
+              "value": "comprehension"
+            }
+          ],
+          "notes": "The listening-vs-reading comparison is the highest-information single question for separating decoding-driven from language-driven comprehension problems."
+        },
+        {
+          "id": "TCH-RDG-005",
+          "prompt": "During which activities are the reading difficulties most evident?",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "independent",
+              "label": "Independent reading"
+            },
+            {
+              "value": "small_group",
+              "label": "Small-group instruction"
+            },
+            {
+              "value": "whole_group",
+              "label": "Whole-group instruction"
+            },
+            {
+              "value": "content_area",
+              "label": "Reading in science / social studies / word problems"
+            },
+            {
+              "value": "across",
+              "label": "Across all settings"
+            }
+          ],
+          "constructIds": [
+            "ACAD.READ"
+          ],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-RDG-006",
+          "prompt": "Compared with classmates, how would you describe this student's current overall reading performance?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "well_below",
+              "label": "Well below most classmates"
+            },
+            {
+              "value": "somewhat_below",
+              "label": "Somewhat below most classmates"
+            },
+            {
+              "value": "typical",
+              "label": "About typical for the class"
+            },
+            {
+              "value": "above",
+              "label": "Above most classmates"
+            }
+          ],
+          "constructIds": [
+            "ACAD.READ"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "TCH-RDG-007",
+          "prompt": "Is there reading assessment or progress-monitoring data you can reference (screeners, running records, intervention graphs)? If yes, please describe what it shows.",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.READ",
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "elicits": "context"
+        }
+      ]
+    },
+    {
+      "id": "self_regulation",
+      "title": "Executive Function Module",
+      "displayLabel": "Self-Regulation",
+      "intro": "These questions focus on attention, organization, and self-management in the classroom.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-SR-001",
+          "prompt": "Which of these are most difficult for the student?",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "task_initiation",
+              "label": "Getting started on tasks without extra prompting",
+              "constructIds": [
+                "EF.TASK_INITIATION"
+              ]
+            },
+            {
+              "value": "sustained_attention",
+              "label": "Staying focused until a task is finished",
+              "constructIds": [
+                "EF.SUSTAINED_ATTENTION"
+              ]
+            },
+            {
+              "value": "working_memory",
+              "label": "Remembering multi-step directions",
+              "constructIds": [
+                "EF.WORKING_MEMORY"
+              ]
+            },
+            {
+              "value": "planning_org",
+              "label": "Keeping track of materials, assignments, and steps",
+              "constructIds": [
+                "EF.PLANNING_ORG"
+              ]
+            },
+            {
+              "value": "flexibility",
+              "label": "Adjusting when plans or routines change",
+              "constructIds": [
+                "EF.COG_FLEXIBILITY"
+              ]
+            },
+            {
+              "value": "impulse",
+              "label": "Stopping and thinking before acting or speaking",
+              "constructIds": [
+                "EF.IMPULSE_CONTROL"
+              ]
+            },
+            {
+              "value": "emotion",
+              "label": "Managing frustration or strong feelings during work",
+              "constructIds": [
+                "EF.EMOT_REGULATION"
+              ]
+            },
+            {
+              "value": "self_monitor",
+              "label": "Noticing their own mistakes or checking work",
+              "constructIds": [
+                "EF.SELF_MONITORING"
+              ]
+            }
+          ],
+          "constructIds": [
+            "EF"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "TCH-SR-002",
+          "prompt": "What typically happens when independent work begins?",
+          "responseType": "open_text",
+          "constructIds": [
+            "EF.TASK_INITIATION"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-SR-001",
+              "operator": "includes",
+              "value": "task_initiation"
+            }
+          ]
+        },
+        {
+          "id": "TCH-SR-003",
+          "prompt": "During which tasks or times of day is attention hardest, and what does off-task look like for this student?",
+          "responseType": "open_text",
+          "constructIds": [
+            "EF.SUSTAINED_ATTENTION"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-SR-001",
+              "operator": "includes",
+              "value": "sustained_attention"
+            }
+          ]
+        },
+        {
+          "id": "TCH-SR-004",
+          "prompt": "Describe a recent example of the student becoming frustrated or overwhelmed during work: what led up to it, how long it lasted, and what helped.",
+          "responseType": "open_text",
+          "constructIds": [
+            "EF.EMOT_REGULATION"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-SR-001",
+              "operator": "includes",
+              "value": "emotion"
+            }
+          ]
+        },
+        {
+          "id": "TCH-SR-005",
+          "prompt": "In which settings or under which conditions does the student manage themselves best?",
+          "responseType": "open_text",
+          "constructIds": [
+            "EF"
+          ],
+          "elicits": "strength",
+          "required": true
+        },
+        {
+          "id": "TCH-SR-006",
+          "prompt": "How much adult support does the student need to start and finish a typical assignment?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "none",
+              "label": "Little or none - works like most classmates"
+            },
+            {
+              "value": "occasional",
+              "label": "An occasional prompt or check-in"
+            },
+            {
+              "value": "frequent",
+              "label": "Frequent prompts throughout"
+            },
+            {
+              "value": "continuous",
+              "label": "Nearly continuous adult support"
+            }
+          ],
+          "constructIds": [
+            "EF.TASK_INITIATION",
+            "EF.SUSTAINED_ATTENTION"
+          ],
+          "elicits": "concern",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "behavior",
+      "title": "Behavior Module",
+      "displayLabel": "Behavior and Emotional Functioning",
+      "intro": "These questions focus on specific behaviors. Concrete descriptions of what you see and hear are more helpful than general labels.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-BEH-001",
+          "prompt": "Which behaviors are of concern?",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "noncompliance",
+              "label": "Refusing or not following adult directions",
+              "topography": "noncompliance"
+            },
+            {
+              "value": "avoidance",
+              "label": "Avoiding or escaping tasks or places",
+              "topography": "avoidance"
+            },
+            {
+              "value": "aggression",
+              "label": "Physical or verbal aggression",
+              "topography": "aggression"
+            },
+            {
+              "value": "withdrawal",
+              "label": "Withdrawing from peers or activities",
+              "topography": "withdrawal"
+            },
+            {
+              "value": "disruption",
+              "label": "Disrupting class (calling out, noises, out of seat)",
+              "topography": "disruption"
+            }
+          ],
+          "constructIds": [
+            "BEH"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "TCH-BEH-002",
+          "prompt": "Has any behavior placed the student or others at risk of harm?",
+          "responseType": "yes_no",
+          "constructIds": [
+            "BEH.EXTERNALIZING"
+          ],
+          "elicits": "concern",
+          "required": true,
+          "notes": "A yes answer sets a priority flag on the case for expedited psychologist review. Flagging behavior is runtime logic, not part of this content file."
+        },
+        {
+          "id": "TCH-BEH-002a",
+          "prompt": "Briefly describe what happened and when.",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.EXTERNALIZING"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-BEH-002",
+              "operator": "is_yes"
+            }
+          ]
+        },
+        {
+          "id": "TCH-BEH-003",
+          "prompt": "When and where are these behaviors most likely - and least likely - to occur?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH"
+          ],
+          "elicits": "context",
+          "required": true
+        }
+      ],
+      "repeatGroups": [
+        {
+          "sourceQuestionId": "TCH-BEH-001",
+          "questions": [
+            {
+              "id": "TCH-BEH-G01",
+              "prompt": "Describe exactly what this behavior looks like when it happens.",
+              "helpText": "What would a visitor see and hear?",
+              "responseType": "open_text",
+              "constructIds": [],
+              "elicits": "concern",
+              "required": true,
+              "notes": "Elicits an operational definition. Evidence created from repeat-group answers carries the group's topography tag automatically."
+            },
+            {
+              "id": "TCH-BEH-G02",
+              "prompt": "How often does it happen?",
+              "responseType": "single_select",
+              "options": [
+                {
+                  "value": "multi_daily",
+                  "label": "Multiple times per day"
+                },
+                {
+                  "value": "daily",
+                  "label": "About daily"
+                },
+                {
+                  "value": "few_week",
+                  "label": "A few times per week"
+                },
+                {
+                  "value": "weekly",
+                  "label": "About weekly"
+                },
+                {
+                  "value": "less",
+                  "label": "Less than weekly"
+                }
+              ],
+              "constructIds": [],
+              "elicits": "context",
+              "required": true
+            },
+            {
+              "id": "TCH-BEH-G03",
+              "prompt": "How long does a typical episode last?",
+              "responseType": "single_select",
+              "options": [
+                {
+                  "value": "seconds",
+                  "label": "Seconds - it is brief"
+                },
+                {
+                  "value": "minutes",
+                  "label": "A few minutes"
+                },
+                {
+                  "value": "extended",
+                  "label": "Ten minutes or longer"
+                },
+                {
+                  "value": "varies",
+                  "label": "It varies widely"
+                }
+              ],
+              "constructIds": [],
+              "elicits": "context",
+              "required": true
+            },
+            {
+              "id": "TCH-BEH-G04",
+              "prompt": "What usually happens right before this behavior?",
+              "helpText": "For example: a task is assigned, a transition begins, a peer interaction, being told no.",
+              "responseType": "open_text",
+              "constructIds": [],
+              "elicits": "context",
+              "required": true,
+              "notes": "Antecedent. Feeds hypothesizedFunction downstream; the form never asks the teacher to name a function."
+            },
+            {
+              "id": "TCH-BEH-G05",
+              "prompt": "What usually happens right after - how do adults and peers respond, and what does the student do next?",
+              "responseType": "open_text",
+              "constructIds": [],
+              "elicits": "context",
+              "required": true,
+              "notes": "Consequence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "writing",
+      "title": "Writing Module",
+      "displayLabel": "Written Expression",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-WRT-001",
+          "prompt": "Describe what you observe in the student's writing (spelling, handwriting, getting ideas onto paper, amount produced).",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.WRIT"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "TCH-WRT-002",
+          "prompt": "Compared with classmates, the student's writing is:",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "well_below",
+              "label": "Well below most classmates"
+            },
+            {
+              "value": "somewhat_below",
+              "label": "Somewhat below most classmates"
+            },
+            {
+              "value": "typical",
+              "label": "About typical for the class"
+            },
+            {
+              "value": "above",
+              "label": "Above most classmates"
+            }
+          ],
+          "constructIds": [
+            "ACAD.WRIT"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "TCH-WRT-003",
+          "prompt": "Are writing work samples available that show the concern?",
+          "responseType": "yes_no",
+          "constructIds": [
+            "ACAD.WRIT"
+          ],
+          "elicits": "context"
+        }
+      ]
+    },
+    {
+      "id": "math",
+      "title": "Math Module",
+      "displayLabel": "Mathematics",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-MTH-001",
+          "prompt": "Describe what you observe in the student's math (number facts, computation, word problems, math anxiety).",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.MATH"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "TCH-MTH-002",
+          "prompt": "Compared with classmates, the student's math performance is:",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "well_below",
+              "label": "Well below most classmates"
+            },
+            {
+              "value": "somewhat_below",
+              "label": "Somewhat below most classmates"
+            },
+            {
+              "value": "typical",
+              "label": "About typical for the class"
+            },
+            {
+              "value": "above",
+              "label": "Above most classmates"
+            }
+          ],
+          "constructIds": [
+            "ACAD.MATH"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "TCH-MTH-003",
+          "prompt": "Is math assessment or progress-monitoring data available? If yes, what does it show?",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.MATH",
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "elicits": "context"
+        }
+      ]
+    },
+    {
+      "id": "social_comm",
+      "title": "Social & Communication Module",
+      "displayLabel": "Social Interaction and Communication",
+      "intro": "These questions focus on how the student interacts and communicates at school.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-SOC-001",
+          "prompt": "During unstructured time (recess, lunch, free time), what does the student typically do?",
+          "helpText": "Who are they with, what are they doing, and how does it usually go?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either",
+          "required": true,
+          "notes": "Unstructured time is the richest social observation window in the building; direct cross-informant pair with the parent play questions (PAR-SCR-007/008)."
+        },
+        {
+          "id": "TCH-SOC-002",
+          "prompt": "With peers, the student most often:",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "initiates",
+              "label": "Initiates and joins interactions successfully"
+            },
+            {
+              "value": "joins_awkward",
+              "label": "Tries to join but it often goes awkwardly"
+            },
+            {
+              "value": "parallel",
+              "label": "Stays near peers but doesn't really interact"
+            },
+            {
+              "value": "isolated",
+              "label": "Keeps to themselves most of the time"
+            },
+            {
+              "value": "conflict",
+              "label": "Interactions frequently end in conflict"
+            }
+          ],
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either",
+          "required": true
+        },
+        {
+          "id": "TCH-SOC-003",
+          "prompt": "How does the student handle transitions or unexpected changes to the routine?",
+          "responseType": "open_text",
+          "constructIds": [
+            "EF.COG_FLEXIBILITY"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "TCH-SOC-004",
+          "prompt": "Check any you observe in the student's communication:",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "literal",
+              "label": "Takes language very literally; misses jokes or figures of speech",
+              "constructIds": [
+                "LANG.PRAGMATIC"
+              ]
+            },
+            {
+              "value": "one_sided",
+              "label": "Conversations are one-sided or center on preferred topics",
+              "constructIds": [
+                "LANG.PRAGMATIC"
+              ]
+            },
+            {
+              "value": "nonverbal",
+              "label": "Misses facial expressions, tone, or body language",
+              "constructIds": [
+                "LANG.PRAGMATIC"
+              ]
+            },
+            {
+              "value": "articulation",
+              "label": "Speech is hard to understand",
+              "constructIds": [
+                "LANG.ARTIC"
+              ]
+            },
+            {
+              "value": "expressive",
+              "label": "Struggles to put thoughts into words",
+              "constructIds": [
+                "LANG.EXPRESSIVE"
+              ]
+            },
+            {
+              "value": "receptive",
+              "label": "Seems not to understand directions or classroom language",
+              "constructIds": [
+                "LANG.RECEPTIVE"
+              ]
+            },
+            {
+              "value": "none",
+              "label": "None of these"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "either",
+          "required": true
+        },
+        {
+          "id": "TCH-SOC-005",
+          "prompt": "How does the student participate when work happens in pairs or small groups?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "TCH-BEH-004",
+          "prompt": "How does the student get along with classmates? Describe their peer relationships.",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either"
+        }
+      ]
+    },
+    {
+      "id": "interventions",
+      "title": "Interventions Module",
+      "displayLabel": "Supports Already Tried",
+      "intro": "These questions ask what has been tried so far and how the student responded.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-INT-001",
+          "prompt": "What supports or interventions have been tried for the concerns you described?",
+          "helpText": "Classroom strategies, small-group intervention, behavior plans, seating or schedule changes, parent contact - anything intentional.",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-INT-002",
+          "prompt": "For the main intervention: about how long has it been in place, and how often does it occur?",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "TCH-INT-003",
+          "prompt": "Who provides it?",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "TCH-INT-004",
+          "prompt": "How has the student responded so far?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "clear_improve",
+              "label": "Clear improvement"
+            },
+            {
+              "value": "some_improve",
+              "label": "Some improvement"
+            },
+            {
+              "value": "no_change",
+              "label": "Little or no change"
+            },
+            {
+              "value": "worse",
+              "label": "Things have gotten harder"
+            },
+            {
+              "value": "too_early",
+              "label": "Too early to tell"
+            }
+          ],
+          "constructIds": [
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-INT-005",
+          "prompt": "Does progress-monitoring data exist for this intervention? If yes, where is it kept and what does it show?",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "elicits": "context"
+        }
+      ]
+    },
+    {
+      "id": "impact",
+      "title": "Educational Impact & Closing",
+      "displayLabel": "Impact and Final Thoughts",
+      "alwaysShown": true,
+      "questions": [
+        {
+          "id": "TCH-IMP-001",
+          "prompt": "How do these concerns affect the student's learning and participation in your classroom?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "concern",
+          "required": true,
+          "showIf": [
+            {
+              "questionId": "TCH-CORE-008",
+              "operator": "answered"
+            }
+          ]
+        },
+        {
+          "id": "TCH-IMP-002",
+          "prompt": "How are the student's grades and work completion relative to your expectations for the class?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-IMP-005",
+          "prompt": "What do you think others miss or misunderstand about this student?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "either",
+          "notes": "Cross-informant pair with PAR-CLS-004; surfaces masking, hidden strengths, and context others don't see."
+        },
+        {
+          "id": "TCH-IMP-003",
+          "prompt": "If supports were successful, what would look different for this student in your classroom a year from now?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context",
+          "notes": "One-year outcome framing - cross-informant pair with PAR-CLS-002 (pre-publication rewording of the earlier 'hoping this process provides' item)."
+        },
+        {
+          "id": "TCH-IMP-004",
+          "prompt": "Is there anything else the school psychologist should know?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "either"
+        }
+      ]
+    }
+  ],
+  "branchRules": [
+    {
+      "id": "BR-001",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "reading"
+        }
+      ],
+      "action": "show_module",
+      "target": "reading"
+    },
+    {
+      "id": "BR-002",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "self_regulation"
+        }
+      ],
+      "action": "show_module",
+      "target": "self_regulation"
+    },
+    {
+      "id": "BR-003",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "behavior"
+        }
+      ],
+      "action": "show_module",
+      "target": "behavior"
+    },
+    {
+      "id": "BR-004",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "answered"
+        }
+      ],
+      "action": "show_module",
+      "target": "interventions"
+    },
+    {
+      "id": "BR-005",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "writing"
+        }
+      ],
+      "action": "show_module",
+      "target": "writing"
+    },
+    {
+      "id": "BR-006",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "math"
+        }
+      ],
+      "action": "show_module",
+      "target": "math"
+    },
+    {
+      "id": "BR-007",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "social"
+        }
+      ],
+      "action": "show_module",
+      "target": "social_comm"
+    },
+    {
+      "id": "BR-008",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "communication"
+        }
+      ],
+      "action": "show_module",
+      "target": "social_comm"
+    },
+    {
+      "id": "BR-009",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "behavior"
+        }
+      ],
+      "action": "show_module",
+      "target": "social_comm"
+    }
+  ],
+  "followUps": [
+    {
+      "id": "FU-GEN-001",
+      "prompt": "What does that look like in the moment - what would someone see or hear?",
+      "constructIds": [],
+      "triggerHint": "Respondent used a vague descriptor (shuts down, struggles, acts out, gets upset) without observable detail."
+    },
+    {
+      "id": "FU-GEN-002",
+      "prompt": "About how often does this happen in a typical week?",
+      "constructIds": [],
+      "triggerHint": "A concern was described with no frequency information."
+    },
+    {
+      "id": "FU-GEN-003",
+      "prompt": "When did you first notice this?",
+      "constructIds": [],
+      "triggerHint": "A concern was described with no onset or duration information."
+    },
+    {
+      "id": "FU-GEN-004",
+      "prompt": "Is there anything that helps, even a little?",
+      "constructIds": [],
+      "triggerHint": "A concern was described with no mention of what mitigates it."
+    },
+    {
+      "id": "FU-RDG-001",
+      "prompt": "Does this occur primarily during independent reading, small-group instruction, whole-group instruction, or across settings?",
+      "constructIds": [
+        "ACAD.READ"
+      ],
+      "triggerHint": "A reading concern lacks setting information."
+    },
+    {
+      "id": "FU-RDG-002",
+      "prompt": "What happens when the student reads easier text - does the difficulty change?",
+      "constructIds": [
+        "ACAD.READ.DECODING",
+        "ACAD.READ.FLUENCY"
+      ],
+      "triggerHint": "Decoding or fluency concern described; instructional-level information would clarify severity."
+    },
+    {
+      "id": "FU-RDG-003",
+      "prompt": "Describe what you observe when the student comes to a word they do not know.",
+      "constructIds": [
+        "ACAD.READ.DECODING",
+        "ACAD.READ.WORD_RECOGNITION"
+      ],
+      "triggerHint": "Word-level reading concern selected but no observable description was provided."
+    },
+    {
+      "id": "FU-SR-001",
+      "prompt": "Does this occur mainly at the start of tasks, partway through, or during transitions?",
+      "constructIds": [
+        "EF.TASK_INITIATION",
+        "EF.SUSTAINED_ATTENTION"
+      ],
+      "triggerHint": "Attention or initiation concern lacks task-phase information."
+    },
+    {
+      "id": "FU-SR-002",
+      "prompt": "How does the student respond when directions have several steps?",
+      "constructIds": [
+        "EF.WORKING_MEMORY"
+      ],
+      "triggerHint": "Working memory selected but no example was provided."
+    },
+    {
+      "id": "FU-BEH-001",
+      "prompt": "What usually happens immediately before?",
+      "constructIds": [
+        "BEH"
+      ],
+      "triggerHint": "A behavior was described without antecedent information."
+    },
+    {
+      "id": "FU-BEH-002",
+      "prompt": "How long does a typical episode last, and how does it usually end?",
+      "constructIds": [
+        "BEH"
+      ],
+      "triggerHint": "A behavior was described without duration or resolution information."
+    },
+    {
+      "id": "FU-BEH-003",
+      "prompt": "What helps the student calm down or reengage?",
+      "constructIds": [
+        "BEH",
+        "EF.EMOT_REGULATION"
+      ],
+      "triggerHint": "An emotional or behavioral episode was described without de-escalation information."
+    },
+    {
+      "id": "FU-INT-001",
+      "prompt": "About how long has that support been in place, and how consistently has it happened?",
+      "constructIds": [
+        "CTX.INSTRUCTION_ADEQUACY"
+      ],
+      "triggerHint": "An intervention was named without dosage information."
+    },
+    {
+      "id": "FU-IMP-001",
+      "prompt": "How do these difficulties affect the student's ability to complete grade-level work or participate with classmates?",
+      "constructIds": [],
+      "triggerHint": "Concerns were described but educational impact was not addressed."
+    },
+    {
+      "id": "FU-ATT-001",
+      "prompt": "About how many days has the student missed, as best you can estimate?",
+      "constructIds": [
+        "CTX.ATTENDANCE"
+      ],
+      "triggerHint": "Attendance concern indicated without any magnitude."
+    },
+    {
+      "id": "FU-SOC-001",
+      "prompt": "What does the student typically do during recess, lunch, or other free time?",
+      "constructIds": [
+        "BEH.SOCIAL"
+      ],
+      "triggerHint": "Social, communication, or behavior concern present but no unstructured-time observation was provided."
+    }
+  ],
+  "completenessRules": [
+    {
+      "id": "CR-001",
+      "description": "A concern exists but no intervention information was given.",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "answered"
+        },
+        {
+          "questionId": "TCH-INT-001",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-INT-001"
+    },
+    {
+      "id": "CR-002",
+      "description": "Reading concern without setting information.",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "reading"
+        },
+        {
+          "questionId": "TCH-RDG-005",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-RDG-001"
+    },
+    {
+      "id": "CR-003",
+      "description": "Behavior selected but antecedent description missing for a topography group.",
+      "when": [
+        {
+          "questionId": "TCH-BEH-001",
+          "operator": "answered"
+        },
+        {
+          "questionId": "TCH-BEH-G04",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-BEH-001"
+    },
+    {
+      "id": "CR-004",
+      "description": "Attendance concern indicated but not described.",
+      "when": [
+        {
+          "questionId": "TCH-CORE-006",
+          "operator": "is_yes"
+        },
+        {
+          "questionId": "TCH-CORE-006a",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-ATT-001"
+    },
+    {
+      "id": "CR-005",
+      "description": "Concerns reported but educational impact not addressed.",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "answered"
+        },
+        {
+          "questionId": "TCH-IMP-001",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-IMP-001"
+    },
+    {
+      "id": "CR-006",
+      "description": "Word recognition selected without an observable description (decoding path not triggered).",
+      "when": [
+        {
+          "questionId": "TCH-RDG-001",
+          "operator": "includes",
+          "value": "word_recognition"
+        },
+        {
+          "questionId": "TCH-RDG-002",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-RDG-003"
+    },
+    {
+      "id": "CR-007",
+      "description": "Social/behavior concern without unstructured-time observation.",
+      "when": [
+        {
+          "questionId": "TCH-BEH-001",
+          "operator": "answered"
+        },
+        {
+          "questionId": "TCH-SOC-001",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-SOC-001"
+    }
+  ],
+  "summaryConstraints": {
+    "prohibited": [
+      "Never assign or imply a diagnostic label (dyslexia, ADHD, autism, anxiety disorder, etc.).",
+      "Never state or imply special education eligibility, disability category, or the need for an IEP or 504 plan.",
+      "Never make causal claims about why the student behaves or performs as reported.",
+      "Never state that a specific assessment instrument will or should be administered; assessment planning belongs to the psychologist.",
+      "Never convert an inference into a reported fact; every statement carries its claim-type label.",
+      "Never quantify what the respondent did not quantify (no invented frequencies, percentages, or durations).",
+      "Never characterize parenting, teaching quality, or home environment.",
+      "Never compare the reported pattern to disability criteria or eligibility standards."
+    ],
+    "requiredFraming": [
+      "Attribute every reported statement to its respondent (\"The teacher reported...\", \"The teacher described...\").",
+      "Preserve the respondent's hedges and uncertainty (sometimes, usually, I think) rather than strengthening them.",
+      "State missing information explicitly in a dedicated section rather than omitting it silently.",
+      "Frame patterns as areas warranting further examination, not as findings (e.g., \"the reported pattern suggests a need to examine foundational reading skills\").",
+      "Keep strengths in the summary; a referral summary is not a deficit list."
+    ]
+  }
+}

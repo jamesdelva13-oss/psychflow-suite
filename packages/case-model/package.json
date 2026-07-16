@@ -1,0 +1,17 @@
+{
+  "name": "@suite/case-model",
+  "version": "0.2.0",
+  "description": "Canonical contracts and shared vocabulary: entity schemas, construct taxonomy (schema + versioned data), question-bank and crosswalk schemas (decisions.md D-006, D-011, D-018). Authored instances live in @suite/content.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "tsx tests/run-all.ts"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0"
+  }
+}

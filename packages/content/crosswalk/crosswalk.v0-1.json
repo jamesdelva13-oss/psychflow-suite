@@ -1,0 +1,22 @@
+{
+  "version": "0.1",
+  "taxonomyVersion": "0.3",
+  "entries": [
+    { "instrument": "CTOPP-2", "scale": "Elision", "kind": "subtest", "constructIds": ["COG.GA.PHONOLOGICAL"] },
+    { "instrument": "CTOPP-2", "scale": "Rapid Digit Naming", "kind": "subtest", "constructIds": ["COG.GL.RAN"] },
+    { "instrument": "WIAT-4", "scale": "Phonemic Proficiency", "kind": "subtest", "constructIds": ["ACAD.READ.PHONOLOGICAL_AWARENESS"] },
+    { "instrument": "WIAT-4", "scale": "Pseudoword Decoding", "kind": "subtest", "constructIds": ["ACAD.READ.DECODING"] },
+    { "instrument": "WIAT-4", "scale": "Orthographic Fluency", "kind": "subtest", "constructIds": ["ACAD.READ.WORD_RECOGNITION"], "notes": "Orthographic processing is an alias on WORD_RECOGNITION (spec v0.3)." },
+    { "instrument": "WIAT-4", "scale": "Spelling", "kind": "subtest", "constructIds": ["ACAD.WRIT.SPELLING", "ACAD.READ.WORD_RECOGNITION"], "notes": "Dual-mapped: contributes to orthographic composite." },
+    { "instrument": "WISC-V", "scale": "Working Memory Index", "kind": "index", "constructIds": ["COG.GWM"] },
+    { "instrument": "BRIEF-2", "scale": "Initiate", "kind": "scale", "constructIds": ["EF.TASK_INITIATION"] },
+    { "instrument": "BRIEF-2", "scale": "Working Memory", "kind": "scale", "constructIds": ["EF.WORKING_MEMORY"] },
+    { "instrument": "BRIEF-2", "scale": "Self-Monitor", "kind": "scale", "constructIds": ["EF.SELF_MONITORING"] },
+    { "instrument": "BASC-3", "scale": "Attention Problems", "kind": "scale", "constructIds": ["BEH.ATTENTION"] },
+    { "instrument": "BASC-3", "scale": "Hyperactivity", "kind": "scale", "constructIds": ["BEH.HYPER_IMPULSIVE"] },
+    { "instrument": "Conners-4", "scale": "Inattention/Executive Dysfunction", "kind": "scale", "constructIds": ["BEH.ATTENTION", "EF.SUSTAINED_ATTENTION"] },
+    { "instrument": "Vineland-3", "scale": "Coping Skills", "kind": "scale", "constructIds": ["ADAPT.SOCIALIZATION.COPING"] },
+    { "instrument": "Vineland-3", "scale": "Internalizing", "kind": "scale", "constructIds": ["BEH.INTERNALIZING"], "notes": "Maladaptive Behavior section crosswalks to BEH (spec v0.2)." },
+    { "instrument": "ABAS-3", "scale": "Self-Direction", "kind": "scale", "constructIds": ["EF.PLANNING_ORG", "EF.TASK_INITIATION"], "notes": "ABAS-3 skill areas distribute across taxonomy nodes; composites live here, not in the taxonomy." }
+  ]
+}

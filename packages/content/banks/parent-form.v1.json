@@ -1,0 +1,2208 @@
+{
+  "bankId": "parent-intake",
+  "respondent": "parent",
+  "version": "1.2.1",
+  "taxonomyVersion": "0.3",
+  "title": "Parent / Guardian Questionnaire",
+  "estimatedMinutes": "15-20",
+  "intro": "You know your child in ways school staff cannot. Your answers help the school understand your child's strengths, history, and needs. Approximate answers are fine - precision matters less than the overall picture. You may skip any question, and you can close this form and return later using the same secure link.",
+  "modules": [
+    {
+      "id": "core",
+      "title": "Core Context",
+      "displayLabel": "About You and Your Child",
+      "alwaysShown": true,
+      "questions": [
+        {
+          "id": "PAR-CORE-001",
+          "prompt": "What is your relationship to the child?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "mother",
+              "label": "Mother"
+            },
+            {
+              "value": "father",
+              "label": "Father"
+            },
+            {
+              "value": "stepparent",
+              "label": "Stepparent"
+            },
+            {
+              "value": "grandparent",
+              "label": "Grandparent"
+            },
+            {
+              "value": "foster",
+              "label": "Foster parent"
+            },
+            {
+              "value": "guardian",
+              "label": "Legal guardian"
+            },
+            {
+              "value": "other",
+              "label": "Other"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "PAR-CORE-002",
+          "prompt": "Who lives in your child's home with them?",
+          "helpText": "Relationships and ages are enough - names are not needed (for example: mother, stepfather, two younger sisters ages 4 and 6).",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context",
+          "notes": "Deliberately minimal vs. source forms' full household rosters with names, education levels, and custody detail - data-minimization posture. Custody/guardianship specifics belong in the psychologist's district records, not this tool."
+        },
+        {
+          "id": "PAR-CORE-003",
+          "prompt": "What language(s) does your child hear and speak at home? Which did they learn first?",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.ELL_CULTURAL"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-CORE-004",
+          "prompt": "What are your child's strengths and interests?",
+          "helpText": "What do they enjoy? What are they good at? What do you love about them?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "strength",
+          "required": true
+        },
+        {
+          "id": "PAR-CORE-005",
+          "prompt": "What concerns you most about your child right now?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "PAR-CORE-006",
+          "prompt": "Which areas concern you?",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "reading",
+              "label": "Reading",
+              "constructIds": [
+                "ACAD.READ"
+              ]
+            },
+            {
+              "value": "writing",
+              "label": "Writing",
+              "constructIds": [
+                "ACAD.WRIT"
+              ]
+            },
+            {
+              "value": "math",
+              "label": "Math",
+              "constructIds": [
+                "ACAD.MATH"
+              ]
+            },
+            {
+              "value": "self_regulation",
+              "label": "Attention, organization, or getting things done",
+              "constructIds": [
+                "EF"
+              ]
+            },
+            {
+              "value": "behavior",
+              "label": "Behavior or emotions",
+              "constructIds": [
+                "BEH"
+              ]
+            },
+            {
+              "value": "communication",
+              "label": "Speech or language",
+              "constructIds": [
+                "LANG"
+              ]
+            },
+            {
+              "value": "social",
+              "label": "Friendships and social situations",
+              "constructIds": [
+                "BEH.SOCIAL"
+              ]
+            },
+            {
+              "value": "adaptive",
+              "label": "Everyday independence (self-care, routines)",
+              "constructIds": [
+                "ADAPT"
+              ]
+            },
+            {
+              "value": "motor",
+              "label": "Movement or coordination",
+              "constructIds": [
+                "MOTOR_SENS"
+              ]
+            },
+            {
+              "value": "not_sure",
+              "label": "I'm not sure - the school raised the concern"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "PAR-CORE-007",
+          "prompt": "When did you first become concerned?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "recent",
+              "label": "Recently (this school year)"
+            },
+            {
+              "value": "year_or_two",
+              "label": "In the past year or two"
+            },
+            {
+              "value": "preschool",
+              "label": "During the preschool years"
+            },
+            {
+              "value": "infancy",
+              "label": "Since infancy or toddlerhood"
+            },
+            {
+              "value": "not_concerned",
+              "label": "I have not been concerned myself"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-CORE-008",
+          "prompt": "What questions would you like this process to answer for you?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context"
+        }
+      ]
+    },
+    {
+      "id": "development",
+      "title": "Birth & Early Development",
+      "displayLabel": "Birth and Early Development",
+      "intro": "Approximate answers are fine here. If you don't recall something, choose \"don't recall\" and move on.",
+      "alwaysShown": true,
+      "questions": [
+        {
+          "id": "PAR-DEV-001",
+          "prompt": "Were there any complications during the pregnancy or birth?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "not_sure",
+              "label": "Not sure / I wasn't present for this period"
+            }
+          ],
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "notes": "Deliberately one broad question instead of the source forms' detailed prenatal checklists (substance use, maternal stress, planned/unwanted pregnancy). Those items are intrusive in a school intake and better handled in a psychologist-led interview when clinically indicated. Flag for JD review."
+        },
+        {
+          "id": "PAR-DEV-001a",
+          "prompt": "Please describe briefly (for example: born early, breathing problems, long labor, jaundice).",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-DEV-001",
+              "operator": "equals",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "id": "PAR-DEV-002",
+          "prompt": "Was your child born early, on time, or late?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "very_early",
+              "label": "More than 3 weeks early"
+            },
+            {
+              "value": "on_time",
+              "label": "Around the due date"
+            },
+            {
+              "value": "late",
+              "label": "More than 2 weeks late"
+            },
+            {
+              "value": "dont_recall",
+              "label": "Don't recall / not sure"
+            }
+          ],
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-DEV-003",
+          "prompt": "After birth, did your child need extra medical care (such as NICU or a longer hospital stay)?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "dont_recall",
+              "label": "Don't recall / not sure"
+            }
+          ],
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-DEV-012",
+          "prompt": "As far as you know, was your child exposed to alcohol, tobacco, or other substances before birth?",
+          "helpText": "This is asked of every family because prenatal exposures can affect learning and attention, and it helps the team consider all possible explanations. Answer only as far as you know - 'no information available' is a completely acceptable answer.",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "no",
+              "label": "No, not that I know of"
+            },
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no_info",
+              "label": "No information available to me"
+            },
+            {
+              "value": "prefer_not",
+              "label": "Prefer not to answer here"
+            }
+          ],
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "notes": "Reframed from the direct maternal-use question by JD's decision: third-person (about the child), knowledge-hedged, respondent-neutral - works for foster/adoptive/kinship caregivers, who are disproportionately the respondents in affirmative cases. 'No information available' is deliberately distinct from 'no'. Extraction fence: reported neutrally as exposure context; never characterizes any caregiver; never speculates toward FASD."
+        },
+        {
+          "id": "PAR-DEV-012a",
+          "prompt": "Share whatever you know or were told - even general information helps.",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-DEV-012",
+              "operator": "equals",
+              "value": "yes"
+            }
+          ],
+          "notes": "Deliberately gentle open prompt - not 'what and how much'. No completeness rule nags this question (same posture as trauma item)."
+        },
+        {
+          "id": "PAR-DEV-004",
+          "prompt": "Walking alone - compared with other children, your child walked:",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "earlier",
+              "label": "Earlier than most"
+            },
+            {
+              "value": "typical",
+              "label": "Around the same time as most"
+            },
+            {
+              "value": "later",
+              "label": "Somewhat later than most"
+            },
+            {
+              "value": "much_later",
+              "label": "Much later than most"
+            },
+            {
+              "value": "dont_recall",
+              "label": "Don't recall"
+            }
+          ],
+          "constructIds": [
+            "MOTOR_SENS.GROSS_MOTOR"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-DEV-005",
+          "prompt": "First words - your child spoke their first words:",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "earlier",
+              "label": "Earlier than most"
+            },
+            {
+              "value": "typical",
+              "label": "Around the same time as most"
+            },
+            {
+              "value": "later",
+              "label": "Somewhat later than most"
+            },
+            {
+              "value": "much_later",
+              "label": "Much later than most"
+            },
+            {
+              "value": "dont_recall",
+              "label": "Don't recall"
+            }
+          ],
+          "constructIds": [
+            "LANG.EXPRESSIVE"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-DEV-006",
+          "prompt": "Short sentences - your child began combining words into short sentences:",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "earlier",
+              "label": "Earlier than most"
+            },
+            {
+              "value": "typical",
+              "label": "Around the same time as most"
+            },
+            {
+              "value": "later",
+              "label": "Somewhat later than most"
+            },
+            {
+              "value": "much_later",
+              "label": "Much later than most"
+            },
+            {
+              "value": "dont_recall",
+              "label": "Don't recall"
+            }
+          ],
+          "constructIds": [
+            "LANG.EXPRESSIVE"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-DEV-007",
+          "prompt": "Toilet training (daytime) - your child was toilet trained:",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "earlier",
+              "label": "Earlier than most"
+            },
+            {
+              "value": "typical",
+              "label": "Around the same time as most"
+            },
+            {
+              "value": "later",
+              "label": "Somewhat later than most"
+            },
+            {
+              "value": "much_later",
+              "label": "Much later than most"
+            },
+            {
+              "value": "dont_recall",
+              "label": "Don't recall"
+            }
+          ],
+          "constructIds": [
+            "ADAPT.DAILY_LIVING.PERSONAL"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-DEV-008",
+          "prompt": "If any milestones stood out as unusually early or late, share approximate ages or details here.",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-DEV-009",
+          "prompt": "Thinking about your child's first three years, check any that describe them:",
+          "helpText": "Many children show one or two of these. Check what fits your memory of that period.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "eye_contact",
+              "label": "Rarely made eye contact with people",
+              "constructIds": [
+                "BEH.ATYPICALITY"
+              ]
+            },
+            {
+              "value": "name_response",
+              "label": "Often didn't respond when their name was called",
+              "constructIds": [
+                "BEH.ATYPICALITY"
+              ]
+            },
+            {
+              "value": "pointing",
+              "label": "Didn't point at things to show interest",
+              "constructIds": [
+                "BEH.ATYPICALITY"
+              ]
+            },
+            {
+              "value": "cuddling",
+              "label": "Didn't enjoy cuddling or was hard to comfort",
+              "constructIds": [
+                "BEH.ATYPICALITY"
+              ]
+            },
+            {
+              "value": "regression",
+              "label": "Lost words or skills they previously had",
+              "constructIds": [
+                "BEH.ATYPICALITY"
+              ]
+            },
+            {
+              "value": "object_fascination",
+              "label": "Unusually intense interest in specific objects (spinning wheels, lining up toys)",
+              "constructIds": [
+                "BEH.ATYPICALITY"
+              ]
+            },
+            {
+              "value": "repetitive_movement",
+              "label": "Repeated the same movements often (rocking, hand-flapping)",
+              "constructIds": [
+                "BEH.ATYPICALITY"
+              ]
+            },
+            {
+              "value": "sensory_reactions",
+              "label": "Strong reactions to sounds, textures, or lights",
+              "constructIds": [
+                "MOTOR_SENS.SENSORY_PROCESSING"
+              ]
+            },
+            {
+              "value": "feeding",
+              "label": "Significant feeding difficulties or extreme pickiness",
+              "constructIds": [
+                "MOTOR_SENS.SENSORY_PROCESSING"
+              ]
+            },
+            {
+              "value": "sleep",
+              "label": "Significant sleep difficulties",
+              "constructIds": [
+                "CTX.HEALTH_MEDICAL"
+              ]
+            },
+            {
+              "value": "none",
+              "label": "None of these"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "either",
+          "notes": "Early social-communication markers drawn from source forms' infancy sections (eye contact, name response, cuddling, object fascination) plus joint attention and regression. Extraction treats endorsements as reported observations; construct tags remain hypothesis-grade for interpretive purposes downstream - never framed as screening results."
+        },
+        {
+          "id": "PAR-DEV-010",
+          "prompt": "If you checked any of the above, tell us more about what you remember.",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-DEV-011",
+          "prompt": "How would you describe your child's temperament as a baby and toddler?",
+          "helpText": "For example: easygoing, fussy, very active, cautious with new people, predictable or unpredictable routines.",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context"
+        }
+      ]
+    },
+    {
+      "id": "health",
+      "title": "Health",
+      "displayLabel": "Health and Medical",
+      "alwaysShown": true,
+      "questions": [
+        {
+          "id": "PAR-HLTH-001",
+          "prompt": "How would you describe your child's current overall health?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "excellent",
+              "label": "Excellent"
+            },
+            {
+              "value": "good",
+              "label": "Good"
+            },
+            {
+              "value": "fair",
+              "label": "Fair"
+            },
+            {
+              "value": "poor",
+              "label": "Poor"
+            }
+          ],
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-HLTH-002",
+          "prompt": "Has your child had any serious illnesses, injuries, or hospitalizations?",
+          "helpText": "Please include concussions (even ones described as mild), other head injuries, seizures or convulsions, very high fevers, frequent ear infections, or surgeries.",
+          "responseType": "yes_no",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "required": true,
+          "notes": "Concussion named explicitly as a recall cue - parents often don't file 'concussion' under 'head injury' (adopted from ChatGPT review; cue over separate question)."
+        },
+        {
+          "id": "PAR-HLTH-002a",
+          "prompt": "Please describe what happened and roughly how old your child was.",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-HLTH-002",
+              "operator": "is_yes"
+            }
+          ]
+        },
+        {
+          "id": "PAR-HLTH-003",
+          "prompt": "Does your child have any current medical or mental-health diagnoses?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "prefer_not",
+              "label": "Prefer not to answer here"
+            }
+          ],
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-HLTH-003a",
+          "prompt": "Please list the diagnoses and roughly when they were made.",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-HLTH-003",
+              "operator": "equals",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "id": "PAR-HLTH-004",
+          "prompt": "Does your child currently take any medications?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "prefer_not",
+              "label": "Prefer not to answer here"
+            }
+          ],
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-HLTH-004a",
+          "prompt": "What is the medication for, and have you noticed effects (helpful or not)?",
+          "helpText": "The purpose and effect matter most; you may include or omit medication names as you prefer.",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-HLTH-004",
+              "operator": "equals",
+              "value": "yes"
+            }
+          ]
+        },
+        {
+          "id": "PAR-HLTH-005",
+          "prompt": "Vision: has your child's vision been checked, and are there concerns?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "checked_ok",
+              "label": "Checked - no concerns"
+            },
+            {
+              "value": "checked_concern",
+              "label": "Checked - wears glasses or has a known concern"
+            },
+            {
+              "value": "not_recent",
+              "label": "Not checked recently"
+            },
+            {
+              "value": "not_sure",
+              "label": "Not sure"
+            }
+          ],
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "PAR-HLTH-006",
+          "prompt": "Hearing: has your child's hearing been checked, and are there concerns?",
+          "helpText": "Include history of frequent ear infections or ear tubes if relevant.",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "checked_ok",
+              "label": "Checked - no concerns"
+            },
+            {
+              "value": "checked_concern",
+              "label": "Checked - known concern (or history of ear infections/tubes)"
+            },
+            {
+              "value": "not_recent",
+              "label": "Not checked recently"
+            },
+            {
+              "value": "not_sure",
+              "label": "Not sure"
+            }
+          ],
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "PAR-HLTH-007",
+          "prompt": "Sleep: check any that apply to your child.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "falling",
+              "label": "Trouble falling asleep"
+            },
+            {
+              "value": "staying",
+              "label": "Wakes often during the night"
+            },
+            {
+              "value": "snoring",
+              "label": "Snores loudly most nights"
+            },
+            {
+              "value": "tired",
+              "label": "Seems tired even after a full night's sleep"
+            },
+            {
+              "value": "hard_wake",
+              "label": "Very hard to wake in the morning"
+            },
+            {
+              "value": "none",
+              "label": "No sleep concerns"
+            }
+          ],
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-HLTH-008",
+          "prompt": "Has your child ever received counseling or therapy services (counseling, speech, occupational, or physical therapy)?",
+          "responseType": "yes_no",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-HLTH-008a",
+          "prompt": "What kind, roughly when, and did it help?",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-HLTH-008",
+              "operator": "is_yes"
+            }
+          ]
+        },
+        {
+          "id": "PAR-HLTH-009",
+          "prompt": "Has your child ever lost abilities they had previously developed (such as language, toileting, motor skills, social engagement, or academic skills), even if those abilities later returned?",
+          "responseType": "yes_no",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "either",
+          "notes": "Lifetime regression question. Placed in Health rather than Development deliberately: Development asks how development unfolded; Health asks whether development ever changed course. Wording refined per ChatGPT review (fuller example list, 'even if abilities returned'). Catches post-illness, post-injury, seizure-related, and emotional regression at any age; extraction flags any yes for psychologist attention."
+        },
+        {
+          "id": "PAR-HLTH-009a",
+          "prompt": "What did they lose, roughly when, and did the abilities come back?",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-HLTH-009",
+              "operator": "is_yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "social_comm",
+      "title": "Social Communication & Routines",
+      "displayLabel": "Social Style and Routines",
+      "intro": "These questions help us understand your child's social style and preferences. Many children show a few of these - check what fits.",
+      "alwaysShown": true,
+      "questions": [
+        {
+          "id": "PAR-SCR-001",
+          "prompt": "Check any that describe your child now:",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "routines",
+              "label": "Strong need for routines; gets very upset when plans change",
+              "constructIds": [
+                "EF.COG_FLEXIBILITY"
+              ]
+            },
+            {
+              "value": "intense_interests",
+              "label": "Extremely intense interest in specific topics or objects",
+              "constructIds": [
+                "BEH.ATYPICALITY"
+              ]
+            },
+            {
+              "value": "repetition",
+              "label": "Repeats certain phrases, sounds, or movements",
+              "constructIds": [
+                "BEH.ATYPICALITY"
+              ]
+            },
+            {
+              "value": "literal",
+              "label": "Takes things very literally; jokes and sarcasm are hard",
+              "constructIds": [
+                "LANG.PRAGMATIC"
+              ]
+            },
+            {
+              "value": "conversation",
+              "label": "Back-and-forth conversation is difficult",
+              "constructIds": [
+                "LANG.PRAGMATIC"
+              ]
+            },
+            {
+              "value": "nonverbal",
+              "label": "Difficulty reading facial expressions or body language",
+              "constructIds": [
+                "LANG.PRAGMATIC"
+              ]
+            },
+            {
+              "value": "alone",
+              "label": "Strongly prefers playing or being alone",
+              "constructIds": [
+                "BEH.SOCIAL",
+                "BEH.WITHDRAWAL"
+              ]
+            },
+            {
+              "value": "sensory",
+              "label": "Unusual sensitivity to noise, lights, textures, or tastes",
+              "constructIds": [
+                "MOTOR_SENS.SENSORY_PROCESSING"
+              ]
+            },
+            {
+              "value": "sensory_seeking",
+              "label": "Seeks out intense movement, pressure, or sensory input",
+              "constructIds": [
+                "MOTOR_SENS.SENSORY_PROCESSING"
+              ]
+            },
+            {
+              "value": "none",
+              "label": "None of these"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "either",
+          "required": true
+        },
+        {
+          "id": "PAR-SCR-002",
+          "prompt": "If you checked any, describe what you notice.",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-SCR-003",
+          "prompt": "When your child was younger, how much did they engage in pretend play (feeding a doll, playing house, imaginary games)?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "often",
+              "label": "Often"
+            },
+            {
+              "value": "sometimes",
+              "label": "Sometimes"
+            },
+            {
+              "value": "rarely",
+              "label": "Rarely or never"
+            },
+            {
+              "value": "dont_recall",
+              "label": "Don't recall"
+            }
+          ],
+          "constructIds": [
+            "BEH.ATYPICALITY"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-SCR-007",
+          "prompt": "When your child plays or spends free time, which of these fit? (Think about now, or when they were younger if they've outgrown play.)",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "alone",
+              "label": "Mostly plays alone",
+              "constructIds": [
+                "BEH.SOCIAL"
+              ]
+            },
+            {
+              "value": "alongside",
+              "label": "Plays near other kids but not really with them",
+              "constructIds": [
+                "BEH.SOCIAL"
+              ]
+            },
+            {
+              "value": "cooperative",
+              "label": "Plays cooperatively with other kids",
+              "constructIds": [
+                "BEH.SOCIAL"
+              ]
+            },
+            {
+              "value": "imaginative",
+              "label": "Imaginative or make-believe play",
+              "constructIds": [
+                "ADAPT.SOCIALIZATION.PLAY_LEISURE"
+              ]
+            },
+            {
+              "value": "building",
+              "label": "Building, collecting, sorting, or organizing",
+              "constructIds": [
+                "ADAPT.SOCIALIZATION.PLAY_LEISURE"
+              ]
+            },
+            {
+              "value": "physical",
+              "label": "Physical, active play",
+              "constructIds": [
+                "ADAPT.SOCIALIZATION.PLAY_LEISURE"
+              ]
+            }
+          ],
+          "constructIds": [],
+          "elicits": "either",
+          "notes": "Play-style window (adopted from ChatGPT review, trimmed from its 3-5 open questions to one tagged multi-select + one select). Solitary/parallel/cooperative maps to social development; play type maps to cognition and interests."
+        },
+        {
+          "id": "PAR-SCR-008",
+          "prompt": "In play with other kids, does your child tend to direct the play or follow along?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "directs",
+              "label": "Usually directs - play has to go their way"
+            },
+            {
+              "value": "follows",
+              "label": "Usually follows others' lead"
+            },
+            {
+              "value": "flexible",
+              "label": "A flexible mix of both"
+            },
+            {
+              "value": "alone",
+              "label": "Mostly plays alone, so it rarely comes up"
+            },
+            {
+              "value": "not_sure",
+              "label": "Not sure"
+            }
+          ],
+          "constructIds": [
+            "EF.COG_FLEXIBILITY",
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either",
+          "notes": "Directing-vs-following speaks to flexibility and social reciprocity."
+        },
+        {
+          "id": "PAR-SCR-004",
+          "prompt": "How would you describe your child's friendships?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "several_close",
+              "label": "Has friends, including at least one close friend"
+            },
+            {
+              "value": "some_few_close",
+              "label": "Has some friends but few close ones"
+            },
+            {
+              "value": "wants_struggles",
+              "label": "Wants friends but struggles to make or keep them"
+            },
+            {
+              "value": "prefers_not",
+              "label": "Doesn't seem interested in friendships"
+            },
+            {
+              "value": "not_sure",
+              "label": "Not sure"
+            }
+          ],
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either",
+          "required": true
+        },
+        {
+          "id": "PAR-SCR-005",
+          "prompt": "In social situations, does your child struggle with any of these?",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "initiating",
+              "label": "Starting a conversation or joining play",
+              "constructIds": [
+                "BEH.SOCIAL"
+              ]
+            },
+            {
+              "value": "keeping",
+              "label": "Keeping friendships going over time",
+              "constructIds": [
+                "BEH.SOCIAL"
+              ]
+            },
+            {
+              "value": "cues",
+              "label": "Picking up on social cues",
+              "constructIds": [
+                "LANG.PRAGMATIC"
+              ]
+            },
+            {
+              "value": "conflict",
+              "label": "Working out disagreements with other kids",
+              "constructIds": [
+                "BEH.SOCIAL"
+              ]
+            },
+            {
+              "value": "none",
+              "label": "None of these"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-SCR-006",
+          "prompt": "How does your child get along with family members at home (siblings, parents, others)?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either"
+        }
+      ]
+    },
+    {
+      "id": "education",
+      "title": "Educational History",
+      "displayLabel": "School History",
+      "alwaysShown": true,
+      "questions": [
+        {
+          "id": "PAR-EDU-001",
+          "prompt": "Did your child attend preschool, pre-K, or daycare? How did it go?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-EDU-002",
+          "prompt": "How many schools has your child attended (including the current one)?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "one",
+              "label": "Just this one"
+            },
+            {
+              "value": "two_three",
+              "label": "2-3 schools"
+            },
+            {
+              "value": "four_plus",
+              "label": "4 or more schools"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-EDU-008",
+          "prompt": "Has your child ever changed schools because of academic, behavioral, disciplinary, or safety reasons?",
+          "responseType": "yes_no",
+          "constructIds": [],
+          "elicits": "context",
+          "notes": "Distinct from the mobility count: educational disruption vs. mere mobility. 'Safety' and 'disciplinary' adopted from ChatGPT review (bullying, expulsion). 'Family reasons' deliberately declined: it re-collapses the distinction (military transfers are family reasons and are the non-signal), and foster/DV moves are already caught by PAR-FAM-001 with its prefer-not protections."
+        },
+        {
+          "id": "PAR-EDU-008a",
+          "prompt": "Briefly, what happened?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-EDU-008",
+              "operator": "is_yes"
+            }
+          ]
+        },
+        {
+          "id": "PAR-EDU-003",
+          "prompt": "Has your child ever repeated or skipped a grade?",
+          "responseType": "yes_no",
+          "constructIds": [],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-EDU-003a",
+          "prompt": "Which grade, and what led to that decision?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-EDU-003",
+              "operator": "is_yes"
+            }
+          ]
+        },
+        {
+          "id": "PAR-EDU-004",
+          "prompt": "Has your child ever received any of these services?",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "iep",
+              "label": "IEP (special education)"
+            },
+            {
+              "value": "plan504",
+              "label": "504 plan"
+            },
+            {
+              "value": "early_intervention",
+              "label": "Early Intervention / Child Find (before school age)"
+            },
+            {
+              "value": "speech",
+              "label": "Speech therapy"
+            },
+            {
+              "value": "reading_intervention",
+              "label": "Reading or math intervention at school"
+            },
+            {
+              "value": "tutoring",
+              "label": "Private tutoring"
+            },
+            {
+              "value": "school_counseling",
+              "label": "Counseling at school"
+            },
+            {
+              "value": "none",
+              "label": "None of these"
+            },
+            {
+              "value": "not_sure",
+              "label": "Not sure"
+            }
+          ],
+          "constructIds": [
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "PAR-EDU-005",
+          "prompt": "Has your child ever been evaluated outside of school (by a doctor, psychologist, or clinic)?",
+          "responseType": "yes_no",
+          "constructIds": [],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-EDU-005a",
+          "prompt": "Who evaluated them, roughly when, and what did you learn? (You can also share the report with the school psychologist directly.)",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-EDU-005",
+              "operator": "is_yes"
+            }
+          ]
+        },
+        {
+          "id": "PAR-EDU-006",
+          "prompt": "How does homework usually go at your house?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-EDU-007",
+          "prompt": "How does your child feel about school?",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.MOTIVATION_ENGAGEMENT"
+          ],
+          "elicits": "either"
+        }
+      ]
+    },
+    {
+      "id": "family_context",
+      "title": "Home & Family Context",
+      "displayLabel": "Home and Family",
+      "intro": "These questions help the school understand your child's world outside school. They are asked of every family. You may skip anything, and \"prefer not to answer\" is always respected.",
+      "alwaysShown": true,
+      "questions": [
+        {
+          "id": "PAR-FAM-001",
+          "prompt": "Have there been major changes or stressful events in your child's life in the past few years (moves, family separation, a loss, new siblings, serious illness in the family)?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "prefer_not",
+              "label": "Prefer not to answer here"
+            }
+          ],
+          "constructIds": [
+            "CTX.ENVIRONMENT_TRAUMA"
+          ],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-FAM-001a",
+          "prompt": "If you're comfortable, briefly describe what happened and how your child responded.",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.ENVIRONMENT_TRAUMA"
+          ],
+          "elicits": "context",
+          "showIf": [
+            {
+              "questionId": "PAR-FAM-001",
+              "operator": "equals",
+              "value": "yes"
+            }
+          ],
+          "notes": "Deliberately no completeness rule nags this question. Broad question first, no detailed trauma probes - deeper exploration belongs in a psychologist-led conversation (per planning decision on sensitive-topic gating)."
+        },
+        {
+          "id": "PAR-FAM-002",
+          "prompt": "Is there any family history (parents, siblings, grandparents, aunts/uncles) of the following?",
+          "helpText": "This is asked because some learning and attention patterns run in families. It helps the team understand context - it is never used to judge anyone.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "learning",
+              "label": "Learning difficulties (reading, writing, math)"
+            },
+            {
+              "value": "speech",
+              "label": "Speech or language difficulties"
+            },
+            {
+              "value": "attention",
+              "label": "Attention or hyperactivity difficulties"
+            },
+            {
+              "value": "developmental",
+              "label": "Autism or developmental disabilities"
+            },
+            {
+              "value": "emotional",
+              "label": "Anxiety, depression, or other emotional difficulties"
+            },
+            {
+              "value": "none",
+              "label": "None that I know of"
+            },
+            {
+              "value": "prefer_not",
+              "label": "Prefer not to answer"
+            }
+          ],
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "elicits": "context",
+          "notes": "Family history is contextual information about relatives, not evidence about the child. Extraction stores it as context-only; it must never generate construct-tagged Evidence about the student."
+        },
+        {
+          "id": "PAR-FAM-003",
+          "prompt": "Is there anything in your child's earlier life experiences that you believe still affects them today?",
+          "responseType": "open_text",
+          "constructIds": [
+            "CTX.ENVIRONMENT_TRAUMA"
+          ],
+          "elicits": "context"
+        }
+      ]
+    },
+    {
+      "id": "academics_home",
+      "title": "Academics at Home",
+      "displayLabel": "Learning at Home",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "PAR-ACD-001",
+          "prompt": "What do you notice when your child reads at home, or when you read together?",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.READ"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "PAR-CORE-006",
+              "operator": "includes",
+              "value": "reading"
+            }
+          ]
+        },
+        {
+          "id": "PAR-ACD-002",
+          "prompt": "Does your child understand a story better when someone reads it to them than when they read it themselves?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "better_read_to",
+              "label": "Yes - clearly understands better when read to"
+            },
+            {
+              "value": "about_same",
+              "label": "About the same either way"
+            },
+            {
+              "value": "not_sure",
+              "label": "Not sure"
+            }
+          ],
+          "constructIds": [
+            "ACAD.READ.COMPREHENSION"
+          ],
+          "elicits": "either",
+          "showIf": [
+            {
+              "questionId": "PAR-CORE-006",
+              "operator": "includes",
+              "value": "reading"
+            }
+          ],
+          "notes": "Cross-informant pair with TCH-RDG-004 (listening vs. reading comprehension) - convergence here is high-value evidence."
+        },
+        {
+          "id": "PAR-ACD-003",
+          "prompt": "Does your child avoid reading or put up a fight about schoolwork at home?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "often",
+              "label": "Often"
+            },
+            {
+              "value": "sometimes",
+              "label": "Sometimes"
+            },
+            {
+              "value": "rarely",
+              "label": "Rarely or never"
+            }
+          ],
+          "constructIds": [
+            "ACAD.READ",
+            "CTX.MOTIVATION_ENGAGEMENT"
+          ],
+          "elicits": "either",
+          "showIf": [
+            {
+              "questionId": "PAR-CORE-006",
+              "operator": "includes",
+              "value": "reading"
+            }
+          ]
+        },
+        {
+          "id": "PAR-ACD-004",
+          "prompt": "What do you notice about your child's writing (letters, spelling, getting ideas on paper)?",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.WRIT"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "PAR-CORE-006",
+              "operator": "includes",
+              "value": "writing"
+            }
+          ]
+        },
+        {
+          "id": "PAR-ACD-005",
+          "prompt": "What do you notice about your child's math (counting, math facts, homework problems)?",
+          "responseType": "open_text",
+          "constructIds": [
+            "ACAD.MATH"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "PAR-CORE-006",
+              "operator": "includes",
+              "value": "math"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "self_regulation_home",
+      "title": "Self-Regulation at Home",
+      "displayLabel": "Attention and Independence at Home",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "PAR-SRH-001",
+          "prompt": "What happens when your child needs to start homework or a chore on their own?",
+          "responseType": "open_text",
+          "constructIds": [
+            "EF.TASK_INITIATION"
+          ],
+          "elicits": "concern"
+        },
+        {
+          "id": "PAR-SRH-002",
+          "prompt": "How does your child handle directions with several steps (\"brush your teeth, get your backpack, and meet me at the car\")?",
+          "responseType": "open_text",
+          "constructIds": [
+            "EF.WORKING_MEMORY"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-SRH-003",
+          "prompt": "How often does your child lose track of belongings (jackets, homework, devices)?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "rarely",
+              "label": "Rarely"
+            },
+            {
+              "value": "sometimes",
+              "label": "Sometimes"
+            },
+            {
+              "value": "often",
+              "label": "Often"
+            },
+            {
+              "value": "constantly",
+              "label": "Almost constantly"
+            }
+          ],
+          "constructIds": [
+            "EF.PLANNING_ORG"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-SRH-004",
+          "prompt": "Describe a recent time your child got frustrated or overwhelmed at home: what led up to it, and what helped?",
+          "responseType": "open_text",
+          "constructIds": [
+            "EF.EMOT_REGULATION"
+          ],
+          "elicits": "concern"
+        },
+        {
+          "id": "PAR-SRH-005",
+          "prompt": "How independent is your child with daily routines (getting ready in the morning, bedtime)?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "independent",
+              "label": "Mostly independent"
+            },
+            {
+              "value": "some_reminders",
+              "label": "Needs some reminders"
+            },
+            {
+              "value": "many_reminders",
+              "label": "Needs many reminders every step"
+            },
+            {
+              "value": "constant_help",
+              "label": "Needs an adult alongside nearly the whole time"
+            }
+          ],
+          "constructIds": [
+            "EF.TASK_INITIATION",
+            "ADAPT.DAILY_LIVING.PERSONAL"
+          ],
+          "elicits": "either"
+        }
+      ]
+    },
+    {
+      "id": "behavior_home",
+      "title": "Behavior at Home",
+      "displayLabel": "Behavior at Home",
+      "intro": "Concrete descriptions of what you see and hear help more than general labels.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "PAR-BEH-001",
+          "prompt": "Which of these do you see at home?",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "noncompliance",
+              "label": "Refusing or ignoring what adults ask",
+              "topography": "noncompliance"
+            },
+            {
+              "value": "avoidance",
+              "label": "Avoiding or escaping tasks (homework, chores, getting ready)",
+              "topography": "avoidance"
+            },
+            {
+              "value": "aggression",
+              "label": "Hitting, throwing, or hurtful words",
+              "topography": "aggression"
+            },
+            {
+              "value": "withdrawal",
+              "label": "Withdrawing - spending long periods alone, shutting down",
+              "topography": "withdrawal"
+            },
+            {
+              "value": "disruption",
+              "label": "Very loud, wild, or hard-to-settle behavior",
+              "topography": "disruption"
+            }
+          ],
+          "constructIds": [
+            "BEH"
+          ],
+          "elicits": "concern",
+          "required": true
+        },
+        {
+          "id": "PAR-BEH-002",
+          "prompt": "Has any behavior put your child or someone else at risk of getting hurt?",
+          "responseType": "yes_no",
+          "constructIds": [
+            "BEH.EXTERNALIZING"
+          ],
+          "elicits": "concern",
+          "required": true,
+          "notes": "Same safety gate as teacher form - yes flags the case for expedited psychologist review."
+        },
+        {
+          "id": "PAR-BEH-002a",
+          "prompt": "Briefly describe what happened and when.",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.EXTERNALIZING"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "PAR-BEH-002",
+              "operator": "is_yes"
+            }
+          ]
+        },
+        {
+          "id": "PAR-BEH-003",
+          "prompt": "What discipline or strategies seem to work best with your child? What clearly doesn't work?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context"
+        },
+        {
+          "id": "PAR-BEH-004",
+          "prompt": "Does your child's behavior at home seem different from what the school describes? How?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context",
+          "notes": "Deliberate cross-setting question - direct input for the cross-informant synthesis stage."
+        }
+      ],
+      "repeatGroups": [
+        {
+          "sourceQuestionId": "PAR-BEH-001",
+          "questions": [
+            {
+              "id": "PAR-BEH-G01",
+              "prompt": "What does this look like at home? Describe what someone would see and hear.",
+              "responseType": "open_text",
+              "constructIds": [],
+              "elicits": "concern",
+              "required": true
+            },
+            {
+              "id": "PAR-BEH-G02",
+              "prompt": "How often does it happen?",
+              "responseType": "single_select",
+              "options": [
+                {
+                  "value": "multi_daily",
+                  "label": "Multiple times per day"
+                },
+                {
+                  "value": "daily",
+                  "label": "About daily"
+                },
+                {
+                  "value": "few_week",
+                  "label": "A few times per week"
+                },
+                {
+                  "value": "weekly",
+                  "label": "About weekly"
+                },
+                {
+                  "value": "less",
+                  "label": "Less than weekly"
+                }
+              ],
+              "constructIds": [],
+              "elicits": "context",
+              "required": true
+            },
+            {
+              "id": "PAR-BEH-G03",
+              "prompt": "What usually happens right before it starts, and how do the adults at home respond?",
+              "responseType": "open_text",
+              "constructIds": [],
+              "elicits": "context",
+              "required": true,
+              "notes": "Antecedent + consequence combined into one question for the parent register (teacher form separates them)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "asd_deep_dive",
+      "title": "Social Development Deep Dive",
+      "displayLabel": "More About Social Development",
+      "intro": "Because of what you shared, we'd like to understand your child's social development over time in more detail. There are no right answers - your observations across the years are what help.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "PAR-ASD-001",
+          "prompt": "As a toddler, how did your child share attention with you - pointing to show you things, bringing objects to show, or following your point?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "often",
+              "label": "Often - regularly shared attention this way"
+            },
+            {
+              "value": "sometimes",
+              "label": "Sometimes"
+            },
+            {
+              "value": "rarely",
+              "label": "Rarely or never"
+            },
+            {
+              "value": "dont_recall",
+              "label": "Don't recall"
+            }
+          ],
+          "constructIds": [
+            "BEH.ATYPICALITY"
+          ],
+          "elicits": "either",
+          "notes": "Joint attention - the single most ASD-informative early marker missing from the general checklist's pointing item nuance."
+        },
+        {
+          "id": "PAR-ASD-002",
+          "prompt": "How does your child respond to familiar people compared with unfamiliar people?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-ASD-003",
+          "prompt": "How does your child do in groups of children - birthday parties, teams, the lunch table?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-ASD-004",
+          "prompt": "What has your child been intensely interested in over the years, and how intense do those interests get?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.ATYPICALITY"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-ASD-005",
+          "prompt": "How has your child's social interaction changed as they've gotten older?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "elicits": "either",
+          "notes": "Developmental-trajectory item - especially valuable for reevaluations; general forms rarely ask it."
+        },
+        {
+          "id": "PAR-ASD-006",
+          "prompt": "How does your child spend free time when they can choose anything?",
+          "responseType": "open_text",
+          "constructIds": [
+            "ADAPT.SOCIALIZATION.PLAY_LEISURE"
+          ],
+          "elicits": "either"
+        },
+        {
+          "id": "PAR-ASD-007",
+          "prompt": "How does your child handle understanding other people's feelings or points of view?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.SOCIAL",
+            "LANG.PRAGMATIC"
+          ],
+          "elicits": "either"
+        }
+      ]
+    },
+    {
+      "id": "closing",
+      "title": "Impact & Closing",
+      "displayLabel": "Final Thoughts",
+      "alwaysShown": true,
+      "questions": [
+        {
+          "id": "PAR-CLS-001",
+          "prompt": "From what you see, how do these difficulties affect your child's daily life and learning?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "PAR-CORE-006",
+              "operator": "answered"
+            }
+          ]
+        },
+        {
+          "id": "PAR-CLS-004",
+          "prompt": "What do you think people most misunderstand about your child?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "either",
+          "notes": "Adopted from ChatGPT proposal - surfaces masking, cultural factors, giftedness, and overlooked strengths."
+        },
+        {
+          "id": "PAR-CLS-002",
+          "prompt": "If this process were successful, what would be different for your child one year from now?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "context",
+          "notes": "Adopted from ChatGPT proposal - captures parent priorities, expectations, and intervention goals; seeds the recommendations layer. Pre-publication rewording of the earlier 'hopes' item."
+        },
+        {
+          "id": "PAR-CLS-003",
+          "prompt": "Is there anything else you'd like the school psychologist to know about your child?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "either"
+        }
+      ]
+    }
+  ],
+  "branchRules": [
+    {
+      "id": "BR-001",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "includes",
+          "value": "reading"
+        }
+      ],
+      "action": "show_module",
+      "target": "academics_home"
+    },
+    {
+      "id": "BR-002",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "includes",
+          "value": "writing"
+        }
+      ],
+      "action": "show_module",
+      "target": "academics_home"
+    },
+    {
+      "id": "BR-003",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "includes",
+          "value": "math"
+        }
+      ],
+      "action": "show_module",
+      "target": "academics_home"
+    },
+    {
+      "id": "BR-004",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "includes",
+          "value": "self_regulation"
+        }
+      ],
+      "action": "show_module",
+      "target": "self_regulation_home"
+    },
+    {
+      "id": "BR-005",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "includes",
+          "value": "behavior"
+        }
+      ],
+      "action": "show_module",
+      "target": "behavior_home"
+    },
+    {
+      "id": "BR-006",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "includes",
+          "value": "social"
+        }
+      ],
+      "action": "show_module",
+      "target": "asd_deep_dive"
+    },
+    {
+      "id": "BR-007",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "includes",
+          "value": "communication"
+        }
+      ],
+      "action": "show_module",
+      "target": "asd_deep_dive"
+    },
+    {
+      "id": "BR-008",
+      "when": [
+        {
+          "questionId": "PAR-SCR-001",
+          "operator": "includes",
+          "value": "intense_interests"
+        }
+      ],
+      "action": "show_module",
+      "target": "asd_deep_dive"
+    },
+    {
+      "id": "BR-009",
+      "when": [
+        {
+          "questionId": "PAR-SCR-001",
+          "operator": "includes",
+          "value": "conversation"
+        }
+      ],
+      "action": "show_module",
+      "target": "asd_deep_dive"
+    },
+    {
+      "id": "BR-010",
+      "when": [
+        {
+          "questionId": "PAR-SCR-001",
+          "operator": "includes",
+          "value": "nonverbal"
+        }
+      ],
+      "action": "show_module",
+      "target": "asd_deep_dive"
+    },
+    {
+      "id": "BR-011",
+      "when": [
+        {
+          "questionId": "PAR-SCR-001",
+          "operator": "includes",
+          "value": "repetition"
+        }
+      ],
+      "action": "show_module",
+      "target": "asd_deep_dive"
+    }
+  ],
+  "followUps": [
+    {
+      "id": "FU-PGEN-001",
+      "prompt": "What does that look like at home - what would someone see or hear?",
+      "constructIds": [],
+      "triggerHint": "Parent used a vague descriptor (meltdown, struggles, shuts down) without observable detail."
+    },
+    {
+      "id": "FU-PGEN-002",
+      "prompt": "About how often does that happen in a typical week?",
+      "constructIds": [],
+      "triggerHint": "A concern was described with no frequency information."
+    },
+    {
+      "id": "FU-PGEN-003",
+      "prompt": "When did you first notice this?",
+      "constructIds": [],
+      "triggerHint": "A concern was described with no onset information."
+    },
+    {
+      "id": "FU-PGEN-004",
+      "prompt": "Is there anything that helps, even a little?",
+      "constructIds": [],
+      "triggerHint": "A concern was described with no mention of what mitigates it."
+    },
+    {
+      "id": "FU-PGEN-005",
+      "prompt": "Of everything you mentioned, what worries you most?",
+      "constructIds": [],
+      "triggerHint": "Concern areas were selected but the primary concern was not described."
+    },
+    {
+      "id": "FU-PGEN-006",
+      "prompt": "How does this compare with your other children, or with other kids their age you know?",
+      "constructIds": [],
+      "triggerHint": "A developmental or behavioral concern lacks a peer/sibling comparison anchor."
+    },
+    {
+      "id": "FU-PDEV-001",
+      "prompt": "Roughly how old was your child when this happened? An approximate age is fine.",
+      "constructIds": [],
+      "triggerHint": "A developmental event was described without any age anchor."
+    },
+    {
+      "id": "FU-PHLT-001",
+      "prompt": "Can you share a bit more - roughly when it happened and whether your child needed treatment?",
+      "constructIds": [
+        "CTX.HEALTH_MEDICAL"
+      ],
+      "triggerHint": "A health event was endorsed without description."
+    },
+    {
+      "id": "FU-PBEH-001",
+      "prompt": "Think of the most recent time: what was happening right before, and what happened right after?",
+      "constructIds": [
+        "BEH"
+      ],
+      "triggerHint": "A behavior was described without antecedent or consequence information."
+    },
+    {
+      "id": "FU-PIMP-001",
+      "prompt": "How do these difficulties affect your child's everyday life - school, friendships, family time?",
+      "constructIds": [],
+      "triggerHint": "Concerns were described but daily-life impact was not addressed."
+    },
+    {
+      "id": "FU-PACD-001",
+      "prompt": "When someone reads a story to your child, do they understand it better than when they read it themselves?",
+      "constructIds": [
+        "ACAD.READ.COMPREHENSION"
+      ],
+      "triggerHint": "Reading concern present but the listening-vs-reading comparison is missing."
+    }
+  ],
+  "completenessRules": [
+    {
+      "id": "CR-001",
+      "description": "Concern areas selected but daily-life impact not addressed.",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "answered"
+        },
+        {
+          "questionId": "PAR-CLS-001",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-PIMP-001"
+    },
+    {
+      "id": "CR-002",
+      "description": "Concern areas selected but primary concern not described.",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "answered"
+        },
+        {
+          "questionId": "PAR-CORE-005",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-PGEN-005"
+    },
+    {
+      "id": "CR-003",
+      "description": "Health event endorsed but not described.",
+      "when": [
+        {
+          "questionId": "PAR-HLTH-002",
+          "operator": "is_yes"
+        },
+        {
+          "questionId": "PAR-HLTH-002a",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-PHLT-001"
+    },
+    {
+      "id": "CR-004",
+      "description": "Behavior selected but antecedent/consequence description missing.",
+      "when": [
+        {
+          "questionId": "PAR-BEH-001",
+          "operator": "answered"
+        },
+        {
+          "questionId": "PAR-BEH-G03",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-PBEH-001"
+    },
+    {
+      "id": "CR-005",
+      "description": "Reading concern selected but listening-vs-reading comparison missing.",
+      "when": [
+        {
+          "questionId": "PAR-CORE-006",
+          "operator": "includes",
+          "value": "reading"
+        },
+        {
+          "questionId": "PAR-ACD-002",
+          "operator": "not_answered"
+        }
+      ],
+      "askFollowUpId": "FU-PACD-001"
+    }
+  ],
+  "summaryConstraints": {
+    "prohibited": [
+      "Never assign or imply a diagnostic label (autism, ADHD, dyslexia, anxiety disorder, etc.), and never characterize social-communication endorsements as screening results or autism likelihood.",
+      "Never state or imply special education eligibility, disability category, or the need for an IEP or 504 plan.",
+      "Never make causal claims about why the child behaves or develops as reported.",
+      "Never characterize parenting quality, discipline choices, or the home environment.",
+      "Never treat 'prefer not to answer' or a skipped question as evidence of anything; record it only as information not provided.",
+      "Never generate construct-tagged evidence about the student from family-history items; family history is context about relatives only.",
+      "Never infer trauma, abuse, or adverse experiences beyond what the parent explicitly stated.",
+      "Never convert an inference into a reported fact; every statement carries its claim-type label.",
+      "Never quantify what the parent did not quantify (no invented frequencies, ages, or durations).",
+      "Never state that a specific assessment instrument will or should be administered.",
+      "Never characterize the biological mother or any caregiver in relation to prenatal exposures; report exposure information neutrally as child-history context, and never speculate toward fetal alcohol or exposure-related diagnoses."
+    ],
+    "requiredFraming": [
+      "Attribute every reported statement to the parent (\"The parent reported...\", \"The parent described...\").",
+      "Preserve the parent's hedges and uncertainty (I think, around age 3, don't recall exactly) rather than strengthening them.",
+      "Frame early-development and social-communication endorsements as parent-reported observations that may warrant further assessment, not as findings.",
+      "State missing or 'prefer not to answer' information explicitly in a dedicated section, neutrally, without speculation.",
+      "Keep strengths and the parent's hopes in the summary; the parent's own questions (PAR-CORE-008) should appear so the evaluation can answer them.",
+      "Where a parent item has a teacher-form counterpart (e.g., listening-vs-reading comprehension), note agreement or difference across settings factually."
+    ]
+  }
+}
