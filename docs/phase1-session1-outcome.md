@@ -85,6 +85,10 @@ The three package suites remained green and untouched: case-model 17, content
   dashboard only generates *teacher* invitations in Session 1.
 - **Email delivery** stubbed to copy-link (D-005); no SMS/voice/SSO/multilingual.
 - **Phase 2 pipeline** (Evidence/Claims extraction, AI layers) — tables exist
-  from `0001` but are unpopulated; out of scope for Session 1.
+  from `0001` but are **unpopulated: there are no `Source` records yet.** The
+  first extraction fixture will be **authored deliberately at the start of
+  Phase 2** — a submission written to exercise specific constructs, then
+  hand-annotated as the golden-set "correct" extraction. The `A.B.` case stays
+  as-is (clean case, `pending` invitation) as a live demo, not a fixture.
 - **Regenerate** mints a fresh link without auto-revoking the prior one; explicit
   Revoke is provided.
