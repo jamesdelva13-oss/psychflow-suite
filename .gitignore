@@ -3,3 +3,7 @@ node_modules/
 npm-debug.log*
 .npm/
 .DS_Store
+
+# Next.js build output (any app, and guard against stray root builds)
+.next/
+

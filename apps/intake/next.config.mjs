@@ -12,21 +12,9 @@ const nextConfig = {
     "@suite/content",
     "@suite/referral-engine-core",
   ],
-  // Hard guard against the server-only engine ever leaking into a client
-  // bundle: if something imports `@suite/referral-engine-core` (which uses
-  // node:crypto) from client code, the build fails loudly instead of shipping
-  // a broken bundle. All engine use must be in server components / route
-  // handlers. (decisions.md D-021; JD hard constraint.)
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve = config.resolve || {};
-      config.resolve.alias = {
-        ...(config.resolve.alias || {}),
-        "@suite/referral-engine-core": false,
-      };
-    }
-    return config;
-  },
+  // The server-only engine boundary is enforced in code by lib/engine.ts's
+  // `import "server-only"` (any client import fails the build), so no webpack
+  // alias is needed here.
 };
 
 export default nextConfig;
