@@ -22,7 +22,7 @@ const check = (name: string, ok: boolean, detail?: string) => {
   if (!ok) failures++;
 };
 
-const tax = Taxonomy.parse(read("../../case-model/src/taxonomy.v0-3.json"));
+const tax = Taxonomy.parse(read("../../case-model/src/taxonomy.v0-4.json"));
 
 /* crosswalk data */
 const cwParsed = Crosswalk.safeParse(read("../crosswalk/crosswalk.v0-1.json"));

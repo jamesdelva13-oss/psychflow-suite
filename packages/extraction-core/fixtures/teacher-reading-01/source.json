@@ -1,0 +1,45 @@
+{
+  "fixtureId": "teacher-reading-01",
+  "description": "3rd-grade teacher submission. Single-domain: word-level reading difficulty (phonological awareness, decoding, fluency) with a real strength (oral vocabulary / listening comprehension) and adequate Tier-2 intervention. Synthetic student M.R. — not a real case.",
+  "case": {
+    "state": "SC",
+    "evalType": "initial",
+    "referralDate": "2026-04-14",
+    "displayInitials": "M.R.",
+    "grade": "3",
+    "studentRef": "fixture-teacher-reading-01"
+  },
+  "informant": {
+    "role": "teacher",
+    "relationship": "3rd-grade general education teacher (reading/ELA block)",
+    "monthsKnownStudent": 7
+  },
+  "bank": { "bankId": "teacher-intake", "bankVersion": "1.2.0", "taxonomyVersion": "0.4" },
+  "responses": {
+    "TCH-CORE-001": "gen_ed",
+    "TCH-CORE-002": "Third-grade general education — all core subjects, including the 90-minute ELA/reading block.",
+    "TCH-CORE-003": "6to12m",
+    "TCH-CORE-005": "Tier 2 small-group phonics intervention four days a week, plus preferential seating near the front of the room.",
+    "TCH-CORE-006": "no",
+    "TCH-CORE-007": "M. has a strong speaking vocabulary and loves being read to. During read-alouds he answers inference questions better than most of the class, and he builds elaborate models in science. His listening comprehension is a real strength.",
+    "TCH-CORE-008": ["reading"],
+    "TCH-CORE-010": "start_year",
+    "TCH-CORE-011": "no",
+    "TCH-CORE-012": "no",
+    "TCH-RDG-001": ["phon_awareness", "decoding", "fluency"],
+    "TCH-RDG-002": "When he comes to an unfamiliar word he usually stops and waits, or guesses from the first letter and the picture instead of sounding it out. Blends like 'st' and 'bl' and vowel teams trip him up, and he has a hard time breaking longer words into parts.",
+    "TCH-RDG-003": "His oral reading is slow and choppy compared with classmates — he reads word by word with little expression and often loses his place. On grade-level passages he reads roughly half as many words per minute as a typical third grader.",
+    "TCH-RDG-005": ["independent", "content_area"],
+    "TCH-RDG-006": "well_below",
+    "TCH-RDG-007": "Fall and winter DIBELS placed him well below benchmark on nonsense word fluency and oral reading fluency. Our reading specialist's running records show accuracy around 88% on grade-level passages.",
+    "TCH-INT-001": "Systematic small-group phonics intervention (decoding and blending), plus decodable texts sent home to reread.",
+    "TCH-INT-002": "In place since October — about 20 weeks — four sessions a week, roughly 25 minutes each.",
+    "TCH-INT-003": "Our Title I reading interventionist runs the group; I reinforce the same strategies during the ELA block.",
+    "TCH-INT-004": "some_improve",
+    "TCH-INT-005": "The interventionist charts weekly nonsense-word-fluency probes. The graph shows a slow upward trend but he is still below the aim line.",
+    "TCH-IMP-001": "Reading slows him down across the whole day — he can't get through independent reading or content-area text without one-on-one help, and lately he avoids reading tasks and has started calling himself 'the bad reader.'",
+    "TCH-IMP-002": "His reading grades are below expectations, but when material is read to him he participates fully, and his science and math work is on grade level.",
+    "TCH-IMP-005": "People assume he isn't trying, but he works hard. The problem is decoding, not effort or ability — his thinking is strong when he isn't fighting the words.",
+    "TCH-IMP-003": "In a year I'd want him decoding grade-level words accurately, reading smoothly enough to focus on meaning, and picking up a book without dread."
+  }
+}

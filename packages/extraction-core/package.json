@@ -1,0 +1,19 @@
+{
+  "name": "@suite/extraction-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Phase 2 extraction: Source -> Evidence. Deterministic rule-based tagging from bank option constructIds/topography first; LLM narrative extraction later (injected provider, D-008 provenance + verbatim grounding). Pure, framework-agnostic; scored against golden-set fixtures.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "tsx tests/run-all.ts"
+  },
+  "dependencies": {
+    "@suite/case-model": "*",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0"
+  }
+}

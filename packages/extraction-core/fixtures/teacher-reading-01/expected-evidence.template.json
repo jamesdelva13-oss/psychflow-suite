@@ -1,0 +1,16 @@
+{
+  "_instructions": "Copy this file to expected-evidence.json and author the correct DETERMINISTIC extraction for source.json, applying rules R1-R4 in README.md. One entry per expected Evidence. The single entry below is a SCHEMA-SHAPE illustration only (a math construct that is NOT part of this reading fixture) — delete it and author your own set.",
+  "fixtureId": "teacher-reading-01",
+  "slice": "deterministic",
+  "evidence": [
+    {
+      "responseIds": ["<QID>::<option-value>"],
+      "constructTags": [{ "id": "ACAD.MATH.CALCULATION", "status": "reported" }],
+      "topography": null,
+      "polarity": "concern",
+      "severity": null,
+      "statement": "SCHEMA SHAPE ONLY — delete this entry; it is not part of the answer.",
+      "extractionMethod": "rule"
+    }
+  ]
+}

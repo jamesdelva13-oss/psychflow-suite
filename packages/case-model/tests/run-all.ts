@@ -26,14 +26,14 @@ const check = (name: string, ok: boolean, detail?: string) => {
 };
 
 /* 1 ── taxonomy */
-const taxRaw = read("../src/taxonomy.v0-3.json");
+const taxRaw = read("../src/taxonomy.v0-4.json");
 const taxParsed = Taxonomy.safeParse(taxRaw);
 check("taxonomy: schema-valid", taxParsed.success, taxParsed.success ? "" : JSON.stringify(taxParsed.error.issues[0]));
 const tax = taxParsed.success ? taxParsed.data : null;
 if (tax) {
   const integ = validateTaxonomy(tax);
   check("taxonomy: structural integrity (parents, dot-paths, cross-links)", integ.length === 0, integ.slice(0, 3).join("; "));
-  check("taxonomy: version is 0.3", tax.version === "0.3");
+  check("taxonomy: version is 0.4", tax.version === "0.4");
   check("taxonomy: EF displays as Self-Regulation", tax.nodes.find(n => n.id === "EF")?.displayLabel === "Self-Regulation");
 }
 

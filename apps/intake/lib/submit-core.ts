@@ -6,9 +6,11 @@ import { visibleKeys } from "./form-view";
 import { authorizeRespondent } from "./respondent-guard";
 import { invitationUsable, type InvitationRow } from "./respondent-data";
 
-// Answering "yes" to either safety-gate question flags the case for expedited
-// review — decided here, server-side, never trusted from the client.
-export const SAFETY_GATE_KEYS = ["TCH-BEH-002", "PAR-BEH-002"];
+// Answering "yes" to ANY safety-gate question flags the case for expedited
+// review — decided here, server-side, never trusted from the client. Both the
+// externalizing gate (TCH-BEH-002) and the internalizing/self-harm gate
+// (TCH-EMO-004, teacher v1.2.0) set priority_flag through this one list.
+export const SAFETY_GATE_KEYS = ["TCH-BEH-002", "TCH-EMO-004", "PAR-BEH-002"];
 
 export function isSafetyGateTriggered(responses: ResponseMap): boolean {
   return SAFETY_GATE_KEYS.some((k) => responses[k] === "yes");

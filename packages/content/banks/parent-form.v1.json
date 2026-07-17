@@ -1,8 +1,8 @@
 {
   "bankId": "parent-intake",
   "respondent": "parent",
-  "version": "1.2.1",
-  "taxonomyVersion": "0.3",
+  "version": "1.2.2",
+  "taxonomyVersion": "0.4",
   "title": "Parent / Guardian Questionnaire",
   "estimatedMinutes": "15-20",
   "intro": "You know your child in ways school staff cannot. Your answers help the school understand your child's strengths, history, and needs. Approximate answers are fine - precision matters less than the overall picture. You may skip any question, and you can close this form and return later using the same secure link.",

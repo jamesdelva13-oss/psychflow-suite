@@ -3,7 +3,7 @@ export * from "./taxonomy.schema";
 export * from "./entities";
 export * from "./crosswalk.schema";
 export * from "./question-bank.schema";
-export { default as taxonomyV03 } from "./taxonomy.v0-3.json";
+export { default as taxonomyV04 } from "./taxonomy.v0-4.json";
 
 // Export hygiene (D-023): ConstructId and Topography are each declared in two
 // submodules (question-bank.schema re-declares both identically). Re-export

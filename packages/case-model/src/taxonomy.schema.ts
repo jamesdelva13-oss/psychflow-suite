@@ -1,7 +1,7 @@
 /**
  * taxonomy.schema.ts — the shape of the construct taxonomy (D-011).
  *
- * The taxonomy itself is DATA (taxonomy.v0-3.json), validated against this
+ * The taxonomy itself is DATA (taxonomy.v0-4.json), validated against this
  * schema plus the integrity rules in validateTaxonomy():
  *   - node IDs unique and permanent
  *   - dot-path IDs consistent with the declared parent

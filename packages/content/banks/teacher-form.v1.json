@@ -1,8 +1,8 @@
 {
   "bankId": "teacher-intake",
   "respondent": "teacher",
-  "version": "1.1.2",
-  "taxonomyVersion": "0.3",
+  "version": "1.2.0",
+  "taxonomyVersion": "0.4",
   "title": "Teacher Referral Questionnaire",
   "estimatedMinutes": "8-12",
   "intro": "We will ask about the student's strengths, current concerns, classroom performance, supports already tried, and how the concerns affect learning. Most teachers finish in about 8-12 minutes. Your answers are saved as you go, and you can return later using the same secure link.",
@@ -161,10 +161,24 @@
               ]
             },
             {
+              "value": "cognitive",
+              "label": "Learning pace — grasping or holding onto new material",
+              "constructIds": [
+                "COG"
+              ]
+            },
+            {
               "value": "behavior",
               "label": "Behavior or emotional functioning",
               "constructIds": [
                 "BEH"
+              ]
+            },
+            {
+              "value": "emotional",
+              "label": "Anxiety, low mood, or withdrawal",
+              "constructIds": [
+                "BEH.INTERNALIZING"
               ]
             },
             {
@@ -219,7 +233,6 @@
               "questionId": "TCH-CORE-008",
               "operator": "includes_any",
               "values": [
-                "adaptive",
                 "fine_motor",
                 "gross_motor"
               ]
@@ -309,6 +322,58 @@
           "elicits": "either",
           "required": true,
           "notes": "Teacher-observation evidence for the vision/hearing exclusionary factor (SC SEED / NC 1503 require it be addressed); complements screening records rather than replacing them."
+        },
+        {
+          "id": "TCH-MOT-001",
+          "prompt": "Do you notice sensory sensitivities that affect this student's functioning in the classroom?",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "over_responsive",
+              "label": "Bothered by everyday sounds, textures, lights, or clothing tags",
+              "constructIds": [
+                "MOTOR_SENS.SENSORY_PROCESSING"
+              ]
+            },
+            {
+              "value": "seeking",
+              "label": "Seeks out extra movement, touch, or input (fidgeting, crashing into things, chewing)",
+              "constructIds": [
+                "MOTOR_SENS.SENSORY_PROCESSING"
+              ]
+            },
+            {
+              "value": "none",
+              "label": "None of these"
+            }
+          ],
+          "constructIds": [],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-CORE-008",
+              "operator": "includes",
+              "value": "fine_motor"
+            }
+          ],
+          "notes": "OT sensory screening on the fine-motor path (v1.2.0). Deliberately light - not a full sensory module (JD decision)."
+        },
+        {
+          "id": "TCH-MOT-002",
+          "prompt": "If you noticed any sensory sensitivities, briefly describe how they affect the student's participation or comfort in class.",
+          "responseType": "open_text",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-CORE-008",
+              "operator": "includes",
+              "value": "fine_motor"
+            }
+          ]
         }
       ]
     },
@@ -1089,6 +1154,308 @@
       ]
     },
     {
+      "id": "cognitive",
+      "title": "Cognitive / Learning Module",
+      "displayLabel": "Learning and Thinking",
+      "intro": "These questions focus on how this student takes in and holds onto new material. Describe what you see - no special knowledge is needed.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-COG-001",
+          "prompt": "Which of these have you noticed? (Select all that apply.)",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "acquisition",
+              "label": "Needs new concepts retaught or repeated many more times than classmates before they stick",
+              "constructIds": [
+                "COG.GL.ACQUISITION"
+              ]
+            },
+            {
+              "value": "processing_speed",
+              "label": "Completes even simple, familiar work much more slowly than classmates",
+              "constructIds": [
+                "COG.GS"
+              ]
+            },
+            {
+              "value": "transfer",
+              "label": "Learns a skill in one lesson or setting but doesn't carry it over to a new task or subject",
+              "constructIds": [
+                "COG.GL.TRANSFER"
+              ]
+            },
+            {
+              "value": "reasoning",
+              "label": "Struggles with tasks that require figuring something out or reasoning it through",
+              "constructIds": [
+                "COG.GF"
+              ]
+            }
+          ],
+          "constructIds": [
+            "COG"
+          ],
+          "elicits": "concern",
+          "required": true,
+          "notes": "Observable-only phrasing; construct tags map behind the scenes (v1.2.0). Multi-step directions / holding information deliberately omitted here - already covered by EF.WORKING_MEMORY (TCH-SR-001)."
+        },
+        {
+          "id": "TCH-COG-002",
+          "prompt": "When this student is learning something new, what do you see - what seems to help it stick, and what gets in the way?",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "concern"
+        },
+        {
+          "id": "TCH-COG-003",
+          "prompt": "Compared with classmates, how quickly does this student pick up new academic material?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "much_slower",
+              "label": "Much more slowly than most classmates"
+            },
+            {
+              "value": "somewhat_slower",
+              "label": "Somewhat more slowly than most classmates"
+            },
+            {
+              "value": "typical",
+              "label": "About the same as most classmates"
+            },
+            {
+              "value": "quicker",
+              "label": "More quickly than most classmates"
+            }
+          ],
+          "constructIds": [
+            "COG"
+          ],
+          "elicits": "concern",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "emotional",
+      "title": "Emotional Well-Being Module",
+      "displayLabel": "Emotional Well-Being",
+      "intro": "These questions focus on how this student seems to be feeling at school. Concrete descriptions of what you have seen or heard are most helpful.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-EMO-001",
+          "prompt": "Which of these have you noticed? (Select all that apply.)",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "anxious",
+              "label": "Seems worried or on edge; seeks a lot of reassurance",
+              "constructIds": [
+                "BEH.INTERNALIZING.ANXIETY"
+              ]
+            },
+            {
+              "value": "perfectionistic",
+              "label": "Very hard on themselves; strong fear of making mistakes",
+              "constructIds": [
+                "BEH.INTERNALIZING.ANXIETY"
+              ]
+            },
+            {
+              "value": "low_mood",
+              "label": "Seems sad or low, or has lost interest in things they used to enjoy",
+              "constructIds": [
+                "BEH.INTERNALIZING.DEPRESSION"
+              ]
+            },
+            {
+              "value": "tearful",
+              "label": "Cries easily or becomes tearful during the school day",
+              "constructIds": [
+                "BEH.INTERNALIZING"
+              ]
+            },
+            {
+              "value": "somatic",
+              "label": "Frequent stomachaches or headaches, or nurse visits, without a clear medical cause",
+              "constructIds": [
+                "BEH.INTERNALIZING.SOMATIZATION"
+              ]
+            },
+            {
+              "value": "withdrawn",
+              "label": "Keeps to themselves; withdraws from peers or activities",
+              "constructIds": [
+                "BEH.WITHDRAWAL"
+              ]
+            }
+          ],
+          "constructIds": [
+            "BEH.INTERNALIZING"
+          ],
+          "elicits": "concern",
+          "required": true,
+          "notes": "Teacher-observable internalizing screen (v1.2.0). Internalizing presentations are the most-missed because they aren't disruptive; framed in observable classroom terms."
+        },
+        {
+          "id": "TCH-EMO-002",
+          "prompt": "Describe what you have seen and when it tends to happen (for example, during certain subjects, transitions, social times, or tests).",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "concern"
+        },
+        {
+          "id": "TCH-EMO-003",
+          "prompt": "How often do you notice these?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "multi_daily",
+              "label": "Multiple times per day"
+            },
+            {
+              "value": "daily",
+              "label": "About daily"
+            },
+            {
+              "value": "few_week",
+              "label": "A few times per week"
+            },
+            {
+              "value": "weekly",
+              "label": "About weekly"
+            },
+            {
+              "value": "less",
+              "label": "Less than weekly"
+            }
+          ],
+          "constructIds": [
+            "BEH.INTERNALIZING"
+          ],
+          "elicits": "context",
+          "required": true
+        },
+        {
+          "id": "TCH-EMO-004",
+          "prompt": "Have you seen or heard anything that makes you worried about this student's safety, or that they might hurt themselves?",
+          "responseType": "yes_no",
+          "constructIds": [
+            "BEH.INTERNALIZING"
+          ],
+          "elicits": "concern",
+          "required": true,
+          "notes": "Safety gate. A yes sets cases.priority_flag server-side (SAFETY_GATE_KEYS), same as TCH-BEH-002. Worded to invite reporting what was observed, not a risk judgment (JD decision, v1.2.0)."
+        },
+        {
+          "id": "TCH-EMO-004a",
+          "prompt": "Briefly, what did you see or hear, and when?",
+          "responseType": "open_text",
+          "constructIds": [
+            "BEH.INTERNALIZING"
+          ],
+          "elicits": "concern",
+          "showIf": [
+            {
+              "questionId": "TCH-EMO-004",
+              "operator": "is_yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adaptive",
+      "title": "Adaptive / Independence Module",
+      "displayLabel": "Independence and Daily Skills",
+      "intro": "These questions focus on how independently this student manages everyday classroom routines and self-care, compared with classmates.",
+      "alwaysShown": false,
+      "questions": [
+        {
+          "id": "TCH-ADP-001",
+          "prompt": "Which of these does the student need more help with than classmates? (Select all that apply.)",
+          "helpText": "Select all that apply.",
+          "responseType": "multi_select",
+          "options": [
+            {
+              "value": "self_care",
+              "label": "Self-care and hygiene routines (bathroom, handwashing, dressing for recess)",
+              "constructIds": [
+                "ADAPT.DAILY_LIVING.PERSONAL"
+              ]
+            },
+            {
+              "value": "belongings",
+              "label": "Managing their own belongings and materials (desk, backpack, supplies)",
+              "constructIds": [
+                "ADAPT.DAILY_LIVING.DOMESTIC"
+              ]
+            },
+            {
+              "value": "routines",
+              "label": "Following classroom routines and transitions independently, without step-by-step prompting",
+              "constructIds": [
+                "ADAPT.DAILY_LIVING"
+              ]
+            },
+            {
+              "value": "safety",
+              "label": "Everyday safety awareness (classroom, hallways, playground)",
+              "constructIds": [
+                "ADAPT.DAILY_LIVING.COMMUNITY"
+              ]
+            }
+          ],
+          "constructIds": [
+            "ADAPT"
+          ],
+          "elicits": "concern",
+          "required": true,
+          "notes": "Daily-living independence, distinct from EF task-initiation/self-regulation (TCH-SR). v1.2.0."
+        },
+        {
+          "id": "TCH-ADP-002",
+          "prompt": "Describe what independence looks like for this student during a typical day, compared with classmates.",
+          "responseType": "open_text",
+          "constructIds": [],
+          "elicits": "either"
+        },
+        {
+          "id": "TCH-ADP-003",
+          "prompt": "How much adult support does the student need to manage everyday classroom routines?",
+          "responseType": "single_select",
+          "options": [
+            {
+              "value": "little_none",
+              "label": "Little or none - manages like most classmates"
+            },
+            {
+              "value": "occasional",
+              "label": "Occasional reminders"
+            },
+            {
+              "value": "frequent",
+              "label": "Frequent reminders throughout the day"
+            },
+            {
+              "value": "continuous",
+              "label": "Nearly continuous adult support"
+            }
+          ],
+          "constructIds": [
+            "ADAPT.DAILY_LIVING"
+          ],
+          "elicits": "concern",
+          "required": true
+        }
+      ]
+    },
+    {
       "id": "interventions",
       "title": "Interventions Module",
       "displayLabel": "Supports Already Tried",
@@ -1328,6 +1695,42 @@
       ],
       "action": "show_module",
       "target": "social_comm"
+    },
+    {
+      "id": "BR-010",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "cognitive"
+        }
+      ],
+      "action": "show_module",
+      "target": "cognitive"
+    },
+    {
+      "id": "BR-011",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "emotional"
+        }
+      ],
+      "action": "show_module",
+      "target": "emotional"
+    },
+    {
+      "id": "BR-012",
+      "when": [
+        {
+          "questionId": "TCH-CORE-008",
+          "operator": "includes",
+          "value": "adaptive"
+        }
+      ],
+      "action": "show_module",
+      "target": "adaptive"
     }
   ],
   "followUps": [

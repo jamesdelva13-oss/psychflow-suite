@@ -6,6 +6,7 @@
     "packages/case-model",
     "packages/content",
     "packages/referral-engine-core",
+    "packages/extraction-core",
     "apps/*"
   ]
 }

@@ -27,13 +27,13 @@ test("invitation row pins bank id + version (D-013)", () => {
     expiresAt: new Date().toISOString(),
   });
   assert.equal(row.bank_id, "teacher-intake");
-  assert.equal(row.bank_version, "1.1.2");
+  assert.equal(row.bank_version, "1.2.0");
 });
 
 function inv(over: Partial<InvitationRow> = {}): InvitationRow {
   return {
     id: "A", case_id: "c1", informant_id: "i1", respondent_role: "teacher",
-    bank_id: "teacher-intake", bank_version: "1.1.2", token_hash: "h",
+    bank_id: "teacher-intake", bank_version: "1.2.0", token_hash: "h",
     expires_at: new Date(Date.now() + 864e5).toISOString(),
     status: "opened", max_uses: 1, uses: 0, completed_at: null, deleted_at: null,
     ...over,
