@@ -12,6 +12,7 @@ import { Taxonomy, isKnownConstruct } from "../../case-model/src/taxonomy.schema
 import { Crosswalk } from "../../case-model/src/crosswalk.schema";
 import { QuestionBank } from "../../case-model/src/question-bank.schema";
 import { Topography } from "../../case-model/src/entities";
+import { BlockRegistry } from "../../case-model/src/block-scope.schema";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const read = (p: string) => JSON.parse(fs.readFileSync(path.join(here, p), "utf8"));
@@ -69,24 +70,52 @@ for (const bf of bankFiles) {
 
   const fuids = new Set(bank.followUps.map(f => f.id));
   const modids = new Set(bank.modules.map(m => m.id));
+  // Synthetic, engine-computed references (D-028): `$`-prefixed ids are not
+  // question ids — they resolve to derived values. `$concernSet` is valid only
+  // when the bank declares a concernSet config.
+  const synthetic = new Set<string>();
+  if (bank.concernSet) synthetic.add("$concernSet");
+  const knownRef = (id: string) => qids.has(id) || synthetic.has(id);
   const refErrors: string[] = [];
+  // concernSet config must reference real questions (base + each screener)
+  if (bank.concernSet) {
+    if (!qids.has(bank.concernSet.baseQuestionId))
+      refErrors.push(`concernSet.baseQuestionId unknown ${bank.concernSet.baseQuestionId}`);
+    bank.concernSet.screeners.forEach(s => {
+      if (!qids.has(s.questionId)) refErrors.push(`concernSet screener refs unknown ${s.questionId}`);
+    });
+  }
   for (const br of bank.branchRules) {
     if (!modids.has(br.target)) refErrors.push(`${br.id} -> unknown module ${br.target}`);
-    br.when.forEach(c => { if (!qids.has(c.questionId)) refErrors.push(`${br.id} refs unknown ${c.questionId}`); });
+    br.when.forEach(c => { if (!knownRef(c.questionId)) refErrors.push(`${br.id} refs unknown ${c.questionId}`); });
   }
   for (const cr of bank.completenessRules) {
     if (!fuids.has(cr.askFollowUpId)) refErrors.push(`${cr.id} -> unknown follow-up ${cr.askFollowUpId}`);
-    cr.when.forEach(c => { if (!qids.has(c.questionId)) refErrors.push(`${cr.id} refs unknown ${c.questionId}`); });
+    cr.when.forEach(c => { if (!knownRef(c.questionId)) refErrors.push(`${cr.id} refs unknown ${c.questionId}`); });
   }
   for (const m of bank.modules) {
     for (const q of m.questions) {
-      (q.showIf ?? []).forEach(c => { if (!qids.has(c.questionId)) refErrors.push(`${q.id} showIf refs unknown ${c.questionId}`); });
+      (q.showIf ?? []).forEach(c => { if (!knownRef(c.questionId)) refErrors.push(`${q.id} showIf refs unknown ${c.questionId}`); });
       if ((q.responseType === "single_select" || q.responseType === "multi_select" || q.responseType === "likert") && !q.options?.length)
         refErrors.push(`${q.id} is ${q.responseType} with no options`);
     }
     (m.repeatGroups ?? []).forEach(rg => { if (!qids.has(rg.sourceQuestionId)) refErrors.push(`repeatGroup in ${m.id} refs unknown ${rg.sourceQuestionId}`); });
   }
   check(`${bf}: referential integrity`, refErrors.length === 0, refErrors.slice(0, 4).join("; "));
+}
+
+/* block registry (drafting-spec P31) */
+{
+  const reg = BlockRegistry.safeParse(read("../blocks/block-registry.v0-1.json"));
+  check("block-registry: schema-valid", reg.success, reg.success ? "" : JSON.stringify(reg.error.issues[0]));
+  if (reg.success) {
+    const ids = reg.data.blocks.map(b => b.id);
+    check("block-registry: block ids unique", ids.length === new Set(ids).size);
+    const caseScoped = reg.data.blocks.filter(b => b.scope === "case").map(b => b.id).sort();
+    check("block-registry: the three case-scoped blocks are RfR / existing data / intervention history",
+      JSON.stringify(caseScoped) === JSON.stringify(["existing_data", "intervention_history", "reason_for_referral"]),
+      caseScoped.join(", "));
+  }
 }
 
 console.log(failures === 0 ? "\nALL CONTENT CHECKS PASSED ✓" : `\n${failures} CHECK(S) FAILED ✗`);

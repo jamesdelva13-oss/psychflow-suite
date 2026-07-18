@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "blocks": [
+    { "id": "reason_for_referral", "label": "Reason for Referral", "scope": "case" },
+    { "id": "existing_data", "label": "Existing Data / Assessment History", "scope": "case" },
+    { "id": "intervention_history", "label": "Intervention History", "scope": "case" },
+    { "id": "reading", "label": "Reading", "scope": "informant" },
+    { "id": "written_expression", "label": "Written Expression", "scope": "informant" },
+    { "id": "mathematics", "label": "Mathematics", "scope": "informant" },
+    { "id": "executive_function_attention", "label": "Executive Function / Attention", "scope": "informant" },
+    { "id": "behavior", "label": "Behavior", "scope": "informant" },
+    { "id": "social_emotional_internalizing", "label": "Social-Emotional / Internalizing", "scope": "informant" },
+    { "id": "communication", "label": "Communication", "scope": "informant" },
+    { "id": "cognitive", "label": "Cognitive (learning & thinking)", "scope": "informant" },
+    { "id": "adaptive", "label": "Adaptive", "scope": "informant" },
+    { "id": "motor_sensory", "label": "Motor / Sensory", "scope": "informant" },
+    { "id": "health_medical", "label": "Health & Medical", "scope": "informant" },
+    { "id": "vision_hearing", "label": "Vision & Hearing", "scope": "informant" },
+    { "id": "other_information", "label": "Other Information", "scope": "informant" }
+  ]
+}

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import teacher from "@suite/content/banks/teacher-form.v1.json";
+import teacher from "@suite/content/banks/teacher-form.v1.3.0.json";
 import { QuestionBank } from "@suite/case-model";
 import { visibleQuestions, validateSubmission, type ResponseMap } from "../lib/engine";
 import { submitResponse } from "../lib/submit-core";
@@ -11,7 +11,7 @@ const bank = QuestionBank.parse(teacher);
 function inv(over: Partial<InvitationRow> = {}): InvitationRow {
   return {
     id: "A", case_id: "c1", informant_id: "i1", respondent_role: "teacher",
-    bank_id: "teacher-intake", bank_version: "1.2.0", token_hash: "h",
+    bank_id: "teacher-intake", bank_version: "1.3.0", token_hash: "h",
     expires_at: new Date(Date.now() + 864e5).toISOString(),
     status: "opened", max_uses: 1, uses: 0, completed_at: null, deleted_at: null,
     ...over,

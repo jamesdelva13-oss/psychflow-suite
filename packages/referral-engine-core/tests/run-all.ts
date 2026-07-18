@@ -8,14 +8,14 @@ import * as path from "path";
 import { fileURLToPath } from "url";
 import {
   visibleQuestions, activeModules, validateSubmission, pendingFollowUps,
-  lockSubmission, instanceKey, type ResponseMap,
+  lockSubmission, instanceKey, computeConcernSet, type ResponseMap,
 } from "../src/form-runtime";
 import { generateToken, hashToken, checkInvitation, invitationUrl, type InvitationRecord } from "../src/invitations";
 import { qrDataUrl, qrSvg } from "../src/qr";
 import { Source } from "../../case-model/src/entities";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const teacher = JSON.parse(fs.readFileSync(path.join(here, "../../content/banks/teacher-form.v1.json"), "utf8"));
+const teacher = JSON.parse(fs.readFileSync(path.join(here, "../../content/banks/teacher-form.v1.3.0.json"), "utf8"));
 const parent = JSON.parse(fs.readFileSync(path.join(here, "../../content/banks/parent-form.v1.json"), "utf8"));
 
 let failures = 0;
@@ -103,6 +103,43 @@ const check = (name: string, ok: boolean, detail?: string) => {
   const fus2 = pendingFollowUps(teacher, r2);
   check("teacher: CR-003 and CR-007 clear once answered",
     !fus2.some(f => f.ruleId === "CR-003") && !fus2.some(f => f.ruleId === "CR-007"));
+}
+
+/* ---------- derived concern set: screener adds a domain without mutating CORE-008 (D-028) ---------- */
+{
+  // affirmative screeners visible when the domain is NOT flagged on CORE-008
+  const base: ResponseMap = { "TCH-CORE-008": ["reading"] };
+  let vis = visibleQuestions(teacher, base).map(v => v.key);
+  check("teacher: TCH-COG-000 / TCH-ADP-000 screeners visible when domain not flagged",
+    vis.includes("TCH-COG-000") && vis.includes("TCH-ADP-000"));
+  check("teacher: cognitive/adaptive modules inactive on a bare no-concern screen",
+    !activeModules(teacher, base).has("cognitive") && !activeModules(teacher, base).has("adaptive"));
+
+  // screener 'below' adds the domain to concernSet (via screener) and loads the module,
+  // WITHOUT writing to CORE-008's stored answer
+  const below: ResponseMap = { "TCH-CORE-008": ["reading"], "TCH-COG-000": "below" };
+  const cs = computeConcernSet(teacher, below);
+  check("teacher: screener 'below' adds cognitive with via=screener",
+    cs.some(e => e.domain === "cognitive" && e.via === "screener"));
+  check("teacher: base CORE-008 answer is not mutated by the screener",
+    JSON.stringify(below["TCH-CORE-008"]) === JSON.stringify(["reading"]));
+  check("teacher: 'below' loads the cognitive concern module via $concernSet",
+    activeModules(teacher, below).has("cognitive"));
+
+  // domain flagged on CORE-008 -> screener suppressed (excludes), module via core-008
+  const flagged: ResponseMap = { "TCH-CORE-008": ["cognitive"] };
+  vis = visibleQuestions(teacher, flagged).map(v => v.key);
+  check("teacher: TCH-COG-000 suppressed once cognitive is flagged on CORE-008",
+    !vis.includes("TCH-COG-000") && activeModules(teacher, flagged).has("cognitive"));
+  check("teacher: flagged domain carries via=core-008",
+    computeConcernSet(teacher, flagged).some(e => e.domain === "cognitive" && e.via === "core-008"));
+
+  // within/above is affirmative (T2/T3): no concern module, detail item appears (equals_any)
+  const above: ResponseMap = { "TCH-CORE-008": ["reading"], "TCH-COG-000": "above" };
+  check("teacher: affirmative screener does NOT load the concern module",
+    !activeModules(teacher, above).has("cognitive"));
+  check("teacher: T3 detail (TCH-COG-000d) appears on within/above (equals_any)",
+    visibleQuestions(teacher, above).map(v => v.key).includes("TCH-COG-000d"));
 }
 
 /* ---------- parent bank: ASD deep-dive triggering ---------- */

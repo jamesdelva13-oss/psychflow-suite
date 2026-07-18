@@ -59,6 +59,67 @@ export const Retention = z.object({
 
 const IsoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
+/** Informant roles (shared: Case.contributingInformants reuses this). */
+export const InformantRole = z.enum([
+  "teacher",
+  "sped_teacher",
+  "interventionist",
+  "parent_guardian",
+  "student",
+  "related_service",
+  "administrator",
+  "psychologist",
+  "other",
+]);
+export type TInformantRole = z.infer<typeof InformantRole>;
+
+/* ---------- referral provenance (D-030) ----------
+ * Referral source, concern onset, and contributing informants are THREE
+ * distinct facts. A referral is case-scoped and may originate from an
+ * intervention team, a parent, an administrator, an outside provider, a
+ * re-evaluation cycle, or several at once — the teacher intake is one
+ * contributing source, never "the referral." Onset (when a concern was first
+ * noticed) is not the referral source and must never populate it.
+ */
+export const ReferralSourceKind = z.enum([
+  "mtss_intervention_team",
+  "parent_guardian",
+  "teacher",
+  "administrator",
+  "outside_provider",
+  "student_self_referral",
+  "reevaluation_cycle",
+  "multiple",                   // requires referralContributors (>=2)
+  "unknown_not_yet_captured",   // honest default; never silently backfilled
+]);
+export type TReferralSourceKind = z.infer<typeof ReferralSourceKind>;
+
+/** Concrete originators when referralSource === "multiple" (no meta values). */
+export const ReferralContributorKind = z.enum([
+  "mtss_intervention_team",
+  "parent_guardian",
+  "teacher",
+  "administrator",
+  "outside_provider",
+  "student_self_referral",
+  "reevaluation_cycle",
+]);
+
+/** When the concern was first noticed — distinct from who referred (D-030). */
+export const ConcernOnset = z.object({
+  firstNoticed: z
+    .enum(["this_month", "this_term", "start_year", "prior_year", "unknown"])
+    .nullable()
+    .default(null),
+  // free label for who first noticed (e.g. "a prior teacher"); NOT a referralSource.
+  reportedBy: z.string().nullable().default(null),
+});
+
+export const ContributingInformant = z.object({
+  role: InformantRole,
+  informantId: z.string().nullable().default(null),
+});
+
 /* ---------- Case ---------- */
 
 export const Case = z.object({
@@ -79,27 +140,50 @@ export const Case = z.object({
     ageYearsMonths: z.string().regex(/^\d{1,2}:\d{1,2}$/).optional(),
   }),
   priorityFlag: z.boolean().default(false), // e.g., harm-risk gate from intake
+  /** Referral provenance — three separate facts (D-030). referralSource is
+   *  required and enum-constrained; it is NEVER derived from concernOnset. */
+  referralSource: ReferralSourceKind,
+  referralContributors: z.array(ReferralContributorKind).default([]), // required (>=2) iff referralSource === "multiple"
+  concernOnset: ConcernOnset.nullable().default(null),
+  contributingInformants: z.array(ContributingInformant).default([]),
   retention: Retention.default({ autoPurgeDays: null, deletedAt: null }),
   createdAt: z.string().datetime(),
+})
+.superRefine((c, ctx) => {
+  if (c.referralSource === "multiple" && c.referralContributors.length < 2) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["referralContributors"],
+      message: 'referralSource "multiple" requires referralContributors to list at least two sources (D-030).',
+    });
+  }
+  if (c.referralSource !== "multiple" && c.referralContributors.length > 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["referralContributors"],
+      message: "referralContributors is only used when referralSource === \"multiple\" (D-030).",
+    });
+  }
 });
 export type TCase = z.infer<typeof Case>;
+
+/**
+ * The checkable "onset never populates referralSource" rule (D-030). A single
+ * intake source does not establish who referred; deriving referralSource from
+ * any intake — least of all from an onset item — is prohibited. Any Case built
+ * from a lone intake carries "unknown_not_yet_captured" until a referral source
+ * is captured directly.
+ */
+export function referralSourceForSingleIntake(): TReferralSourceKind {
+  return "unknown_not_yet_captured";
+}
 
 /* ---------- Informant ---------- */
 
 export const Informant = z.object({
   informantId: z.string(),
   caseId: z.string(),
-  role: z.enum([
-    "teacher",
-    "sped_teacher",
-    "interventionist",
-    "parent_guardian",
-    "student",
-    "related_service",
-    "administrator",
-    "psychologist",
-    "other",
-  ]),
+  role: InformantRole,
   relationship: z.string().optional(),      // "3rd grade gen ed, reading block"
   monthsKnownStudent: z.number().int().nonnegative().optional(),
   preferredLanguage: z.string().optional(),

@@ -14,7 +14,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { Taxonomy, validateTaxonomy, isKnownConstruct } from "../src/taxonomy.schema";
-import { Case, Informant, Source, Evidence, Claim, Topography } from "../src/entities";
+import { Case, Informant, Source, Evidence, Claim, Topography, referralSourceForSingleIntake } from "../src/entities";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const read = (p: string) => JSON.parse(fs.readFileSync(path.join(here, p), "utf8"));
@@ -44,10 +44,36 @@ const gen = { modelId: "claude-fable-5", promptVersion: "extract-v1", schemaVers
 const okCase = Case.safeParse({
   caseId: "case_0001", state: "SC", evalType: "initial", referralDate: "2026-09-08",
   student: { studentRef: "stu_x9", displayInitials: "J.D.", grade: "3", ageYearsMonths: "8:4" },
+  referralSource: "unknown_not_yet_captured",
   createdAt: now,
 });
 check("Case: valid record parses (organizationId defaults null per D-003)", okCase.success && okCase.data.organizationId === null);
 check("Case: retention fields present by default (D-004)", okCase.success && okCase.data.retention.deletedAt === null);
+check("Case: referral provenance fields default clean (D-030)",
+  okCase.success && okCase.data.referralContributors.length === 0 &&
+  okCase.data.concernOnset === null && okCase.data.contributingInformants.length === 0);
+
+// D-030: referralSource is required — a Case cannot omit it
+check("Case: REJECTS missing referralSource (required, D-030)", !Case.safeParse({
+  caseId: "c", state: "SC", evalType: "initial", referralDate: "2026-09-08",
+  student: { studentRef: "s", displayInitials: "A.B.", grade: "3" }, createdAt: now,
+}).success);
+
+// D-030: "multiple" requires >= 2 contributors; other values forbid contributors
+check("Case: REJECTS multiple with < 2 contributors (D-030)", !Case.safeParse({
+  caseId: "c", state: "SC", evalType: "initial", referralDate: "2026-09-08",
+  student: { studentRef: "s", displayInitials: "A.B.", grade: "3" },
+  referralSource: "multiple", referralContributors: ["teacher"], createdAt: now,
+}).success);
+check("Case: accepts multiple with 2 contributors (D-030)", Case.safeParse({
+  caseId: "c", state: "SC", evalType: "initial", referralDate: "2026-09-08",
+  student: { studentRef: "s", displayInitials: "A.B.", grade: "3" },
+  referralSource: "multiple", referralContributors: ["mtss_intervention_team", "parent_guardian"], createdAt: now,
+}).success);
+
+// D-030: the checkable "onset never populates referralSource" rule
+check("Case: a lone intake yields unknown_not_yet_captured, never a derived source (D-030)",
+  referralSourceForSingleIntake() === "unknown_not_yet_captured");
 
 check("Informant: valid record parses", Informant.safeParse({
   informantId: "inf_001", caseId: "case_0001", role: "teacher",

@@ -1,4 +1,4 @@
-# Teacher Intake Summary — Drafting Spec · v0.6
+# Teacher Intake Summary — Drafting Spec · v0.6.1
 
 **Canonical, versioned product specification** for drafting a teacher-report
 **intake summary** from a referral Source. A standalone product asset — the
@@ -284,6 +284,79 @@ precisely so it is not read as permission to duplicate elsewhere.
   under that concern; if removing any one domain would make it homeless, it's
   cross-cutting.
 
+## Added parameters (v0.6.1 — evidence tiers, block scope)
+- **P29 · Evidence-tier ladder (domain-agnostic).** Every domain block renders at
+  one of five evidence tiers, set **only** by what the instrument actually
+  captured. Tiers **never upgrade by inference** — a drafter may not promote a
+  tier because the overall picture seems positive.
+  - **T0 · Not asked / skipped.** The instrument did not screen the domain.
+    Renders as "not addressed" or does not render. **Must never collapse into T1.**
+  - **T1 · Asked; no concern.** Bare negative only. This is exactly **P22's**
+    existing T1 behavior, **unchanged** (a faithful in-domain positive may still
+    accompany it per P22 when the informant volunteered one).
+  - **T1-obs · Asked; insufficient opportunity to observe.** The domain was
+    addressed, but the informant reports they could not observe it — **no finding
+    either way.** T1-obs is **evidence of absence's opposite**: it is *absence of
+    evidence*, and collapsing it into T1 would make an unexamined domain look
+    cleared. This matters most for **Adaptive**, where a gen-ed teacher may
+    genuinely lack a window into self-care, community, and home routines, and
+    where adaptive functioning carries rule-out weight for intellectual disability
+    under SC SEED. **Render form:** an affirmative statement about the
+    **informant's vantage**, never a hedge about the child — "The teacher reported
+    limited opportunity to observe D.'s independence and daily-living skills in the
+    classroom setting," **not** "D.'s adaptive skills were unclear" or "it is
+    uncertain whether…". **QA-Engine contract (unwaivable):** a "domain addressed"
+    check is satisfied by **T1** and **not** by T1-obs; T1-obs raises a
+    **collect-elsewhere flag** naming candidate alternate sources (parent intake,
+    records review, direct observation). This distinction is unrecoverable from
+    rendered prose after the fact, so it **lives in the IR**, never re-derived by
+    parsing text.
+  - **T2 · Asked; affirmatively rated within/above expectations.** Licenses **one**
+    attributed affirmative sentence (see **P30** for licensed language). Reachable
+    **only** when the instrument supplies affirmative data (e.g. a screener rated
+    "within"/"above") — never by promoting a T1 bare negative.
+  - **T3 · T2 plus descriptive detail.** The affirmative rating carried a
+    descriptive follow-up; licenses **a second** sentence with the specifics.
+  **Interactions.** **P22** governs T1 only and is unchanged; P29 adds T0, T1-obs,
+  T2, T3 and the no-inferential-upgrade rule. **P23:** a tier is a property of one
+  block and is never inferred from a neighbouring block's tier. **P14a:** whatever
+  a tier licenses is still subject to the completeness pass and appears-once. In
+  teacher-intake, affirmative data (T2/T3) exists **only** for Cognitive and
+  Adaptive (D-026); every other domain tops out at T1 (or T0 where unscreened).
+- **P30 · Licensed language at T2/T3 (two components).**
+  **(i) Attribution frame — mandatory, closed set.** Every T2/T3 sentence must
+  open with one of a **closed** set of frames, so the QA Engine can lint for a
+  frame at the head of any non-negative domain statement:
+  *"The teacher reported that…"* · *"The teacher described D. as…"* · *"D.
+  reportedly displays…"* · *"The teacher rated D.'s [X] as…"*. Add a frame only if
+  a fixture demonstrably needs one — **flag it, never add silently**.
+  **(ii) Descriptor vocabulary — permitted by default, closed prohibited subset.**
+  With a frame in place, ordinary evaluative language is licensed: *adequate,
+  appropriate to the setting, consistent with peers, on par with classmates, no
+  difficulty apparent, keeping pace.* ("D. reportedly displays adequate
+  reasoning…" is licensed.) **Prohibited (closed list — attribution does NOT
+  rescue these; the term itself asserts a measurement occurred):**
+  - *"within normal limits" / "WNL"* — reads as a standardized-score claim; implies
+    a norm-referenced comparison the teacher did not perform.
+  - *"average" / "low average" / "borderline"* — these are classification-table
+    labels in this product's own psychoed report tables. In narrative from teacher
+    impression they create false correspondence with the score classifications
+    elsewhere in the same document. **Highest-priority prohibition:** a reader
+    seeing "average" in a Cognitive narrative and "Average" in a WISC-V table will
+    read them as the same claim.
+  - *"age-appropriate"* in the developmental-milestone sense — ambiguous; *"consistent
+    with grade-level peers"* carries the meaning instead.
+  **Escape hatch:** a **direct quotation** of the informant's own words is always
+  licensed regardless of vocabulary — attribution is total and the register shift
+  is visible. Quoting *"he's a bright kid, average or better"* is fine; paraphrasing
+  it to "the teacher reported average reasoning" is not.
+  **Why closed lists, not a stated principle:** the QA Engine is a pre-signature
+  compliance tool; a closed list is lintable and testable against fixtures, where a
+  principle drifts across drafters and model versions.
+  **Interactions.** P30 is the affirmative extension of **P22** (T2/T3 only; T1
+  stays a bare negative). Frames use **P18** register (plain, observable). **P14a**
+  still governs whether the T3 detail must appear.
+
 ## Register anchor (worked example)
 A concrete anchor for **P18** (target voice) and **P19c** (the RTI close). Every
 clause is teacher-attributed and data-anchored, so the RTI logic emerges from
@@ -303,6 +376,40 @@ Reading · Written Expression · Mathematics · Executive Function / Attention �
 Behavior · Social-Emotional / Internalizing · Communication ·
 Cognitive (learning & thinking) · Adaptive · Motor / Sensory · Health & Medical ·
 Vision & Hearing · Other Information.
+
+### Block scope (P31 — declare everywhere, enforce on RfR)
+Every block declares a **scope** — `case`, `informant`, or `hybrid` — recorded in
+the machine-readable **block registry** (`@suite/content`) and mirrored here.
+Enforcement rules are written for **Reason for Referral only** this version;
+scope is declared on every block so fixtures are born with it and later
+enforcement is additive (no second migration).
+
+| Block | Scope |
+|---|---|
+| Reason for Referral | **case** |
+| Existing Data / Assessment History | **case** |
+| Intervention History | **case** |
+| Reading · Written Expression · Mathematics · Executive Function / Attention · Behavior · Social-Emotional / Internalizing · Communication · Cognitive · Adaptive · Motor / Sensory · Health & Medical · Vision & Hearing | **informant** |
+| Other Information | **informant** |
+
+- **Case-scoped** blocks describe the *case*, not one informant's account. A
+  referral may originate from an MTSS/intervention team, a parent, an
+  administrator, an outside provider, or a re-evaluation cycle; a single teacher
+  intake is **one contributing source**, never "the account." **Merge semantics
+  for multi-source case-scoped blocks is deferred to v0.7** — do not design
+  conflict resolution between informants here; single-source disclosure (below) is
+  the only rule enforced now.
+- **P32 · Single-source disclosure.** When a **case-scoped** block is populated
+  from exactly one intake source, it renders what that source supports **and
+  discloses the single-source basis** — it must not narrate as though it were the
+  case-level account. Disclosure surfaces in **both** places, by design:
+  (a) a **block-level line** on each case-scoped block (so a reader who sees only
+  that field — the per-domain / EdPlan case, the same isolation P23 assumes —
+  knows the scope limit), and (b) the **reproducibility pin** (document-level
+  provenance for reproducibility). Per-informant attribution ("she reported,"
+  "she noted") is already honest throughout; the disclosure makes the *scope*
+  limitation **legible rather than inferable**. Enforced for the three case-scoped
+  blocks; the Reason for Referral additionally carries the P19/P25/P26 structure.
 
 The academic subareas — **Reading, Written Expression, Mathematics** — are
 separate per-domain blocks (P17), not a single Academic block, so each drops into
@@ -367,10 +474,31 @@ Feedback-learning / work-sample ingestion (FERPA + governance). Configurable
 presentation layer (structure allowed for; not implemented).
 
 ## Versioning
-Parameters carry stable IDs (`P1`…`P28`); edits bump the version and append to the
+Parameters carry stable IDs (`P1`…`P32`); edits bump the version and append to the
 changelog. Drafts record the spec version they ran under.
 
 ## Changelog
+- **v0.6.1** — instrument-and-model workstreams (evidence tiers + block scope).
+  **P29** evidence-tier ladder (T0/T1/T1-obs/T2/T3, domain-agnostic, no
+  inferential upgrade; T1-obs a distinct tier — absence of evidence, not evidence
+  of absence — with a QA-Engine collect-elsewhere contract that lives in the IR).
+  **P30** licensed language at T2/T3: a closed set of mandatory attribution frames
+  and a closed prohibited-descriptor list (WNL, average/low-average/borderline,
+  age-appropriate — each with its rationale), permitted evaluative vocabulary
+  otherwise, and a direct-quotation escape hatch; closed lists are chosen over a
+  stated principle because the QA Engine must lint them. **P31** block scope
+  (`case`/`informant`/`hybrid`) declared on every block via a machine-readable
+  registry in `@suite/content`, enforced on Reason for Referral only this version
+  (declare-everywhere/enforce-later is additive; full merge semantics deferred to
+  v0.7). **P32** single-source disclosure for case-scoped blocks, surfaced at both
+  the block level and the reproducibility pin. Instrument teacher-intake bumped
+  **1.2.0 → 1.3.0** (additive: affirmative Cognitive/Adaptive screeners feeding a
+  derived concern set; base concern answer never mutated); versioned bank files now
+  retained (1.2.0 frozen, 1.3.0 added) honoring D-013. Case Data Model **0.2.0 →
+  0.3.0**: referralSource / concernOnset / contributingInformants split (D-030).
+  **Correction:** v0.6 was committed and presented as final but was **not sealed**;
+  this line extends it. Treat the v0.6 changelog entry below as a point release in
+  an open line, not a closed version.
 - **v0.6** — cross-system harvest on teacher-attention-02 (parallel second-model
   draft). **P28** added: concern-specific observations file in the concern's own
   block, Other Information only for genuinely cross-cutting content (the

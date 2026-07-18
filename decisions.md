@@ -90,7 +90,8 @@ Construct IDs are permanent dot-path identifiers; additions over mutations,
 deprecation over deletion; the taxonomy carries a version number. Aliases
 and display labels live at the presentation layer. Instrument mappings
 belong in the crosswalk, never as taxonomy nodes. Current version: v0.3.
-**Status:** Accepted · 2026-07-14 · Proposed: Claude · Ratified: JD
+**Status:** Accepted · 2026-07-14 · Proposed: Claude · Ratified: JD ·
+**Corrected 2026-07-18 (see D-033): current taxonomy version is v0.4, not v0.3.**
 
 ## D-012 · Behavior is layered, not merged
 Observable behavior uses the topography vocabulary (noncompliance,
@@ -212,3 +213,119 @@ Supabase identity. A cookie minted for one invitation cannot act on another
 (`authorizeRespondent`). Because React Server Components cannot set cookies,
 `/r/[token]` is a route handler that sets the cookie and redirects to the form.
 **Status:** Accepted · 2026-07-16 · Ratified: JD
+
+## D-025 · Evidence-tier ladder; T1-obs is a distinct tier
+Domain blocks render at one of five evidence tiers (drafting-spec P29): T0 not
+asked, T1 asked/no-concern (bare negative), T1-obs asked/insufficient
+opportunity, T2 affirmatively within-or-above (one attributed sentence), T3 T2
+plus detail. Tiers never upgrade by inference. **T1-obs is NOT folded into T1**:
+T1 is evidence of absence, T1-obs is absence of evidence; collapsing them makes
+an unexamined domain look cleared. This carries real weight for Adaptive, where a
+gen-ed teacher may lack a window into self-care/community/home routines and where
+adaptive functioning is a rule-out for intellectual disability under SC SEED.
+Unwaivable QA-Engine contract: a "domain addressed" check is satisfied by T1 and
+NOT by T1-obs; T1-obs raises a collect-elsewhere flag naming alternate sources;
+the distinction lives in the IR, never re-derived from rendered prose. *Rejected:*
+folding T1-obs into T1 (cheaper render, but destroys the addressed-vs-observable
+distinction the tool exists to protect).
+**Status:** Accepted · 2026-07-18 · Proposed: JD (settled) / Claude (implementation) · Ratified: JD
+
+## D-026 · Affirmative capture scoped to Cognitive and Adaptive only
+The 1.3.0 instrument adds affirmative screeners (T2/T3 data) for Cognitive and
+Adaptive only. *Rejected:* adding them for Written Expression, Math, Behavior,
+Communication, and Motor now. Reason: Cognitive and Adaptive carry rule-out weight
+for intellectual disability, so an affirmative "within/above" reading is
+clinically load-bearing there; and every added follow-up costs completion rate on
+an instrument already near ~31 shown items. The ladder itself is built
+domain-agnostic (P29), so later expansion to the other domains is an INSTRUMENT
+VERSION BUMP, not a spec migration.
+**Status:** Accepted · 2026-07-18 · Proposed: JD (settled) / Claude (implementation) · Ratified: JD
+
+## D-027 · Closed lists over stated principle for licensed T2/T3 language
+Licensed affirmative language (drafting-spec P30) is governed by a CLOSED set of
+mandatory attribution frames and a CLOSED prohibited-descriptor list, not by a
+prose principle. Permitted evaluative vocabulary (adequate, consistent with peers,
+keeping pace, …) is allowed once a frame is present; prohibited terms are barred
+even with attribution because the term itself asserts a measurement occurred:
+"within normal limits"/"WNL" reads as a standardized-score claim; "average"/"low
+average"/"borderline" are classification-table labels that would falsely
+correspond to score tables elsewhere in the same report (highest-priority);
+"age-appropriate" (milestone sense) is ambiguous, replaced by "consistent with
+grade-level peers." Direct quotation of the informant is always licensed (escape
+hatch). *Rejected:* a stated principle ("use norm-free language"). Reason: the QA
+Engine is a pre-signature compliance tool — a closed list is lintable and testable
+against fixtures; a principle drifts across drafters and model versions.
+**Status:** Accepted · 2026-07-18 · Proposed: JD (settled) / Claude (implementation) · Ratified: JD
+
+## D-028 · Derived concern set; screeners never mutate the base answer
+Cognitive/Adaptive affirmative screeners can ADD a domain to a DERIVED concern set
+(`concernSet = CORE-008 selections ∪ {domains rated "below" on a screener}`),
+carrying per-domain entry provenance (`via: core-008 | screener`). Branch rules
+BR-010/BR-012 are repointed at the computed `$concernSet` (engine-injected), not at
+CORE-008. *Rejected:* writing a screener "below" back into CORE-008's stored answer
+(the concern set it populates). Reason: that corrupts the verbatim record — a
+downstream audit would misreport what the teacher selected — the same class of
+error as the referral-source/onset collapse (D-030). *Also rejected:* a second
+branch rule per domain (two entrances to maintain). Screeners are always-shown,
+suppressed once the domain is flagged on CORE-008, capping the cost at two items.
+**Status:** Accepted · 2026-07-18 · Proposed: JD (settled) / Claude (implementation) · Ratified: JD
+
+## D-029 · Block scope declared everywhere, enforced on RfR only
+Every drafting block declares `scope: case | informant | hybrid` (drafting-spec
+P31), in the drafting spec's Content-domains list AND a machine-readable registry
+in @suite/content (schema `BlockRegistry` in @suite/case-model per D-020).
+Enforcement rules are written for Reason for Referral only this version.
+*Rejected:* (a) full enforcement now — merge semantics for multi-source
+case-scoped blocks is genuinely hard, not yet blocking (one intake type exists),
+and is deferred to v0.7; (b) declaring scope only on RfR — the classification is
+cheap now and expensive to retrofit, so fixtures are born with it and later
+enforcement is additive (no second migration). "Blocks" are NOT a sixth canonical
+entity (D-006 holds at five); constraining `Claim.outputSection` to the registry
+is the natural v0.7 follow-on (a free-form string → enum), paired with merge
+semantics — not done now.
+**Status:** Accepted · 2026-07-18 · Proposed: JD (settled) / Claude (implementation) · Ratified: JD
+
+## D-030 · Referral source, concern onset, contributing informants are three fields
+The Case gains three first-class fields (case-model 0.3.0): `referralSource`
+(required, enum, with `multiple` requiring ≥2 `referralContributors` and
+`unknown_not_yet_captured` as the honest default), `concernOnset` (when a concern
+was first noticed), and `contributingInformants` (list). A referral is
+case-scoped; a teacher intake is one contributing source, never "the referral."
+Checkable rule: an onset item (e.g. CORE-010) MUST NOT populate referralSource —
+enforced structurally (distinct types) and by `referralSourceForSingleIntake()`,
+which always returns `unknown_not_yet_captured` (a lone intake never establishes
+who referred), covered by a case-model test. *Forward check (B-4):* the design
+survives a no-teacher-instrument case (private-practice live parent interview) —
+referralSource is `parent_guardian`, contributingInformants a parent, onset from
+the parent; nothing in Workstream A/B hard-assumes an async teacher form.
+*Deferred follow-on:* the DB migration (cases columns) and case-construction
+wiring that populate these fields — additive, not in this batch.
+**Status:** Accepted · 2026-07-18 · Proposed: JD (settled) / Claude (implementation) · Ratified: JD
+
+## D-031 · Question banks are stored as versioned files (honors D-013)
+Bank storage moves from a single mutable `teacher-form.v1.json` to per-version
+files: `teacher-form.v1.2.0.json` is frozen (byte-identical to the prior
+published bank) and `teacher-form.v1.3.0.json` is added. This honors D-013
+("published bank versions are immutable; changes create a new version") at the
+file level, so a completed response's version pin stays resolvable. The app and
+engine load the latest published version (1.3.0); golden fixtures keep their own
+pins (fixture #1 → 1.2.0, fixture #2 → 1.3.0). *Rejected:* bumping the single file
+in place and re-pinning fixtures — re-pinning defeats what a pin is for (the v0.6
+fixture #2 draft is only reproducible if the bank it names still exists).
+**Status:** Accepted · 2026-07-18 · Proposed: JD (D-013 resolution) / Claude (implementation) · Ratified: JD
+
+## D-032 · Case Data Model version bump 0.2.0 → 0.3.0
+`@suite/case-model` bumps 0.2.0 → 0.3.0 for the D-030 referral-provenance fields,
+the shared `InformantRole`, and the `BlockRegistry` contract (D-029). Additive;
+existing entities unchanged except `Case` (new fields) and `Informant.role`
+(refactored to the shared enum, same values).
+**Status:** Accepted · 2026-07-18 · Proposed: Claude · Ratified: JD
+
+## D-033 · Correction: taxonomy current version is v0.4 (was mislabeled v0.3)
+D-011's closing line ("Current version: v0.3") went stale when the taxonomy was
+bumped to v0.4 (`taxonomy.v0-4.json`; case-model tests assert "0.4"). The stale
+label was the demonstrated cause of a downstream error in a work prompt (a
+"bump from 0.3" instruction for the Case Data Model, which was actually at 0.2.0).
+Logged as an explicit correction rather than a silent edit so the episode is on
+record. Current taxonomy version: **v0.4**.
+**Status:** Accepted · 2026-07-18 · Proposed: Claude · Ratified: JD

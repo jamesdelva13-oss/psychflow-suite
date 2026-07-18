@@ -57,21 +57,23 @@ export const Condition = z
     questionId: z.string(),
     operator: z.enum([
       "equals",        // answer === value
+      "equals_any",    // single-select answer is one of values (T2/T3 detail gating)
       "includes",      // multi_select answer contains value
       "includes_any",  // multi_select answer contains at least one of values
+      "excludes",      // multi_select answer does NOT contain value (screener suppression)
       "answered",      // any non-empty answer exists
       "not_answered",  // no answer / empty
       "is_yes",
       "is_no",
     ]),
-    value: z.string().optional(),           // required for equals / includes
-    values: z.array(z.string()).optional(), // required for includes_any
+    value: z.string().optional(),           // required for equals / includes / excludes
+    values: z.array(z.string()).optional(), // required for includes_any / equals_any
   })
   .superRefine((c, ctx) => {
-    if ((c.operator === "equals" || c.operator === "includes") && !c.value)
+    if ((c.operator === "equals" || c.operator === "includes" || c.operator === "excludes") && !c.value)
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${c.operator} requires value` });
-    if (c.operator === "includes_any" && !c.values?.length)
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "includes_any requires values[]" });
+    if ((c.operator === "includes_any" || c.operator === "equals_any") && !c.values?.length)
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${c.operator} requires values[]` });
   });
 
 /** all-of semantics; wrap alternatives in separate rules for any-of */
@@ -146,6 +148,31 @@ export const CompletenessRule = z.object({
   askFollowUpId: z.string(),            // must reference a FollowUp id
 });
 
+/* ---------- concern-set derivation (D-028) ---------- */
+
+/**
+ * A domain-affirmative screener that can ADD a domain to the derived concern
+ * set without mutating the base concern question's stored answer. When the
+ * screener's answer equals `whenAnswer`, `addsValue` joins the concern set with
+ * provenance `screener` (vs `core-008` for the base selection). The base
+ * question's verbatim record is never written to (D-028).
+ */
+export const ConcernScreener = z.object({
+  questionId: z.string(),   // e.g. "TCH-COG-000"
+  addsValue: z.string(),    // concern-set member it contributes, e.g. "cognitive"
+  whenAnswer: z.string(),   // answer that triggers the add, e.g. "below"
+});
+
+/**
+ * Declares the derived concern set: the base concern-screen question unioned
+ * with any screener contributions. Branch rules reference the computed set via
+ * the synthetic question id `$concernSet` (operator `includes`).
+ */
+export const ConcernSetConfig = z.object({
+  baseQuestionId: z.string(),               // "TCH-CORE-008"
+  screeners: z.array(ConcernScreener).default([]),
+});
+
 /* ---------- summary constraints ---------- */
 
 export const SummaryConstraints = z.object({
@@ -165,6 +192,8 @@ export const QuestionBank = z.object({
   intro: z.string(),                    // informant-facing welcome text
   modules: z.array(Module).min(1),
   branchRules: z.array(BranchRule),
+  /** Optional derived concern-set config (D-028); absent = base question only. */
+  concernSet: ConcernSetConfig.optional(),
   followUps: z.array(FollowUp),
   completenessRules: z.array(CompletenessRule),
   summaryConstraints: SummaryConstraints,

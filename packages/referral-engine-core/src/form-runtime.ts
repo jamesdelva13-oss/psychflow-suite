@@ -79,6 +79,8 @@ export function evaluateCondition(
       return answers.some((a) => !isAnswered(a));
     case "equals":
       return answers.length === 1 && answers[0] === c.value;
+    case "equals_any":
+      return answers.length === 1 && !Array.isArray(answers[0]) && (c.values ?? []).includes(answers[0] as string);
     case "includes":
       return answers.length === 1 && Array.isArray(answers[0]) && answers[0].includes(c.value!);
     case "includes_any":
@@ -87,6 +89,11 @@ export function evaluateCondition(
         Array.isArray(answers[0]) &&
         (c.values ?? []).some((v) => (answers[0] as string[]).includes(v))
       );
+    case "excludes":
+      // multi_select answer does NOT contain value (an unanswered/absent
+      // multi-select excludes everything). Used to suppress a screener once the
+      // domain is already flagged on the base concern question.
+      return answers.length === 1 && !(Array.isArray(answers[0]) && answers[0].includes(c.value!));
     case "is_yes":
       return answers.length === 1 && answers[0] === "yes";
     case "is_no":
@@ -102,15 +109,54 @@ const allConditions = (
   ik: Map<string, string[]>
 ): boolean => !conds || conds.every((c) => evaluateCondition(c, responses, ik));
 
+/* ---------------- derived concern set (D-028) ---------------- */
+
+export interface ConcernSetEntry {
+  domain: string;
+  via: "core-008" | "screener";
+}
+
+/**
+ * The derived concern set: the base concern-screen selection unioned with any
+ * screener contributions ("below" affirmative-screener answers), each carrying
+ * entry provenance. The base question's stored answer is NEVER mutated (D-028);
+ * this is a pure derivation. Absent config → empty (branch rules then reference
+ * their base question directly, unchanged).
+ */
+export function computeConcernSet(bank: TQuestionBank, responses: ResponseMap): ConcernSetEntry[] {
+  const cfg = bank.concernSet;
+  if (!cfg) return [];
+  const out: ConcernSetEntry[] = [];
+  const seen = new Set<string>();
+  const base = responses[cfg.baseQuestionId];
+  if (Array.isArray(base)) {
+    for (const d of base) if (!seen.has(d)) { seen.add(d); out.push({ domain: d, via: "core-008" }); }
+  }
+  for (const s of cfg.screeners) {
+    if (responses[s.questionId] === s.whenAnswer && !seen.has(s.addsValue)) {
+      seen.add(s.addsValue);
+      out.push({ domain: s.addsValue, via: "screener" });
+    }
+  }
+  return out;
+}
+
+/** Responses augmented with the synthetic `$concernSet` array for branch eval. */
+function withConcernSet(bank: TQuestionBank, responses: ResponseMap): ResponseMap {
+  if (!bank.concernSet) return responses;
+  return { ...responses, $concernSet: computeConcernSet(bank, responses).map((e) => e.domain) };
+}
+
 /* ---------------- visibility ---------------- */
 
 /** Which modules are active given current responses (alwaysShown + branch rules). */
 export function activeModules(bank: TQuestionBank, responses: ResponseMap): Set<string> {
   const ik = new Map<string, string[]>(); // branch conditions never target repeat questions
+  const branchResponses = withConcernSet(bank, responses);
   const active = new Set<string>();
   for (const m of bank.modules) if (m.alwaysShown) active.add(m.id);
   for (const br of bank.branchRules) {
-    if (allConditions(br.when, responses, ik)) active.add(br.target);
+    if (allConditions(br.when, branchResponses, ik)) active.add(br.target);
   }
   return active;
 }

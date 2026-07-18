@@ -1,6 +1,6 @@
 {
   "fixtureId": "teacher-attention-02",
-  "description": "4th-grade teacher submission. MULTI-DOMAIN: word-level reading difficulty (decoding + fluency, somewhat-below) AND self-regulation / attention concerns (task initiation + sustained attention). The two concerns co-occur around independent seatwork so a reader is tempted to causally link them; the teacher never does (P2 stress). Cleared domains carry a mix of faithful in-domain positives (social, communication, hands-on/math) and bare negatives (writing, cognitive, adaptive, motor). One deliberately unresolved teacher musing about which concern drives the other (ambiguity anchor, TCH-IMP-004). Synthetic student D.T. — not a real case.",
+  "description": "4th-grade teacher submission. MULTI-DOMAIN: word-level reading difficulty (decoding + fluency, somewhat-below) AND self-regulation / attention concerns (task initiation + sustained attention). The two concerns co-occur around independent seatwork so a reader is tempted to causally link them; the teacher never does (P2 stress). Cleared domains carry a mix of faithful in-domain positives (social, communication, hands-on/math) and bare negatives (writing, cognitive, adaptive, motor). One deliberately unresolved teacher musing about which concern drives the other (ambiguity anchor, TCH-IMP-004). Synthetic student D.T. — not a real case. Re-pinned to teacher-intake@1.3.0: the affirmative Cognitive/Adaptive screeners (TCH-COG-000/TCH-ADP-000) are shown (neither flagged on CORE-008) but left unanswered, so both domains render at tier T1 (P29) — not backfilled to demonstrate T2.",
   "case": {
     "state": "SC",
     "evalType": "initial",
@@ -14,7 +14,7 @@
     "relationship": "4th-grade general education homeroom teacher (all core subjects)",
     "monthsKnownStudent": 8
   },
-  "bank": { "bankId": "teacher-intake", "bankVersion": "1.2.0", "taxonomyVersion": "0.4" },
+  "bank": { "bankId": "teacher-intake", "bankVersion": "1.3.0", "taxonomyVersion": "0.4" },
   "responses": {
     "TCH-CORE-001": "gen_ed",
     "TCH-CORE-002": "Fourth-grade general education homeroom — I teach him all core subjects.",

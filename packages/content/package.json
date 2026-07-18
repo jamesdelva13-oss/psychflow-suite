@@ -4,6 +4,6 @@
   "description": "Authored clinical content: question banks, crosswalk data, and future state/language variants. Depends on @suite/case-model for all schemas (decisions.md D-018). Content depends on contracts, never the reverse.",
   "type": "module",
   "scripts": { "test": "tsx tests/run-all.ts" },
-  "dependencies": { "@suite/case-model": "0.2.0", "zod": "^3.23.0" },
+  "dependencies": { "@suite/case-model": "0.3.0", "zod": "^3.23.0" },
   "devDependencies": { "tsx": "^4.0.0", "typescript": "^5.4.0" }
 }

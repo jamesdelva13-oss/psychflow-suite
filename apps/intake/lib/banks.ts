@@ -1,6 +1,6 @@
 import "server-only";
 import { QuestionBank, type TQuestionBank } from "@suite/case-model";
-import teacherForm from "@suite/content/banks/teacher-form.v1.json";
+import teacherForm from "@suite/content/banks/teacher-form.v1.3.0.json";
 import parentForm from "@suite/content/banks/parent-form.v1.json";
 
 /**
