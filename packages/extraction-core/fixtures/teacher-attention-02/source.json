@@ -1,0 +1,51 @@
+{
+  "fixtureId": "teacher-attention-02",
+  "description": "4th-grade teacher submission. MULTI-DOMAIN: word-level reading difficulty (decoding + fluency, somewhat-below) AND self-regulation / attention concerns (task initiation + sustained attention). The two concerns co-occur around independent seatwork so a reader is tempted to causally link them; the teacher never does (P2 stress). Cleared domains carry a mix of faithful in-domain positives (social, communication, hands-on/math) and bare negatives (writing, cognitive, adaptive, motor). One deliberately unresolved teacher musing about which concern drives the other (ambiguity anchor, TCH-IMP-004). Synthetic student D.T. — not a real case.",
+  "case": {
+    "state": "SC",
+    "evalType": "initial",
+    "referralDate": "2026-05-05",
+    "displayInitials": "D.T.",
+    "grade": "4",
+    "studentRef": "fixture-teacher-attention-02"
+  },
+  "informant": {
+    "role": "teacher",
+    "relationship": "4th-grade general education homeroom teacher (all core subjects)",
+    "monthsKnownStudent": 8
+  },
+  "bank": { "bankId": "teacher-intake", "bankVersion": "1.2.0", "taxonomyVersion": "0.4" },
+  "responses": {
+    "TCH-CORE-001": "gen_ed",
+    "TCH-CORE-002": "Fourth-grade general education homeroom — I teach him all core subjects.",
+    "TCH-CORE-003": "6to12m",
+    "TCH-CORE-005": "He's in a small-group reading intervention three mornings a week. In class I use a printed start-up checklist taped to his desk and let him take a short movement break to help him get going and stay with his work.",
+    "TCH-CORE-006": "no",
+    "TCH-CORE-007": "D. is genuinely kind and well-liked — he's usually the first to help a classmate and stays calm when there's a disagreement. He's strongest with hands-on work: building, measuring, anything he can do with his hands, and he's sharp in class discussions when he can just listen and talk.",
+    "TCH-CORE-008": ["reading", "self_regulation"],
+    "TCH-CORE-010": "prior_year",
+    "TCH-CORE-011": "no",
+    "TCH-CORE-012": "no",
+    "TCH-RDG-001": ["decoding", "fluency"],
+    "TCH-RDG-002": "When he hits a word he doesn't know, he'll try the first sound and then guess from context, or he just stops and waits for help. Longer, multi-syllable words are where he gets stuck most.",
+    "TCH-RDG-003": "His reading is slow and halting — he reads word by word and often trails off before the end of a sentence. On grade-level text he's clearly behind the pace of the rest of his reading group.",
+    "TCH-RDG-005": ["independent", "content_area"],
+    "TCH-RDG-006": "somewhat_below",
+    "TCH-RDG-007": "Winter DIBELS put him below benchmark on oral reading fluency. He's in the lowest of my three reading groups, and the interventionist's running records have him around 90% accuracy on grade-level text.",
+    "TCH-SR-001": ["task_initiation", "sustained_attention"],
+    "TCH-SR-002": "Getting started is the hardest part. He'll sharpen his pencil, hunt for materials, ask an unrelated question — anything but begin. Once he's actually started, he can usually do the work.",
+    "TCH-SR-003": "He drifts within a few minutes of independent work — looking around the room, fidgeting with things in his desk. In a twenty-minute work block I'm redirecting him five or six times.",
+    "TCH-SR-005": "He does best when he's up and moving or working with a partner, and first thing in the morning. Long stretches of quiet seatwork are when he struggles most.",
+    "TCH-SR-006": "frequent",
+    "TCH-INT-001": "For reading, the small-group phonics and fluency intervention three times a week. For focus and getting started, a visual start-up checklist taped to his desk, a short movement break, and preferential seating near me. I also email his mother every couple of weeks.",
+    "TCH-INT-002": "The reading group has been in place since the start of this year — about five months, three 30-minute sessions a week. The checklist and movement break started around the same time.",
+    "TCH-INT-003": "The reading interventionist runs the group; the classroom supports are mine.",
+    "TCH-INT-004": "some_improve",
+    "TCH-INT-005": "The interventionist charts weekly fluency probes — the trend is slightly up but still below the grade-level target. I don't have a formal chart for the focus supports, just my own notes.",
+    "TCH-IMP-001": "Both concerns cost him a lot of instructional time. Independent work that should take fifteen minutes can take him the whole block, and content-area reading is hard for him to get through without one-on-one help. He's starting to say he's 'not smart,' which worries me.",
+    "TCH-IMP-002": "His grades are below my expectations in reading and in subjects that lean on independent reading; in discussion-based and hands-on work he's right where I'd want him.",
+    "TCH-IMP-005": "People see him drift or not start and read it as laziness or not caring. He cares — he gets frustrated with himself when he can't keep up. It isn't about effort.",
+    "TCH-IMP-003": "I'd want him reading grade-level text closely enough to keep pace with his group, starting his own work without the checklist, and sticking with a task long enough to finish it.",
+    "TCH-IMP-004": "Honestly, I go back and forth on whether the reading or the focus is the bigger issue — some days one seems to feed the other, and I couldn't tell you which comes first."
+  }
+}

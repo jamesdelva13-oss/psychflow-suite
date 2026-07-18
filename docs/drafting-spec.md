@@ -1,4 +1,4 @@
-# Teacher Intake Summary — Drafting Spec · v0.4
+# Teacher Intake Summary — Drafting Spec · v0.5
 
 **Canonical, versioned product specification** for drafting a teacher-report
 **intake summary** from a referral Source. A standalone product asset — the
@@ -183,12 +183,71 @@ teaching/home.
   learning-rate/reasoning negative, and the Communication block's language
   strengths alongside its no-concern negative. Distinct from P16, which governs
   only how a *negative* is phrased.)
+  **Worked example (where the line falls).** A teacher's "he's strongest in
+  hands-on work such as building and measuring" does **not** support a Mathematics
+  positive — building is not mathematical and measuring is only adjacent. Surfacing
+  it under Mathematics would be **association-drift**, and letting it stand would
+  license loosely-related positives in any cleared domain. Mathematics stays a
+  bare negative; the observation belongs where it does not have to claim a domain
+  (**Other Information**, as a cross-cutting strength). This is the negative
+  counterpart to the register anchor: it shows the boundary P22 refuses to cross,
+  the way the RTI sentence anchors P19.
 - **P23 · No cross-domain references (HARD).** Each domain block must **stand
   alone**. Presentation may place blocks in separate fields (e.g. EdPlan), so any
   "as noted under X," "see Y," or "apart from the Z discussed elsewhere" is a
   dangling pointer in a per-domain target. State each block's own content with no
   reference to another block; content that belongs to one domain lives in that
   block only.
+
+## Added parameters (v0.5 — multi-domain)
+Surfaced by the multi-domain stress fixture (two genuine concern domains); the
+single-domain fixture could not exercise them.
+- **P24 · Informant-asserted cross-domain relationships.** When the informant
+  offers a **cross-domain causal claim** — whether **asserted** ("his behavior is
+  because of the reading") or **explicitly unresolved** ("I go back and forth on
+  which comes first") — recount it **attributed and unresolved**, housed
+  **outside any domain block** (Other Information), **never adjudicated or adopted
+  as the document's framing**. The draft does not pick a direction, does not
+  smooth an asserted claim into fact, and does not let the claim reorganize the
+  domain blocks. Genuine ambiguity is a **follow-up target, not a drafting
+  decision** (the completeness/follow-up layer probes "which comes first," not the
+  draft). Distinct from P2 (which bars the *drafter's* own synthesis) and P23
+  (which bars cross-references *between domain blocks*): P24 governs the
+  *informant's* cross-domain statement and confines it to the non-domain block.
+- **P25 · Multi-concern referral with asymmetric intervention data.** The formal
+  referral statement **names each concern domain**. The RTI / adequacy-of-progress
+  close (P19c) is made **only for concerns that carry progress-monitoring data**,
+  and is **never manufactured** for a concern without it — an intervention lacking
+  formal data is described (what was tried, by whom, how long) without an adequacy
+  claim. Silence on adequacy where there is no data is correct, not an omission.
+- **P26 · Multi-concern ordering.** When more than one concern domain is present:
+  if the informant **signaled a primary concern**, follow **her ordering**. Only
+  where **no primacy was signaled** do you order by **evidentiary weight**
+  (objective data, intervention duration). **Never imply primacy the informant did
+  not state** — evidentiary weight is a tiebreaker for presentation order, not a
+  clinical ranking of the concerns.
+- **P27 · Self-concept / affective signal secondary to an academic (or other
+  domain) concern.** A self-concept or affective remark tied to a specific
+  difficulty (e.g. "he's started saying he's 'not smart'" in connection with
+  reading) is recounted as **impact within its home domain** AND carried as a
+  **non-escalating mention in the Internalizing block that keeps that block's
+  negative intact** — e.g. "The teacher did not identify internalizing concerns;
+  she noted that D. has begun saying he is 'not smart' in connection with his
+  reading difficulty." This does **not** manufacture an internalizing concern,
+  does **not** over-read a single remark, and ensures the signal is visible to a
+  reader who sees **only** the Social-Emotional field (which P23 otherwise leaves
+  blind). The mention **must stay tied to its originating difficulty** and **must
+  not be phrased as an independent internalizing observation**. **Bounded
+  exception to appears-once (below):** P27 is the one sanctioned place a signal
+  appears in two blocks, justified *only* by the per-domain target reading fields
+  in isolation — it is **not** general license to duplicate content.
+
+**Appears-exactly-once discipline.** Each substantive signal (a concern, a
+strength, a cleared negative, an impact) lives in **exactly one** block, so a
+per-domain target never shows the same content twice across its fields. The sole
+sanctioned exception is **P27** (self-concept signal mirrored, non-escalating,
+into Internalizing), and it is recorded as an exception precisely so it is not
+read as permission to duplicate elsewhere.
 
 ## Register anchor (worked example)
 A concrete anchor for **P18** (target voice) and **P19c** (the RTI close). Every
@@ -273,10 +332,23 @@ Feedback-learning / work-sample ingestion (FERPA + governance). Configurable
 presentation layer (structure allowed for; not implemented).
 
 ## Versioning
-Parameters carry stable IDs (`P1`…`P23`); edits bump the version and append to the
+Parameters carry stable IDs (`P1`…`P27`); edits bump the version and append to the
 changelog. Drafts record the spec version they ran under.
 
 ## Changelog
+- **v0.5** — multi-domain stress fixture (teacher-attention-02: reading +
+  attention/EF concerns). P2 held under pressure (the two co-occurring concerns
+  stayed unconnected; the informant's own unresolved musing quarantined). Four new
+  parameters: **P24** informant-asserted cross-domain relationships (asserted or
+  unresolved) recounted attributed/unresolved outside any domain block, never
+  adopted as framing; **P25** multi-concern referral names each domain, RTI/adequacy
+  close only for concerns with progress-monitoring data; **P26** multi-concern
+  ordering follows the informant's stated primacy, else evidentiary weight, never
+  imputing primacy; **P27** self-concept/affective signal secondary to a domain
+  concern is recounted as in-domain impact **and** mirrored non-escalating into the
+  Internalizing block (bounded, recorded exception to the appears-exactly-once
+  discipline, justified by per-domain fields being read in isolation). Added the
+  explicit **appears-exactly-once discipline** with P27 as its sole exception.
 - **v0.4** — register/ChatGPT comparison harvest (same fixture, same v0.3 spec).
   Three adopted wins: **(1)** P18 register guidance now prefers **observable
   descriptions of the concern over construct/test terminology** ("difficulty
