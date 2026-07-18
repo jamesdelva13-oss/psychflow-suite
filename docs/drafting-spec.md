@@ -1,4 +1,4 @@
-# Teacher Intake Summary — Drafting Spec · v0.5
+# Teacher Intake Summary — Drafting Spec · v0.6
 
 **Canonical, versioned product specification** for drafting a teacher-report
 **intake summary** from a referral Source. A standalone product asset — the
@@ -226,28 +226,51 @@ single-domain fixture could not exercise them.
   (objective data, intervention duration). **Never imply primacy the informant did
   not state** — evidentiary weight is a tiebreaker for presentation order, not a
   clinical ranking of the concerns.
-- **P27 · Self-concept / affective signal secondary to an academic (or other
-  domain) concern.** A self-concept or affective remark tied to a specific
-  difficulty (e.g. "he's started saying he's 'not smart'" in connection with
-  reading) is recounted as **impact within its home domain** AND carried as a
-  **non-escalating mention in the Internalizing block that keeps that block's
-  negative intact** — e.g. "The teacher did not identify internalizing concerns;
-  she noted that D. has begun saying he is 'not smart' in connection with his
-  reading difficulty." This does **not** manufacture an internalizing concern,
-  does **not** over-read a single remark, and ensures the signal is visible to a
-  reader who sees **only** the Social-Emotional field (which P23 otherwise leaves
-  blind). The mention **must stay tied to its originating difficulty** and **must
-  not be phrased as an independent internalizing observation**. **Bounded
-  exception to appears-once (below):** P27 is the one sanctioned place a signal
-  appears in two blocks, justified *only* by the per-domain target reading fields
-  in isolation — it is **not** general license to duplicate content.
+- **P27 · Self-concept / affective signal secondary to a domain concern.** A
+  self-concept or affective remark reported alongside a specific difficulty (e.g.
+  "he's started saying he's 'not smart'") is carried as a **non-escalating mention
+  in the Internalizing block that keeps that block's negative intact**, and — **when
+  the remark is tied to a single domain** — is *also* recounted as **impact within
+  that home domain**. The mention must **not** manufacture an internalizing
+  concern, must **not** over-read a single remark, and must **not** be phrased as
+  an independent internalizing observation; its purpose is to keep the signal
+  visible to a reader who sees **only** the Social-Emotional field (which P23
+  otherwise leaves blind).
+  **(1) Attribution scope.** Attribute the remark **exactly as far as the source
+  supports** — never narrow it to a single domain the informant did not name, and
+  never broaden it to domains she did not name. Where the informant ties it to a
+  specific difficulty, tie it there; where she does not, report it **without domain
+  attribution** ("she noted that D. has begun saying he is 'not smart,' which she
+  finds concerning").
+  **(2) Appears-twice is conditional.** The two-block placement (in-domain impact
+  **plus** Internalizing mirror) applies **only when the remark is tied to one
+  domain**. When it is tied to **multiple concerns or none specifically**, it
+  appears **once** — domain-neutral, in the Internalizing block — because there is
+  no faithful single academic home to mirror from. This single-domain form is the
+  sole sanctioned exception to appears-once (below).
+  **(3) Preferred phrasing.** Open the kept negative with **"did not identify
+  broader social-emotional or internalizing concerns …"** so it reconciles
+  gracefully with the non-escalating self-concept mention that follows, rather than
+  a flat negative abutting a concern-adjacent remark.
 
 **Appears-exactly-once discipline.** Each substantive signal (a concern, a
 strength, a cleared negative, an impact) lives in **exactly one** block, so a
 per-domain target never shows the same content twice across its fields. The sole
-sanctioned exception is **P27** (self-concept signal mirrored, non-escalating,
-into Internalizing), and it is recorded as an exception precisely so it is not
-read as permission to duplicate elsewhere.
+sanctioned exception is **P27 in its single-domain form** (a self-concept remark
+tied to one domain, mirrored non-escalating into Internalizing); a domain-neutral
+self-concept remark appears once and triggers no exception. This is recorded
+precisely so it is not read as permission to duplicate elsewhere.
+
+## Added parameters (v0.6)
+- **P28 · Concern-specific observations live in the concern's own block.** An
+  observation *about* a specific reported difficulty — a misattribution ("others
+  read his slow starts as laziness"), a functional impact, a qualifying context —
+  belongs in that concern's domain block, not in Other Information. **Other
+  Information is only for genuinely cross-cutting content with no single home** (a
+  cross-domain strength, an informant's cross-domain musing per P24, attendance,
+  closing goals). Test: if the remark names or describes one concern, it files
+  under that concern; if removing any one domain would make it homeless, it's
+  cross-cutting.
 
 ## Register anchor (worked example)
 A concrete anchor for **P18** (target voice) and **P19c** (the RTI close). Every
@@ -332,10 +355,27 @@ Feedback-learning / work-sample ingestion (FERPA + governance). Configurable
 presentation layer (structure allowed for; not implemented).
 
 ## Versioning
-Parameters carry stable IDs (`P1`…`P27`); edits bump the version and append to the
+Parameters carry stable IDs (`P1`…`P28`); edits bump the version and append to the
 changelog. Drafts record the spec version they ran under.
 
 ## Changelog
+- **v0.6** — cross-system harvest on teacher-attention-02 (parallel second-model
+  draft). **P28** added: concern-specific observations file in the concern's own
+  block, Other Information only for genuinely cross-cutting content (the
+  effort/laziness remark, which is about the attention difficulty, moves out of
+  Other Information into EF/Attention). **P27 refined** in three ways: (1)
+  attribution scope — a self-concept remark is attributed exactly as far as the
+  source supports, never narrowed or broadened to domains the informant did not
+  name (here "not smart" is reported domain-neutral); (2) the appears-twice
+  placement is **conditional** — it applies only when the remark is tied to one
+  domain; tied to multiple/none, it appears once (domain-neutral) in Internalizing;
+  (3) preferred phrasing "did not identify **broader** social-emotional or
+  internalizing concerns …" to reconcile the kept negative with the mention.
+  Appears-exactly-once discipline updated to the single-domain conditional. Also
+  flagged (not yet parameterized): a faithful-but-lossy drafting tendency observed
+  twice on this fixture (a dropped 15-minute work-completion impact and a dropped
+  "subjects that lean on independent reading" grades clause) — a P14 completeness
+  check is under review.
 - **v0.5** — multi-domain stress fixture (teacher-attention-02: reading +
   attention/EF concerns). P2 held under pressure (the two co-occurring concerns
   stayed unconnected; the informant's own unresolved musing quarantined). Four new
