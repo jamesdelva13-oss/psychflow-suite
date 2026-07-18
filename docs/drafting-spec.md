@@ -82,6 +82,18 @@ teaching/home.
   precise/informative than paraphrase; attributed; never reading as pasted notes.
 - **P14 · Response weighting.** Length follows information value, not response
   type; never drop a brief response carrying meaningful signal.
+  **P14a · Completeness pass (run before the draft is final).** Walk **every
+  answered source item** and confirm each **substantive teacher statement** in it
+  appears somewhere in the draft — as a concern, a strength, a cleared negative, an
+  impact, or context. A statement is *substantive* if a school psychologist reading
+  the source would expect to see it reflected; **administrative/informant fields**
+  (role, subjects taught, tenure) and **pure duplications** are exempt. This is a
+  **coverage** check, not a length check: each substantive statement must appear
+  **once** (per the appears-exactly-once discipline), in its correct block
+  (P17/P28) — not necessarily verbatim, and not padded. When a statement is
+  deliberately *not* carried (e.g. too thin to state faithfully, handled instead by
+  the follow-up mechanism), that is a **conscious drop**, not an oversight — the
+  default is inclusion.
 - **P15 · Traceability.** Every statement traceable to specific teacher
   responses; do not merge unrelated responses into an unmappable claim.
 
@@ -371,11 +383,13 @@ changelog. Drafts record the spec version they ran under.
   domain; tied to multiple/none, it appears once (domain-neutral) in Internalizing;
   (3) preferred phrasing "did not identify **broader** social-emotional or
   internalizing concerns …" to reconcile the kept negative with the mention.
-  Appears-exactly-once discipline updated to the single-domain conditional. Also
-  flagged (not yet parameterized): a faithful-but-lossy drafting tendency observed
-  twice on this fixture (a dropped 15-minute work-completion impact and a dropped
-  "subjects that lean on independent reading" grades clause) — a P14 completeness
-  check is under review.
+  Appears-exactly-once discipline updated to the single-domain conditional.
+  **P14a completeness pass** added: a faithful-but-lossy drafting tendency was
+  observed twice on this fixture (a dropped 15-minute work-completion impact and a
+  dropped "subjects that lean on independent reading" grades clause), so P14 now
+  carries an operational coverage check — walk every answered source item, confirm
+  each substantive teacher statement appears once in its correct block, with
+  conscious drops (thin content routed to follow-up) distinguished from oversight.
 - **v0.5** — multi-domain stress fixture (teacher-attention-02: reading +
   attention/EF concerns). P2 held under pressure (the two co-occurring concerns
   stayed unconnected; the informant's own unresolved musing quarantined). Four new
