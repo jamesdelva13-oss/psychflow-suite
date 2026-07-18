@@ -1,4 +1,4 @@
-# Teacher Intake Summary — Drafting Spec · v0.3
+# Teacher Intake Summary — Drafting Spec · v0.4
 
 **Canonical, versioned product specification** for drafting a teacher-report
 **intake summary** from a referral Source. A standalone product asset — the
@@ -100,6 +100,14 @@ teaching/home.
   The output feeds a per-domain document — each domain's text must drop into its
   own field without re-parsing. The content does not encode placement; a
   presentation layer maps domains into a target's slots.
+  **Academic subareas split (v0.4).** The academic domain is **not** one folded
+  "Academic" block; it splits into **separate, self-standing blocks — Reading,
+  Written Expression, Mathematics** — because these are distinct target fields
+  (e.g. EdPlan) each needing to drop into its own slot. Each academic subarea
+  carries its own concern-or-negative (a concern where reported, a
+  question-derived affirmative or plain cleared note where not), and each stands
+  alone per P23. A subarea's functional/educational impact is recounted inside
+  that subarea's block.
 - **P18 · Register (one cohesive voice).** Target the register of an experienced
   school psychologist writing for a **mixed professional-and-parent IEP
   audience** — **one voice throughout, not modulated by section** (a seamed
@@ -111,10 +119,25 @@ teaching/home.
   term when it is the accurate word and briefly carries its meaning, not as
   decoration. Formality (e.g. Reason for Referral) comes from **framing and
   content, not from switching register**.
+  **Observable descriptions over construct/test terminology (v0.4).** In the
+  Reason for Referral and throughout, prefer an **observable description of the
+  concern** to a construct or test name — "difficulty hearing and manipulating
+  sounds in words, decoding unfamiliar words, and reading connected text smoothly
+  and at an expected pace," **not** "phonological awareness, decoding, oral
+  reading fluency." This is the accessible end of the register band: the prose
+  says what the teacher would observe, not what the instrument calls it. Construct
+  IDs remain the **internal tags** on the Evidence; they never surface as the
+  reader-facing vocabulary. (A construct term is still allowed where it is
+  genuinely the precise word and no plain observable phrasing is as accurate —
+  P4/P18 — but reading skills, and most classroom-observable concerns, have clear
+  observable descriptions and should use them.)
 - **P19 · Reason for Referral structure.** Formal and complete:
   (a) a **formal referral statement** ("M. has been referred for
   psychoeducational evaluation due to concerns regarding the development of his
-  reading skills"); (b) the **specific concern detail**; (c) an
+  reading skills"); (b) the **specific concern detail, rendered in observable
+  terms** (P18: "difficulty hearing and manipulating sounds in words, decoding
+  unfamiliar words, and reading connected text smoothly and at an expected pace,"
+  not the construct/test names); (c) an
   **intervention-response note framed around adequacy of progress** (RTI/MTSS
   logic: progress that has not reached the expected level substantiates the
   referral). This adequacy framing governs the **Reason for Referral only** —
@@ -140,7 +163,12 @@ teaching/home.
   terms** ("The teacher reported no concerns regarding M.'s learning rate or
   reasoning."), with nothing about screening depth or form structure. *(External
   assessments the teacher cited — DIBELS, running records — are clinical content,
-  not instrument mechanics, and are fine.)*
+  not instrument mechanics, and are fine.)* **Do not trail a cleared negative
+  with the item's own qualifying clause (v0.4):** a cleared Health item reads
+  "The teacher reported no marked change or decline in M.'s skills, behavior, or
+  mood," **not** "…following a break, illness, or specific event" — echoing the
+  question's trailing wording edges toward form-structure/system-adjacent
+  phrasing (P21 spirit); the clean clinical negative is the target.
 - **P22 · Faithful positive signal in cleared domains.** When a domain is cleared
   of concern but the teacher **nonetheless reported positive signal relevant to
   that domain**, surface that signal (attributed) rather than emitting only a bare
@@ -177,15 +205,24 @@ a question-derived affirmative, or a plain cleared note; omit only when the form
 carries no signal AND the domain isn't one that must always be addressed):
 
 Reason for Referral · Existing Data / Assessment History · Intervention History ·
-Academic (reading / writing / math) · Executive Function / Attention · Behavior ·
-Social-Emotional / Internalizing · Communication · Cognitive (learning & thinking)
-· Adaptive · Motor / Sensory · Health & Medical · Vision & Hearing ·
-Other Information.
+Reading · Written Expression · Mathematics · Executive Function / Attention ·
+Behavior · Social-Emotional / Internalizing · Communication ·
+Cognitive (learning & thinking) · Adaptive · Motor / Sensory · Health & Medical ·
+Vision & Hearing · Other Information.
+
+The academic subareas — **Reading, Written Expression, Mathematics** — are
+separate per-domain blocks (P17), not a single Academic block, so each drops into
+its own target field.
 
 The **functional / educational impact** of a domain-specific difficulty (e.g.
 reading avoidance secondary to a reading problem) is recounted **within that
-domain** (here, Academic) as reported impact — there is no separate Educational
-Impact domain.
+domain** (here, Reading) as reported impact — there is no separate Educational
+Impact domain. **Impact phrasing stays source-faithful (v0.4):** paraphrase the
+teacher's own register rather than a tidier synonym when the synonym narrows her
+meaning — e.g. the teacher's "can't get through … without one-on-one help"
+becomes "cannot get through independent reading or content-area text without
+one-to-one assistance," **not** "cannot complete" ("get through" is her word and
+is slightly broader than "complete"; P1 fidelity).
 
 **Strengths surface in-domain only.** A faithful positive lives in its clinical
 block (P22); there is **no standalone Strengths block** in this per-domain / RED
@@ -199,9 +236,12 @@ is rehomed to its most faithful block, not dropped.
 A presentation layer maps the per-domain content into a target document's fixed
 slots, user-configurable. Example target — the **EdPlan Review of Existing Data**
 domain order: Reason for Referral → Assessment History → Intervention History →
-Behavior → Cognitive → Academic → Communication → Adaptive → Fine/Gross Motor →
-Health & Medical → Vision & Hearing → Other Information (with EF/attention and
-social-emotional mapped per user preference). **Do not build configurable display
+Behavior → Cognitive → Academic (Reading / Written Expression / Mathematics) →
+Communication → Adaptive → Fine/Gross Motor → Health & Medical → Vision &
+Hearing → Other Information (with EF/attention and social-emotional mapped per
+user preference). A target that carries a single combined Academic field is a
+presentation choice — the content stays split (P17) and the renderer may
+concatenate the academic subarea blocks. **Do not build configurable display
 now** — only keep the drafting output placement-agnostic so this mapping is
 possible later.
 
@@ -237,6 +277,23 @@ Parameters carry stable IDs (`P1`…`P23`); edits bump the version and append to
 changelog. Drafts record the spec version they ran under.
 
 ## Changelog
+- **v0.4** — register/ChatGPT comparison harvest (same fixture, same v0.3 spec).
+  Three adopted wins: **(1)** P18 register guidance now prefers **observable
+  descriptions of the concern over construct/test terminology** ("difficulty
+  hearing and manipulating sounds in words, decoding unfamiliar words, reading
+  connected text smoothly and at pace," not "phonological awareness, decoding,
+  oral reading fluency") — in Reason for Referral (P19b) and throughout; construct
+  IDs stay as internal Evidence tags only. **(2)** P17 now **splits academic
+  subareas into separate self-standing blocks — Reading, Written Expression,
+  Mathematics** (distinct EdPlan fields), each with its own concern-or-negative;
+  Content domains + Presentation example updated to match. **(3)** Functional-impact
+  phrasing stays **source-faithful** — the teacher's "get through" is kept over the
+  narrower "complete" (P1). Two v0.3 renderings kept as better: **Health & Medical**
+  cleared negative stays clean ("no marked change or decline in skills, behavior,
+  or mood") without the item's trailing "following a break, illness, or specific
+  event" qualifier (P21 spirit, now recorded on P21). No new parameter IDs
+  (P1–P23 unchanged); changes refine P17, P18, P19, P21, and the Content-domains /
+  Presentation sections.
 - **v0.3** — framing idea (content vs. presentation) added; P16 question-derived
   negatives, P17 per-domain placement-agnostic output, P18 register (one voice),
   P19 Reason-for-Referral structure, P20 EF/attention own block; P4 refined under
