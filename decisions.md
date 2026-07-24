@@ -15,6 +15,7 @@ separable commercial products. Engineering is modular (packages); the user
 experience is one integrated workspace. Customers are never asked to think
 in "products."
 **Status:** Accepted · 2026-07-14 · Proposed: ChatGPT · Ratified: JD
+> **Amendment note (2026-07-23, per D-038):** Strike "customers are never asked to think in 'products.'" Integration is a UX property *within a segment*; **separable naming, pricing, and sale are permitted**, and **QA's independence from PsychReport is a selling point** (resolves the tension with D-012 / D-035). See D-062 (sequencing) and D-063 (bundling). Original text preserved above.
 
 ## D-002 · Clinical reasoning is a first-class data object
 The platform stores evidence, construct mappings, claims, provenance, and
@@ -29,6 +30,7 @@ Schools / district-admin layer in the MVP. Schema remains district-ready
 via nullable `organizationId` on relevant tables. District SaaS is the
 destination, not the start.
 **Status:** Accepted · 2026-07-14 · Proposed: Claude · Ratified: JD
+> **Amendment note (2026-07-23, per D-038):** Split into **buyer / tenancy / data architecture**. **Segment map:** district-employed psych; special-ed department; private-practice / IEE evaluator (**defensibility tier**, **mandated tier for IEEs**); independent contractor. The **runtime is now resolved hosted** (D-060). Single-psychologist tenancy stays the MVP *schema* posture; the *buyer* picture is broader than one segment. Original text preserved above.
 
 ## D-004 · Retained store with controls
 Intake submissions persist server-side, encrypted, under the
@@ -45,6 +47,7 @@ autonomous AI interviewing, no assessment-battery automation, no parent
 conversational AI (parent intake = structured forms with free text).
 Reintroducing any of these requires a superseding decision.
 **Status:** Accepted · 2026-07-14 · Proposed: joint · Ratified: JD
+> **Amendment note (2026-07-23, per D-038):** The original rationale is **corrected, not merely relaxed**. Adverse-impact language in a report **does not itself constitute predetermination**; predetermination is the **process violation** defined in D-082 (deciding eligibility/SDI without the team or without data). **Permitted:** criteria-referenced findings and adverse impact **grounded in evaluation data and framed for the team**, where district templates require them — mechanism is `TEAM_RESERVED` + `eligibility_relevant_findings`, with **no mandated boilerplate**. The **schema exclusion becomes a district-template setting**, not a hard structural wall. SDI per D-082. Original text preserved above.
 
 ## D-006 · `@suite/case-model` is the canonical data model
 Five core entities — Case, Informant, Source, Evidence, Claim — defined
@@ -209,6 +212,7 @@ No artifact at rest, and the salt becomes the sensitive object instead.
 Blocking: nothing currently — Layer B ships after Gate 2. Blocks: any pilot
 on real student records (D-017).
 **Status:** OPEN · Logged 2026-07-20 · Proposed: — · Ratified: —
+> **Amendment note (2026-07-23, per D-038): CLOSED.** No aliased mode is being built, so no de-identification mapping / storage-recovery layer exists (superseded by the identified-by-design ruling, D-061). If a solo tier ever ships, **reopen narrowly** — recorded leading pattern is **zero-knowledge sync + keyfile export**. Original text preserved above.
 
 ## D-022 · Teacher-facing identifier level [OPEN]
 What a teacher sees when they open an invitation link. Undecided between:
@@ -224,6 +228,7 @@ risk against disclosure risk and the two do not have a common unit.
 Blocking: teacher form pilot (D-017 names teacher forms as the first pilot
 surface).
 **Status:** OPEN · Logged 2026-07-20 · Proposed: — · Ratified: —
+> **Amendment note (2026-07-23, per D-038): CLOSED by D-084** — teacher-facing identification is **first name + last initial**, carried in the URL fragment so it never transits or logs server-side. Original text preserved above.
 
 ## D-023 · PII scrub: advisory or blocking [OPEN]
 Free-text fields in teacher and parent intake will contain identifying
@@ -241,6 +246,7 @@ detections, advise on the rest) and is not yet costed.
 Blocking: nothing currently. Blocks: retention posture under D-004, since
 what is stored determines what auto-purge has to reach.
 **Status:** OPEN · Logged 2026-07-20 · Proposed: — · Ratified: —
+> **Amendment note (2026-07-23, per D-038): CLOSED.** The advisory-vs-blocking PII-scrub question is **moot under the identified-by-design ruling (D-061)** — the suite no longer treats student identity as something to scrub. Original text preserved above.
 
 ## D-024 · `PRECEDENCE` leaves the shared package
 The precedence stack is exported only from the PsychReport parameter block
@@ -420,6 +426,7 @@ evidence to support a later determination." Cross-ref: parameter block §2;
 `reasoning-contracts` §6 (`PsychReportSection`, deliberately-absent types).
 This is the decision the authority rulings on rows 8.1/8.2 rely on.
 **Status:** Accepted · 2026-07-20 · Proposed: session · Ratified: JD
+> **Amendment note (2026-07-23, per D-038):** Corrected together with D-005 (see there). The adverse-impact/SDI schema exclusion is **no longer an absolute structural wall** — it becomes a **district-template setting**; criteria-referenced adverse-impact findings grounded in evaluation data and framed for the team (`TEAM_RESERVED` + `eligibility_relevant_findings`) are permitted where a district template requires them. Predetermination is a process violation (D-082), not a property of report words. The QA-side inverted rule (evidence-sufficiency, not "statement missing") is unchanged. Original text preserved above.
 
 ## D-035 · Products decoupled; semantics shared; QA is not self-certifying
 *(Origin: 2026-07-20 session log, D-12.)*
@@ -663,6 +670,7 @@ folds into the same monorepo or stays its own repo consuming `@suite/*` as
 dependencies. Blocks: nothing today; blocks any clean cross-package import wiring
 until resolved.
 **Status:** OPEN · Logged 2026-07-23 · Proposed: Claude · Ratified: —
+> **Amendment note (2026-07-23, per D-038; stays OPEN):** Two consolidation consequences added. **(1)** The Sped QA parser / IR / entity-extraction stack must become a **shared package** — PsychReport reuses it for source-document ingestion (D-077) and cannot import from the Sped QA repo. **(2)** The **evidence-object model should be shared** across Sped QA and PsychReport rather than duplicated, alongside the parser stack. **Caveat:** QA judges *actual prose*, so shared extraction **supports** its checks but **never replaces reading the source sentence**. Still OPEN. Original text preserved above.
 
 ## D-047 · [RIE] P33 render-layer purity — adopted as an RIE self-check, not a QA row
 The render-layer-purity rule designed in the July 18 chat was never implemented;
@@ -853,4 +861,275 @@ exhortation: it goes in the end-of-session checklist beside the working-director
 check, and it is the reason both those merges were needed.
 **Status:** Accepted · 2026-07-23 · Proposed: Claude · Ratified: JD
 
+## D-059 · [suite] Rename ratified — "Sped QA Engine"
+The QA Engine is formally **Sped QA Engine** (the GitHub repo is already renamed
+to `Sped-QA-Engine`). The old name "PsychReport QA Engine" / "QA Engine" is
+retired from all new documents. Existing ratified entries keep their original
+wording; only new material uses the new name.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-060 · [suite] Runtime — one hosted platform, three modules
+All three products are **hosted** — one platform, three modules, shared
+auth/ops. Identity handling is a **deployment-context configuration, not an
+architectural fork**. The **district tier ships first**. The
+community/private-practice tier is **deferred pending HIPAA/BAA analysis**:
+private clinicians are likely HIPAA-covered, so hosting their data requires a
+BAA — an attorney item. This resolves the long-open "runtime model" question:
+hosted, not client-only.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-061 · [suite] Privacy strategy — identified-by-design, controls not de-identification
+**De-identification is abandoned as the suite's privacy strategy.** It is
+incompatible with the nature of the work: teachers must know the student,
+reports name the student, and case files are student records. Privacy is
+addressed instead through a control set, not through pretending the data is
+anonymous.
+
+**Legal / contractual controls.** DPAs with each district (the FERPA-context
+equivalent of a BAA — note BAAs apply only if a HIPAA-covered community tier is
+ever built, per D-060); **zero-retention terms with the model provider**;
+subprocessor disclosure; written security overview for IT review; zero-retention
+terms recorded contractually.
+
+**Built controls.** **Tenant isolation enforced at the database layer** (not
+application-query filtering); **role-based access** (psych caseload vs. director
+portfolio, never cross-district); **tamper-evident audit logging**; **encryption
+in transit and at rest**; **deliberate retention with deletion-on-request and
+litigation-hold discipline**. **Data minimization at the schema level is
+retained** — it is cheap and credited by assessors.
+
+**Dual-purpose observation (record it):** role separation and audit logging are
+**already required** by the escalation and finding-resolution workflows (D-072) —
+they are product features that also satisfy compliance, not compliance overhead.
+
+**Third-party verification, budgeted pre-pilot.** **Annual third-party
+penetration testing** covering the web app, API surface, authentication, tenant
+isolation, and the inference pipeline (including prompt-injection and
+data-exfiltration scenarios), plus a **security assessment against a recognized
+framework**. This is a **five-figure cost required before first district
+go-live, not after.** **SOC 2 deferred** until a district requests it. Rationale:
+competitor credibility derives from **external verification**, not from merely
+possessing the controls.
+
+**Consequences (same entry):** all **"de-identified by design" marketing
+language must be retired**; an **incident-response plan** and **cyber liability
+insurance** are required before first district go-live.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+> *(Folds in the compliance control set and third-party-verification items from
+> the competitive-architecture review — logged here as detail rather than as
+> parallel entries, to avoid the duplication this week has been undoing.)*
+
+## D-062 · [suite] Sequencing — district land-and-expand wedge
+Build/sell order is **RIE → PsychReport → Sped QA Engine**, framed as a
+**district land-and-expand wedge**, NOT as solo-market distribution: RIE deploys
+into the pilot district as low-cost entry; PsychReport follows; QA is the
+director-level sale. **Solo/individual distribution is deferred until district
+revenue exists.**
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-063 · [suite] Bundling — separate and integrated
+Products sell **separately and as an integrated district package**. Constraint:
+the claim is **"stronger paired," never "QA requires PsychReport."** QA's
+independent value on reports written *without* PsychReport is load-bearing per
+D-035 and must not be undercut by bundling language.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-064 · [suite] Chat meta-rule — extends D-058 to chats
+D-058 is extended: **decisions ratified in a chat session must be entered into
+the canonical trunk before the chat closes**, exactly as for product repos. The
+same structural reason applies — a decision made where the trunk is not in view
+forks the record unless a mechanical step captures it.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-065 · [suite] Attorney engagement rescoped — five items
+Attorney engagement is rescoped to five items: (1) authority-table review;
+(2) pre-signature findings structure (how QA findings **strengthen rather than
+damage** the district's position); (3) SDI/predetermination phrasing; (4)
+conflict analysis for selling into districts where JD contracts through a
+staffing agency; (5) HIPAA/BAA posture for a future community-clinician tier.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-066 · [suite] Pin discipline extended to marketing claims
+The citation-pin discipline extends to marketing: **no cost/ROI figure ships
+without a current citation.** The older survey figures are flagged as stale; the
+**$30k/hearing figure is a current local report, usable as such**.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-067 · [SpedQA] Positioning — incumbents are distribution, not competition
+Incumbent systems (EdPlan, ECATS, Frontline, PowerSchool) are
+documentation/workflow systems, **not QA** — they verify *existence*, not
+*content*. They are **distribution, not competition**: their output is the
+primary ingestion format, and the plausible endgame is
+**partnership/acquisition as their content layer**. Explicitly **out of scope**:
+rebuilding timeline tracking, live service-log reconciliation, SIS/LMS/email
+integrations.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-068 · [SpedQA] Scope — reasoning-layer QA across the full document set
+Sped QA Engine does **reasoning-layer QA across the full special-education
+document set** (evaluation → eligibility → IEP → PWN → FBA/BIP → MDR →
+transition → progress reports), **not compliance-metric tracking**.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-069 · [SpedQA] Four-layer architecture
+Ratified: **L1 Document QA** (existing rubric work); **L2 Cross-Document
+Consistency** (referral ↔ evaluation ↔ eligibility ↔ IEP ↔ PWN ↔ BIP
+contradiction detection); **L3 Case Timeline Intelligence** (chronology reasoned
+from documents only; **backward-chained milestone achievability** — "is day 60
+still reachable," not "is it late" — with **tolling conditions encoded**, per
+D-037); **L4 District Benchmarking** (**descriptive aggregates only, never
+predictive**).
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-070 · [SpedQA] Rejected — Surveillance Engine
+A live-feed monitoring engine is **rejected**: it requires per-district
+SIS/behavior/attendance/email integration — a different company outside the
+moat. Recorded alternative: **the unit of analysis is the case file**, not the
+student and not the single document.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-071 · [SpedQA] Rejected — Outcome Learning Engine (full rationale preserved)
+An outcome-learning engine is **rejected**; the full rationale is preserved so it
+is not reinvented: **(a)** student-level referral prediction from
+discipline/referral data **encodes documented racial disproportionality** and
+conflicts with §300.173 / SC 43-243.1 **overidentification obligations**;
+**(b)** the "documentation patterns → corrective action" reformulation is
+**worse**, because corrective action tracks **advocacy access** (which families
+push back on), not document quality — the model would learn to scrutinize cases
+with well-resourced families and pass thin reports for families who never
+complain; **(c)** due process is a **rare event with too few labels**, and
+successful intervention **destroys its own training signal**. **L4's descriptive
+benchmarking achieves the organizational-learning goal with no learning target.**
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-072 · [SpedQA] Mandatory finding resolution — no unresolved alerts
+**No unresolved alerts.** Every finding enters a **closure workflow** (reviewed /
+not applicable with rationale / information requested / action taken) **before
+signature**; an open finding at signature is the dangerous artifact. Escalation
+is **role-shaped**: psych-level action list, director-level portfolio view;
+**acknowledgment paths required** so the record shows response, not just
+detection.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-073 · [SpedQA] Actionable findings — remediation in the schema
+Every check carries **finding + pinned authority + required action** as a
+**schema field, not render-time prose**. Constraint: remediation is
+**procedural, not clinical** ("obtain cross-setting data before finalizing,"
+never "administer instrument X"). Origin note (JD): *"knowing what's wrong tells
+you how to fix it, and if it doesn't it should."*
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-074 · [SpedQA] Schema pass queued (do not implement this session)
+Queued, not to be implemented now: rubric checks gain a **`scope` field**
+(document / cross-document / case-timeline); findings gain **document-ID +
+locator**; the **remediation field** per D-073.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-075 · [SpedQA] Sequencing within QA — depth-first
+**Depth-first:** attorney review and **one paid pilot on the evaluation-report
+rubric before any breadth**. The next increment after the wedge is
+**cross-document consistency checks** (cheaper than new full rubrics —
+extraction, not legal grounding). The **canonical demo** is a de-identified
+packet that passed every EdPlan check, run through the engine. **Pilot metric:
+IEE funding requests** (attributable, measurable within a year), **not "hearings
+avoided."**
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-076 · [PsychReport] Full-report scope supersedes results-only generation
+**Full-report scope supersedes results-only generation.** Spec committed at
+`~/Documents/psychreport/docs/PsychReport — Full-Report Scope Spec v1.0.html`.
+*(Path note: the ratifying prompt cited `psychreport-full-report-spec-v1.html`;
+the committed file is the "Full-Report Scope Spec v1.0.html" above — same
+artifact, corrected here for precision.)* Supersedes the earlier unexecuted
+results-only ratification session.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-077 · [PsychReport] Ingestion pipeline reuses the QA parser/IR/entity stack
+The ingestion pipeline **reuses the Sped QA parser / IR / entity-extraction
+stack**, redirected to **source documents**, with the seven document classes.
+**Consequence:** the parser stack **must become a shared package** — PsychReport
+cannot import from the Sped QA repo — which **feeds D-046** (noted there; D-046
+stays OPEN).
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-078 · [PsychReport] The four ledger rules
+Four ledger rules: **(1) no orphan prose; (2) immutable reporter attribution;
+(3) conflicts preserved, not resolved; (4) gap report precedes drafting.**
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-079 · [PsychReport] Per-section reasoning contracts
+**Per-section reasoning contracts extending `reasoning-contracts`**, with the
+**section-to-mode bindings from the spec**.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-080 · [PsychReport] referral_package v0.1 — the RIE→PsychReport interface
+**`referral_package v0.1`** is the RIE → PsychReport interface: **capture-mode
+agnostic**; referral questions carried as the **Summary checklist**.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-081 · [PsychReport] Handwritten observation notes are NOT deferred
+**Multimodal transcription of photographed handwritten observation notes enters
+at M1/M2**, with a **mandatory clinician verification step** (transcription
+shown beside the image; confirmed/corrected **before any claim enters the
+ledger**). Rationale: it is the **highest-frequency self-authored input**, and it
+is an **image-in-existing-call-pattern, not an OCR subsystem**. *(Also recorded
+as a dated amendment block in the spec HTML itself.)*
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-082 · [PsychReport] SDI-need language — user-initiated, editable, default off
+SDI-need language is **user-initiated after report review, editable, default
+off; provisional pending counsel**. Clarification (JD): **predetermination is a
+process violation** — deciding eligibility/SDI without the team or without data —
+**not a property of words in a report**.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-083 · [PsychReport] M1–M5 build order — OPEN
+The M1–M5 build order is **OPEN**, pending re-sequencing under the case-file
+architecture (D-070) and the RIE-first wedge (D-062).
+**Status:** OPEN · Logged 2026-07-23 · Proposed: JD · Ratified: —
+
+## D-084 · [RIE] Teacher-facing identification — first name + last initial (closes D-022)
+Teacher-facing identification is **first name + last initial**. Implementation
+note: **carry it in the URL fragment so it never transits or logs server-side.**
+This **closes D-022** (previously OPEN).
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-085 · [suite] Model-router / provider abstraction
+All LLM calls go through an **internal inference layer**, not direct vendor SDK
+calls scattered through the codebase. **The IP is the case model, evidence
+structures, reasoning contracts, rubric, and remediation logic — the model is a
+component.** Practical drivers: task-appropriate **cost tiering**, districts that
+**mandate a specific vendor**, and **DPA/zero-retention coverage that varies by
+provider**. **Honest scope limit (record it):** this abstracts the **call
+boundary, not output equivalence** — the v2 exemplar-first prompts are tuned to a
+specific model's voice, so any provider swap **requires revalidation**, and **one
+primary model is designated at a time**. **Do not promise model-agnostic output
+quality.**
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-086 · [suite] Rejected — confidential computing / secure enclaves
+**Rejected:** confidential computing / secure enclaves (Intel SGX, AWS Nitro,
+Azure Confidential Computing). Rationale (so it isn't reinvented): **unverified
+as a competitor practice, materially more expensive, and not something district
+IT reviewers ask for.** Tenant isolation plus a pen-test report answers the
+questions actually asked. **Factual correction recorded:** frontier model weights
+are **not licensed for self-hosting** — the mechanism is enterprise/cloud-hosted
+endpoints (Bedrock, Vertex, Azure OpenAI, or direct API with ZDR terms). **No
+budget line should assume self-hosted models.**
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-087 · [suite] Go-to-market — frictionless DPA
+A **pre-filled DPA matching SC and NC standard frameworks** is offered **at first
+contact, not produced during procurement.** Paired deliverable: a **written
+security overview for IT review**. Competitive lesson: **legibility to a
+compliance reviewer is the differentiator, not the sophistication of the
+controls.**
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-088 · [suite] Assistant chat at every product level
+**Chat is included at every product level**, scoped to the **active case**, bound
+by **each product's contracts and rubric authority**, **audit-logged**, **never a
+resolution path for findings** (findings close only through the D-072 workflow),
+and with **refusal boundaries defined per product**.
+**Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
 
