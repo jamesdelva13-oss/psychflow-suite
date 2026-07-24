@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<!-- saved from url=(0076)file:///Users/tathyanadelva/Downloads/psychreport-full-report-spec-v1_1.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsychReport — Full-Report Scope Spec v1.0</title>
+<link href="./PsychReport — Full-Report Scope Spec v1.0_files/css2" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#F7F3EC;
+    --panel:#FFFFFF;
+    --ink:#1E2A2B;
+    --ink-soft:#4A5A5B;
+    --teal:#0F766E;
+    --teal-deep:#0B5751;
+    --teal-tint:#E4F0EE;
+    --amber:#B45309;
+    --amber-tint:#FBF0E1;
+    --rule:#E2DCD0;
+    --mono:'IBM Plex Mono',monospace;
+    --sans:'Hanken Grotesk',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--canvas);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;padding:20px 14px 60px;}
+  .wrap{max-width:720px;margin:0 auto;}
+
+  .masthead{padding:26px 4px 22px;}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:10px;}
+  h1{font-size:30px;font-weight:800;line-height:1.15;letter-spacing:-0.01em;}
+  .subtitle{color:var(--ink-soft);margin-top:10px;font-size:15px;}
+  .meta{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-top:14px;display:flex;flex-wrap:wrap;gap:14px;}
+
+  .panel{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:22px 20px;margin-bottom:16px;}
+  .panel-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:6px;}
+  h2{font-size:21px;font-weight:700;line-height:1.25;margin-bottom:12px;}
+  h3{font-size:16px;font-weight:700;margin:18px 0 6px;}
+  p{margin-bottom:12px;}
+  p:last-child{margin-bottom:0;}
+  .lede{font-size:17px;font-weight:500;}
+
+  .decision{background:var(--teal-tint);border:1px solid #C6DEDA;border-radius:10px;padding:14px 16px;margin:14px 0;}
+  .decision .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-deep);font-weight:600;display:block;margin-bottom:4px;}
+  .caution{background:var(--amber-tint);border:1px solid #EBD4B4;border-radius:10px;padding:14px 16px;margin:14px 0;}
+  .caution .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);font-weight:600;display:block;margin-bottom:4px;}
+
+  .contract{border:1px solid var(--rule);border-radius:10px;margin:12px 0;overflow:hidden;}
+  .contract-head{background:#F2EEE6;padding:10px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .contract-head .name{font-weight:700;font-size:15px;}
+  .contract-head .mode{font-family:var(--mono);font-size:10.5px;color:var(--teal-deep);background:var(--teal-tint);border:1px solid #C6DEDA;border-radius:99px;padding:2px 10px;white-space:nowrap;}
+  .contract-body{padding:12px 14px;font-size:14.5px;}
+  .contract-body .row{display:flex;gap:10px;margin-bottom:7px;}
+  .contract-body .row:last-child{margin-bottom:0;}
+  .contract-body .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);min-width:76px;padding-top:3px;flex-shrink:0;}
+
+  .flow{font-family:var(--mono);font-size:12.5px;background:#20302F;color:#D9EAE7;border-radius:10px;padding:16px 14px;line-height:1.85;overflow-x:auto;white-space:pre;margin:14px 0;}
+  .flow .hl{color:#7FD8C9;font-weight:600;}
+  .flow .dim{color:#6E8683;}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0;}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--ink-soft);border-bottom:2px solid var(--rule);padding:7px 8px 7px 0;}
+  td{border-bottom:1px solid var(--rule);padding:9px 8px 9px 0;vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  td.mono{font-family:var(--mono);font-size:12px;color:var(--teal-deep);white-space:nowrap;}
+
+  ul{padding-left:20px;margin-bottom:12px;}
+  li{margin-bottom:7px;}
+  li:last-child{margin-bottom:0;}
+  .mono-inline{font-family:var(--mono);font-size:.86em;background:#F2EEE6;border-radius:5px;padding:1px 6px;white-space:nowrap;}
+
+  .milestone{display:flex;gap:14px;margin-bottom:14px;}
+  .milestone:last-child{margin-bottom:0;}
+  .milestone .num{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--teal-deep);background:var(--teal-tint);border:1px solid #C6DEDA;border-radius:8px;min-width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .milestone h4{font-size:15px;font-weight:700;margin-bottom:2px;}
+  .milestone p{font-size:14px;color:var(--ink-soft);margin:0;}
+
+  .footer{font-family:var(--mono);font-size:11px;color:var(--ink-soft);text-align:center;padding-top:10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="kicker">PsychReport · Spec Revision</div>
+    <h1>Full-Report Scope: Ingestion, Contracts &amp; the RIE Handoff</h1>
+    <div class="subtitle">Extends the five-mode section system from results-section generation to complete report drafting, with source-bound reasoning contracts on every section.</div>
+    <div class="meta"><span>v1.0 · Draft for review</span><span>July 23, 2026</span><span>Supersedes: results-only scope</span></div>
+  </div>
+
+  <!-- AMENDMENT 2026-07-23 -->
+  <div class="panel" style="border-left:4px solid #b45309;background:#fffbeb">
+    <div class="panel-label">Amendment — 2026-07-23 (D-081)</div>
+    <p><strong>Handwritten observation notes are NOT deferred.</strong> Multimodal
+    transcription of photographed handwritten observation notes enters at
+    <strong>M1/M2</strong>, with a <strong>mandatory clinician verification step</strong>:
+    the transcription is shown beside the source image and must be confirmed or
+    corrected <strong>before any claim enters the ledger</strong>. Rationale: it is the
+    highest-frequency self-authored input, and it is an image-in-existing-call-pattern,
+    not an OCR subsystem. Ratified in the canonical decision trunk as
+    <strong>D-081</strong>.</p>
+  </div>
+
+  <!-- 1. SCOPE -->
+  <div class="panel">
+    <div class="panel-label">01 · Scope Change</div>
+    <h2>PsychReport is a full-report writer</h2>
+    <p class="lede">The clinician provides all source material — score reports, rating scales, notes, records, referral package — and PsychReport drafts the complete report. The clinician's job shifts from writing sections to reviewing, correcting, and owning the draft.</p>
+    <p>Market rationale: full-document ingestion ("drop everything in, get a report out") is now table stakes across Psynth, School Psych AI, PAR, LilyAssist, and BastionGPT. A results-section writer competes against products that draft the entire document.</p>
+    <div class="decision">
+      <span class="tag">Differentiation thesis</span>
+      Competitors run one undifferentiated model pass over heterogeneous input. PsychReport drafts the same full scope, but <strong>every sentence is contract-bound to a source</strong>. "Complete report, fully sourced" beats both "results only" and "dump and pray."
+    </div>
+    <div class="caution">
+      <span class="tag">Boundary preserved</span>
+      Full scope means everything <em>up to</em> the eligibility boundary. Adverse-impact / SDI language remains exclusively in the separate Eligibility Artifacts workflow. PsychReport must refuse to generate eligibility-determinative language even when source documents invite it — this is now a stronger differentiator, not a casualty of the scope change.
+    </div>
+  </div>
+
+  <!-- 2. INGESTION -->
+  <div class="panel">
+    <div class="panel-label">02 · Ingestion Pipeline</div>
+    <h2>From documents to a claims ledger</h2>
+    <p>The ingestion layer is the new front door. It reuses the QA Engine monorepo's parser, intermediate representation, and entity-extraction stack — redirected from finished reports to source documents.</p>
+
+    <div class="flow"><span class="dim">// pipeline stages</span>
+UPLOAD      any docx / pdf / image / text
+   ↓
+<span class="hl">CLASSIFY</span>    assign document class (table below)
+   ↓
+<span class="hl">EXTRACT</span>     scores → structured records
+            prose → atomic claims
+   ↓
+<span class="hl">LEDGER</span>      every claim gets:
+            source_doc · locator · reporter
+            claim_type · confidence
+   ↓
+<span class="hl">GAPS</span>        missing-input report before drafting
+   ↓
+DRAFT       sections generated under contracts
+            (§03), citing ledger IDs only</div>
+
+    <h3>Document classes</h3>
+    <table>
+      <tbody><tr><th>Class</th><th>Examples</th><th>Extraction target</th></tr>
+      <tr><td class="mono">SCORE_REPORT</td><td>Q-global, PARiConnect, scoring printouts</td><td>Instrument, scale, score, CI, percentile</td></tr>
+      <tr><td class="mono">RATING_SCALE</td><td>BASC-3, Conners-4 protocols</td><td>Scores + reporter identity (parent/teacher/self)</td></tr>
+      <tr><td class="mono">REFERRAL_PKG</td><td>RIE export, referral forms</td><td>Referral question(s), concern claims</td></tr>
+      <tr><td class="mono">INTERVIEW</td><td>Parent/teacher/student interview notes</td><td>Reporter-attributed claims</td></tr>
+      <tr><td class="mono">OBSERVATION</td><td>Classroom/testing observation notes</td><td>Setting, task, observed behaviors</td></tr>
+      <tr><td class="mono">RECORDS</td><td>Prior evals, IEPs, grades, attendance, health</td><td>Dated historical facts</td></tr>
+      <tr><td class="mono">DISTRICT_DOC</td><td>Templates, local guidance</td><td>Formatting + section constraints only</td></tr>
+    </tbody></table>
+
+    <h3>Ledger rules</h3>
+    <ul>
+      <li><strong>No orphan prose.</strong> Draft sentences must cite ledger claim IDs. Anything the model wants to say that has no claim behind it is either boilerplate (from the approved template library) or it doesn't get written.</li>
+      <li><strong>Reporter attribution is immutable.</strong> A claim extracted from a teacher interview can never surface as a parent report or an examiner observation.</li>
+      <li><strong>Conflicts are preserved, not resolved.</strong> When sources disagree (parent vs. teacher ratings, records vs. interview), the ledger stores both; contracts govern how sections present the discrepancy.</li>
+      <li><strong>Gap report precedes drafting.</strong> Before generation, the user sees what's missing per section (e.g., "no observation document; Observations section will be skipped or stubbed"). No silent invention to fill holes.</li>
+    </ul>
+    <div class="decision">
+      <span class="tag">Build note</span>
+      Milestone 1 is score-report PDF extraction (Q-global + PARiConnect layouts), since structured scores feed both PsychReport and the QA Engine. Handwritten-note OCR is deferred; typed notes and PDFs cover the dominant workflow.
+    </div>
+  </div>
+
+  <!-- 3. CONTRACTS -->
+  <div class="panel">
+    <div class="panel-label">03 · Reasoning Contracts</div>
+    <h2>Per-section contracts at full scope</h2>
+    <p>Each section binds to one of the five modes and adds section-specific rules: which document classes it may draw from, what inference is permitted, and what it must refuse. Contracts extend <span class="mono-inline">reasoning-contracts.ts</span>.</p>
+
+    <div class="contract">
+      <div class="contract-head"><span class="name">Reason for Referral</span><span class="mode">EXTRACTION-ONLY</span></div>
+      <div class="contract-body">
+        <div class="row"><span class="k">Sources</span><span>REFERRAL_PKG only (RIE export preferred)</span></div>
+        <div class="row"><span class="k">Inference</span><span>None. Restate referral questions and concerns as documented; no elaboration, no softening.</span></div>
+        <div class="row"><span class="k">Refuses</span><span>Adding concerns not in the referral; foreshadowing findings.</span></div>
+      </div>
+    </div>
+
+    <div class="contract">
+      <div class="contract-head"><span class="name">Background &amp; History</span><span class="mode">EXTRACTION-ONLY</span></div>
+      <div class="contract-body">
+        <div class="row"><span class="k">Sources</span><span>RECORDS, INTERVIEW, REFERRAL_PKG</span></div>
+        <div class="row"><span class="k">Inference</span><span>Chronological ordering and grouping only. Every fact dated and reporter-attributed.</span></div>
+        <div class="row"><span class="k">Refuses</span><span>Causal narrative ("likely due to…"), developmental interpretation, filling timeline gaps.</span></div>
+      </div>
+    </div>
+
+    <div class="contract">
+      <div class="contract-head"><span class="name">Observations</span><span class="mode">ATTRIBUTED-REPORT</span></div>
+      <div class="contract-body">
+        <div class="row"><span class="k">Sources</span><span>OBSERVATION, INTERVIEW</span></div>
+        <div class="row"><span class="k">Inference</span><span>Behavioral description only; setting and task context required per claim.</span></div>
+        <div class="row"><span class="k">Refuses</span><span>Trait language ("is anxious") in place of observed behavior; merging observers.</span></div>
+      </div>
+    </div>
+
+    <div class="contract">
+      <div class="contract-head"><span class="name">Validity Statement</span><span class="mode">TWO-LAYER VALIDITY</span></div>
+      <div class="contract-body">
+        <div class="row"><span class="k">Sources</span><span>SCORE_REPORT (validity indices), OBSERVATION (testing behavior)</span></div>
+        <div class="row"><span class="k">Inference</span><span>Existing two-layer model unchanged: instrument-level indices + session-level conditions.</span></div>
+        <div class="row"><span class="k">Refuses</span><span>Declaring results valid when either layer lacks data.</span></div>
+      </div>
+    </div>
+
+    <div class="contract">
+      <div class="contract-head"><span class="name">Results (per instrument)</span><span class="mode">SCORE-BOUND NARRATIVE</span></div>
+      <div class="contract-body">
+        <div class="row"><span class="k">Sources</span><span>SCORE_REPORT, RATING_SCALE</span></div>
+        <div class="row"><span class="k">Inference</span><span>Current v3 narrative behavior. Domain-based prose per formatting conventions; only scales with provided scores; no age/grade equivalents.</span></div>
+        <div class="row"><span class="k">Refuses</span><span>Cross-instrument synthesis (reserved for Summary); diagnostic language.</span></div>
+      </div>
+    </div>
+
+    <div class="contract">
+      <div class="contract-head"><span class="name">Summary &amp; Clinical Impressions</span><span class="mode">BOUNDED-SYNTHESIS</span></div>
+      <div class="contract-body">
+        <div class="row"><span class="k">Sources</span><span>Prior sections only — may cite only claims already established upstream in this draft</span></div>
+        <div class="row"><span class="k">Inference</span><span>Convergence/divergence across sources; explicit answer to each referral question; discrepancies named, not smoothed.</span></div>
+        <div class="row"><span class="k">Refuses</span><span>New facts; eligibility-determinative or adverse-impact language (hard boundary → Eligibility Artifacts workflow); diagnosis beyond the referral scope.</span></div>
+      </div>
+    </div>
+
+    <div class="contract">
+      <div class="contract-head"><span class="name">Recommendations</span><span class="mode">CONSTRAINED-GENERATION</span></div>
+      <div class="contract-body">
+        <div class="row"><span class="k">Sources</span><span>Summary claims + curated recommendation bank</span></div>
+        <div class="row"><span class="k">Inference</span><span>Each recommendation must trace to a finding; bank entries adapted, not free-generated.</span></div>
+        <div class="row"><span class="k">Refuses</span><span>Placement or eligibility recommendations; recommendations orphaned from findings.</span></div>
+      </div>
+    </div>
+
+    <p style="margin-top:14px;">The anti-sycophancy stance carries over: contracts instruct the drafting model to surface weak or conflicting evidence rather than produce a fluent, agreeable narrative. The QA Engine then audits the finished draft as an independent second system — generation and audit never share a pass.</p>
+  </div>
+
+  <!-- 4. RIE HANDOFF -->
+  <div class="panel">
+    <div class="panel-label">04 · RIE → PsychReport Handoff</div>
+    <h2>The referral package interface</h2>
+    <p>RIE's completed intake becomes PsychReport's first-class input — the suite integration story. The handoff is a versioned JSON export; PsychReport treats it as a pre-structured <span class="mono-inline">REFERRAL_PKG</span> that bypasses classification and extraction.</p>
+
+    <div class="flow"><span class="dim">// referral_package v0.1 (shape sketch)</span>
+{
+  <span class="hl">"package_version"</span>: "0.1",
+  <span class="hl">"referral_questions"</span>: [
+    { "id": "rq1", "text": "...", "domain": "..." }
+  ],
+  <span class="hl">"concern_claims"</span>: [
+    { "id": "c1", "text": "...",
+      "reporter": "teacher|parent|clinician",
+      "capture_mode": "async_form|live_interview",
+      "source_item": "bank_item_id|freeform" }
+  ],
+  <span class="hl">"prior_supports"</span>: [ ... ],
+  <span class="hl">"student_ref"</span>: { "mode": "identified|aliased",
+                   "fields": { ... } },
+  <span class="hl">"qa_flags"</span>: [ ... ]   <span class="dim">// from RIE QA Engine</span>
+}</div>
+
+    <h3>Interface rules</h3>
+    <ul>
+      <li><strong>Capture-mode agnostic.</strong> <span class="mono-inline">capture_mode</span> travels with each claim, honoring the multi-modal vision — async form-fill and live interview capture produce the same package shape, so PsychReport never assumes async-only input.</li>
+      <li><strong>Referral questions are load-bearing.</strong> They flow into Reason for Referral verbatim and become the checklist the Summary contract must answer — the mechanism preventing the "answered the test results but missed the referral concern" failure the market critiques.</li>
+      <li><strong>Identity handling matches the firewall decision.</strong> <span class="mono-inline">student_ref.mode</span> is <span class="mono-inline">identified</span> in district/DPA deployments and may be <span class="mono-inline">aliased</span> in solo-practitioner mode — consistent with the tiered firewall (Option 4). No mapping-storage layer is required in identified mode.</li>
+      <li><strong>RIE QA flags surface in the gap report.</strong> Unresolved intake flags (incomplete teacher bank items, scrub advisories) appear before drafting so the clinician resolves them upstream.</li>
+    </ul>
+  </div>
+
+  <!-- 5. MILESTONES -->
+  <div class="panel">
+    <div class="panel-label">05 · Sequencing</div>
+    <h2>Build order</h2>
+    <div class="milestone"><div class="num">M1</div><div><h4>Score-report PDF extraction</h4><p>Q-global + PARiConnect layouts → structured score records. Shared foundation for PsychReport and QA Engine; validates the parser redirection.</p></div></div>
+    <div class="milestone"><div class="num">M2</div><div><h4>Claims ledger + gap report</h4><p>Prose extraction for INTERVIEW / OBSERVATION / RECORDS classes; ledger schema; pre-draft missing-input report.</p></div></div>
+    <div class="milestone"><div class="num">M3</div><div><h4>Contract extension</h4><p>New section contracts into <span class="mono-inline">reasoning-contracts.ts</span>; Summary's prior-sections-only citation rule; eligibility-boundary refusals tested against adversarial source docs.</p></div></div>
+    <div class="milestone"><div class="num">M4</div><div><h4>RIE handoff v0.1</h4><p>Referral package export from RIE Phase 1; PsychReport import; referral-question → Summary checklist wiring.</p></div></div>
+    <div class="milestone"><div class="num">M5</div><div><h4>Full-draft assembly</h4><p>End-to-end: upload set → gap report → complete draft under contracts → QA Engine audit pass on output.</p></div></div>
+    <div class="caution" style="margin-top:16px;">
+      <span class="tag">Open questions for next session</span>
+      (1) Ledger persistence model per deployment tier — ties to the firewall Option 4 decision. (2) Whether DISTRICT_DOC templates can override section order without weakening contracts. (3) Recommendation bank curation workflow — who approves entries, and how district-specific banks are scoped.
+    </div>
+  </div>
+
+  <div class="footer">psychflow-suite · PsychReport full-report spec v1.0 · prepared July 23, 2026</div>
+
+</div>
+
+
+</body></html>
