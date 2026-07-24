@@ -1043,6 +1043,13 @@ the committed file is the "Full-Report Scope Spec v1.0.html" above — same
 artifact, corrected here for precision.)* Supersedes the earlier unexecuted
 results-only ratification session.
 **Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+> **Amendment note (2026-07-24, per D-038):** The spec's **canonical home is the
+> suite repo** — `(suite repo)/docs/PsychReport — Full-Report Scope Spec
+> v1.0.html` (post-D-081 version, md5 `6f7c030a0f826eb6054cb054703e23c7`,
+> committed `5123f47`). The `~/Documents/psychreport/docs/...` path in the
+> original entry was descriptive, not canonical, and is **superseded**: the app
+> repo holds code, not governance docs, consistent with D-029 repo-canonicity.
+> Original text preserved above.
 
 ## D-077 · [PsychReport] Ingestion pipeline reuses the QA parser/IR/entity stack
 The ingestion pipeline **reuses the Sped QA parser / IR / entity-extraction
