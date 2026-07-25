@@ -751,6 +751,7 @@ an instrument already near ~31 shown items. The ladder itself is built
 domain-agnostic (P29), so later expansion to the other domains is an INSTRUMENT
 VERSION BUMP, not a spec migration.
 **Status:** Accepted · 2026-07-18 (orig.) · merged 2026-07-23 · Proposed: JD (settled) / Claude (implementation) · Ratified: JD
+> **Amendment note (2026-07-25, per D-038):** Partially reopened by **D-089**. Affirmative per-domain capture is **no longer scoped to Cognitive and Adaptive only** — every domain must capture can-do / area-of-difficulty, so the instrument must supply affirmative data by design (via a per-domain checklist). The tier-ladder interaction (D-049) is deferred to v0.7. Original scoping text preserved above.
 
 ## D-051 · [RIE] Closed lists over stated principle for licensed T2/T3 language
 *(Fork reconciliation: was RIE `decisions.md` D-027, origin repo psychflow-suite. Original wording preserved, per the amendment rule in D-038.)*
@@ -1043,13 +1044,6 @@ the committed file is the "Full-Report Scope Spec v1.0.html" above — same
 artifact, corrected here for precision.)* Supersedes the earlier unexecuted
 results-only ratification session.
 **Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
-> **Amendment note (2026-07-24, per D-038):** The spec's **canonical home is the
-> suite repo** — `(suite repo)/docs/PsychReport — Full-Report Scope Spec
-> v1.0.html` (post-D-081 version, md5 `6f7c030a0f826eb6054cb054703e23c7`,
-> committed `5123f47`). The `~/Documents/psychreport/docs/...` path in the
-> original entry was descriptive, not canonical, and is **superseded**: the app
-> repo holds code, not governance docs, consistent with D-029 repo-canonicity.
-> Original text preserved above.
 
 ## D-077 · [PsychReport] Ingestion pipeline reuses the QA parser/IR/entity stack
 The ingestion pipeline **reuses the Sped QA parser / IR / entity-extraction
@@ -1139,4 +1133,52 @@ by **each product's contracts and rubric authority**, **audit-logged**, **never 
 resolution path for findings** (findings close only through the D-072 workflow),
 and with **refusal boundaries defined per product**.
 **Status:** Accepted · 2026-07-23 · Proposed: JD · Ratified: JD
+
+## D-089 · [RIE] Required per-domain functional capture; concern-flagging changes depth, not visibility
+Every domain block must capture what the student can do and where they struggle,
+regardless of whether a concern is flagged. The current branching design — which
+hides downstream questions when no concern is reported — is **rejected**: it
+produces domains that read as *absence of information* rather than as a positive
+picture of functioning, which fails the requirement (confirmed in EdPlan district
+practice) that each domain show it was actually **addressed**, not merely that one
+informant had nothing to add.
+
+**Redesign:** conditional-hide becomes **conditional-depth**. Each domain always
+asks a baseline can-do / area-of-difficulty set; a flagged concern **adds
+follow-up** rather than gating the baseline. A **per-domain checklist instrument**
+is the preferred vehicle — faster for the teacher than prose, cleaner as
+structured data for the referral/background section, and equally usable in
+async-form and live-capture modes.
+
+This **strengthens and partially reopens Workstream A (v0.6)**: affirmative
+capture (T2/T3) was scoped as *reachable when the instrument supplies affirmative
+data* (D-050); it is now **required per domain**, so the instrument must supply
+that affirmative data **by design**. Interaction with the tier ladder (D-049) to
+be specified in v0.7.
+**Status:** Accepted · 2026-07-25 · Proposed: JD (EdPlan orientation training) · Ratified: JD
+
+## D-090 · [PsychReport] Clarification (non-change): evaluation-planning coverage is not a report concern
+PsychReport reports **assessments administered** — what a given instrument found.
+Documentation of which domains were **considered but not evaluated** during
+planning is a **referral/eligibility-planning artifact** (RIE and the eligibility
+process), **not a results section**. No "the team considered [domain]" or
+coverage-attestation prose is added to PsychReport. Existing conventions stand:
+only scales with provided scores appear; no domain is manufactured to demonstrate
+consideration. *(Corrects an earlier proposal in conversation to render
+team-considered framing inside report sections — withdrawn.)*
+**Status:** Accepted · 2026-07-25 · Proposed: JD · Ratified: JD
+
+## D-091 · [SpedQA] Cross-document check: all suspected areas addressed in evaluation planning
+A **mandated cross-document check** verifies that every **area of suspected
+disability** — as evidenced in the referral/RIE intake, parent/teacher concerns,
+and prior data — was **addressed in the evaluation**. This is a **case-file
+(Layer 2/3) check** reconciling referral-stage evidence against the evaluation,
+not a single-document scan, and **not** a check that pushes PsychReport to pad
+domains (per D-090). **Primary pin: 34 CFR §300.304(c)(4)** — *the child is
+assessed in all areas related to the suspected disability* — with **SEED/NC
+equivalents to be located and pinned** per the mandated-check discipline (**no
+citation, no mandated**). Maps to the Tier-2 due-process risk *"failure to
+evaluate in all areas of suspected disability."* This is a class of finding
+**EdPlan structurally cannot produce**, since it never reads content.
+**Status:** Accepted · 2026-07-25 · Proposed: JD · Ratified: JD
 
