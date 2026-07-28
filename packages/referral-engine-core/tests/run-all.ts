@@ -16,6 +16,7 @@ import { Source } from "../../case-model/src/entities";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const teacher = JSON.parse(fs.readFileSync(path.join(here, "../../content/banks/teacher-form.v1.3.0.json"), "utf8"));
+const teacher14 = JSON.parse(fs.readFileSync(path.join(here, "../../content/banks/teacher-form.v1.4.0.json"), "utf8"));
 const parent = JSON.parse(fs.readFileSync(path.join(here, "../../content/banks/parent-form.v1.json"), "utf8"));
 
 let failures = 0;
@@ -140,6 +141,93 @@ const check = (name: string, ok: boolean, detail?: string) => {
     !activeModules(teacher, above).has("cognitive"));
   check("teacher: T3 detail (TCH-COG-000d) appears on within/above (equals_any)",
     visibleQuestions(teacher, above).map(v => v.key).includes("TCH-COG-000d"));
+}
+
+/* ---------- v1.4.0: conditional-depth (D-089) ---------- */
+{
+  // Visibility is never concern-gated: every domain module is active from the start.
+  const empty: ResponseMap = {};
+  const mods = activeModules(teacher14, empty);
+  const domains = ["reading", "writing", "math", "self_regulation", "behavior",
+                   "social_comm", "cognitive", "emotional", "adaptive"];
+  check("teacher14: all domain modules active with zero answers",
+    domains.every(d => mods.has(d)), domains.filter(d => !mods.has(d)).join(", "));
+  check("teacher14: cog_adaptive_screen module retired (folded into domains)",
+    !teacher14.modules.some((m: { id: string }) => m.id === "cog_adaptive_screen"));
+
+  const vis0 = visibleQuestions(teacher14, empty).map(v => v.key);
+  check("teacher14: baseline checklists visible before any answers",
+    vis0.includes("TCH-RDG-008") && vis0.includes("TCH-RDG-001") &&
+    vis0.includes("TCH-WRT-004") && vis0.includes("TCH-COG-000") && vis0.includes("TCH-ADP-000"));
+  check("teacher14: safety screens always asked (BEH-002, EMO-004)",
+    vis0.includes("TCH-BEH-002") && vis0.includes("TCH-EMO-004"));
+
+  // Depth appears only when the domain checklist reports difficulty.
+  let vis = visibleQuestions(teacher14, { "TCH-RDG-001": ["none"] }).map(v => v.key);
+  check("teacher14: reading depth hidden when checklist reports none",
+    !vis.includes("TCH-RDG-005") && !vis.includes("TCH-RDG-002"));
+  vis = visibleQuestions(teacher14, { "TCH-RDG-001": ["decoding"] }).map(v => v.key);
+  check("teacher14: reading depth opens on a difficulty selection",
+    vis.includes("TCH-RDG-005") && vis.includes("TCH-RDG-002"));
+
+  // 'none' on the behavior checklist spawns no ABC repeat instances (no topography).
+  let inst = visibleQuestions(teacher14, { "TCH-BEH-001": ["none"] }).filter(v => v.repeatOf);
+  check("teacher14: behavior 'none' spawns no repeat instances", inst.length === 0, `got ${inst.length}`);
+  inst = visibleQuestions(teacher14, { "TCH-BEH-001": ["none", "aggression"] }).filter(v => v.repeatOf);
+  check("teacher14: mixed selection spawns instances only for topography options",
+    inst.length === 5 && inst.every(v => v.repeatOf?.optionValue === "aggression"), `got ${inst.length}`);
+
+  // Gated-required depth is not demanded while hidden.
+  const v0 = validateSubmission(teacher14, empty);
+  check("teacher14: baselines required from the start",
+    v0.missingRequired.includes("TCH-RDG-001") && v0.missingRequired.includes("TCH-WRT-004") &&
+    v0.missingRequired.includes("TCH-EMO-004"));
+  check("teacher14: hidden depth questions never required",
+    !v0.missingRequired.includes("TCH-WRT-001") && !v0.missingRequired.includes("TCH-BEH-003"));
+
+  // A complete submission with one flagged domain and clean baselines validates.
+  const clean: ResponseMap = {
+    "TCH-CORE-001": "gen_ed", "TCH-CORE-002": "3rd grade, all subjects", "TCH-CORE-003": "6to12m",
+    "TCH-CORE-005": "Core reading block with Tier 2 phonics group", "TCH-CORE-006": "no",
+    "TCH-CORE-007": "Curious, kind, strong at science", "TCH-CORE-008": ["reading"],
+    "TCH-CORE-010": "start_year", "TCH-CORE-011": "no", "TCH-CORE-012": "no",
+    "TCH-RDG-008": ["listens_comp"], "TCH-RDG-001": ["decoding"], "TCH-RDG-006": "somewhat_below",
+    "TCH-RDG-005": ["independent"],
+    "TCH-WRT-005": ["ideas_oral"], "TCH-WRT-004": ["none"], "TCH-WRT-002": "typical",
+    "TCH-MTH-005": ["facts_grade"], "TCH-MTH-004": ["none"], "TCH-MTH-002": "typical",
+    "TCH-SR-007": ["starts_tasks"], "TCH-SR-001": ["none"],
+    "TCH-BEH-005": ["follows_expectations"], "TCH-BEH-001": ["none"], "TCH-BEH-002": "no",
+    "TCH-SOC-006": ["has_friends"], "TCH-SOC-004": ["none"], "TCH-SOC-002": "initiates",
+    "TCH-COG-000": "within", "TCH-COG-001": ["none"],
+    "TCH-EMO-005": ["content"], "TCH-EMO-001": ["none"], "TCH-EMO-004": "no",
+    "TCH-ADP-000": "within", "TCH-ADP-001": ["none"],
+    "TCH-INT-001": "Tier 2 phonics group since September", "TCH-INT-004": "some_improve",
+    "TCH-IMP-001": "Falls behind in independent reading tasks", "TCH-IMP-002": "Below expectations in ELA only",
+  };
+  const vc = validateSubmission(teacher14, clean);
+  check("teacher14: complete conditional-depth submission validates",
+    vc.ok, `missing=[${vc.missingRequired.join(", ")}] unknown=[${vc.unknownKeys.join(", ")}]`);
+
+  // Reconciliation: concern flagged on CORE-008 while the domain checklist says none.
+  const contradictory: ResponseMap = { ...clean, "TCH-RDG-001": ["none"] };
+  const fus = pendingFollowUps(teacher14, contradictory);
+  check("teacher14: CR-010 queues FU-GEN-005 when a flagged domain's checklist reports none",
+    fus.some(f => f.ruleId === "CR-010" && f.followUpId === "FU-GEN-005"));
+  check("teacher14: no reconciliation follow-up when checklist agrees with the flag",
+    !pendingFollowUps(teacher14, clean).some(f => f.followUpId === "FU-GEN-005"));
+
+  // Screener reconciliation + concern-set derivation still works on relocated screeners.
+  const below: ResponseMap = { ...clean, "TCH-COG-000": "below" };
+  check("teacher14: relocated screener still adds cognitive via=screener",
+    computeConcernSet(teacher14, below).some(e => e.domain === "cognitive" && e.via === "screener"));
+  check("teacher14: CR-020 queues reconciliation when 'below' but checklist reports none",
+    pendingFollowUps(teacher14, below).some(f => f.ruleId === "CR-020"));
+
+  // BEH-001 'answered' conditions were de-vacuoused: a none-only behavior baseline
+  // must not trigger the behavior/social completeness rules.
+  const behFus = pendingFollowUps(teacher14, clean);
+  check("teacher14: CR-003/CR-007 stay silent on a none-only behavior baseline",
+    !behFus.some(f => f.ruleId === "CR-003" || f.ruleId === "CR-007"));
 }
 
 /* ---------- parent bank: ASD deep-dive triggering ---------- */

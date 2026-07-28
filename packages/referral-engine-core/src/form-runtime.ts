@@ -161,14 +161,26 @@ export function activeModules(bank: TQuestionBank, responses: ResponseMap): Set<
   return active;
 }
 
+/**
+ * Selected options of a repeat-group source that actually spawn instances.
+ * Instances exist to carry a topography tag into downstream Evidence, so a
+ * selected option without one (e.g. a "none of these" baseline option, v1.4.0
+ * D-089) spawns nothing.
+ */
+function repeatableSelections(m: TQuestionBank["modules"][number], rg: { sourceQuestionId: string }, responses: ResponseMap): string[] {
+  const srcQ = m.questions.find((q) => q.id === rg.sourceQuestionId);
+  const sel = responses[rg.sourceQuestionId];
+  const selected = Array.isArray(sel) ? sel : [];
+  return selected.filter((v) => srcQ?.options?.find((o) => o.value === v)?.topography);
+}
+
 /** Map each repeat-group question id to its active instance keys. */
 function repeatInstanceKeys(bank: TQuestionBank, responses: ResponseMap, active: Set<string>) {
   const ik = new Map<string, string[]>();
   for (const m of bank.modules) {
     if (!active.has(m.id)) continue;
     for (const rg of m.repeatGroups ?? []) {
-      const sel = responses[rg.sourceQuestionId];
-      const selected = Array.isArray(sel) ? sel : [];
+      const selected = repeatableSelections(m, rg, responses);
       for (const q of rg.questions) {
         ik.set(q.id, selected.map((v) => instanceKey(q.id, v)));
       }
@@ -192,8 +204,7 @@ export function visibleQuestions(bank: TQuestionBank, responses: ResponseMap): Q
     }
     for (const rg of m.repeatGroups ?? []) {
       const srcQ = m.questions.find((q) => q.id === rg.sourceQuestionId);
-      const sel = responses[rg.sourceQuestionId];
-      const selected = Array.isArray(sel) ? sel : [];
+      const selected = repeatableSelections(m, rg, responses);
       for (const optVal of selected) {
         const opt = srcQ?.options?.find((o) => o.value === optVal);
         for (const q of rg.questions) {
