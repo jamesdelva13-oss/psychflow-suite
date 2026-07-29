@@ -49,7 +49,17 @@ export const ResponseType = z.enum([
   "open_text",
   "yes_no",
   "likert",
+  // v1.5.0 hybrid response model (D-119 / handoff 04): scale kinds carry the
+  // construct they measure. Engine semantics are identical to single_select
+  // (one option value); the kind exists so authoring review and rendering can
+  // enforce "each scale must match its construct".
+  "comparison_scale", // skill vs. peers, every level clinically meaningful
+  "frequency_scale",  // events the respondent can reliably observe
+  "support_scale",    // degree of prompting / independence
 ]);
+
+/** Developmental band ids (see grade-bands.ts for the versioned mapping). */
+export const GradeBand = z.enum(["early_childhood", "elementary", "middle", "secondary"]);
 
 /** A condition over a previously answered question. */
 export const Condition = z
@@ -103,8 +113,38 @@ export const Question = z.object({
   stages: z
     .array(z.enum(["prereferral", "initial_evaluation", "reevaluation"]))
     .default(["prereferral", "initial_evaluation", "reevaluation"]),
+  /**
+   * Developmental bands where the question applies (grade/developmental
+   * routing, D-119). Absent = applies to every band. Routing removes
+   * categorically irrelevant content only — never an applicable domain the
+   * respondent simply hasn't observed.
+   */
+  gradeBands: z.array(GradeBand).optional(),
+  /**
+   * baseline = always-shown universal-consideration item; depth = shown when
+   * a disposition licenses it (rendered in the "Relevant follow-up" step).
+   */
+  tier: z.enum(["baseline", "depth"]).optional(),
+  /**
+   * Declares that this always-shown item carries an explicit observation
+   * escape (D-119): an option meaning "not enough opportunity to observe".
+   * The escape completes the item but is NEVER no-concern (T1-obs, D-049).
+   */
+  observationEscape: z.boolean().optional(),
+  /** Option value that is the observation escape (default "not_observed"). */
+  observationEscapeValue: z.string().optional(),
   notes: z.string().optional(),         // authoring notes, never displayed
-});
+})
+  .superRefine((q, ctx) => {
+    if (q.observationEscape) {
+      const esc = q.observationEscapeValue ?? "not_observed";
+      if (!q.options?.some((o) => o.value === esc))
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `observationEscape requires an option with value "${esc}"`,
+        });
+    }
+  });
 
 /* ---------- modules ---------- */
 
@@ -120,6 +160,10 @@ export const Module = z.object({
   displayLabel: z.string(),             // informant-facing section header
   intro: z.string().optional(),         // informant-facing section intro
   alwaysShown: z.boolean().default(false),
+  /** Respondent step (four-step flow, handoff 03) this module renders under. */
+  step: z.number().int().min(1).max(4).optional(),
+  /** Developmental bands where the whole module applies; absent = all. */
+  gradeBands: z.array(GradeBand).optional(),
   questions: z.array(Question),
   repeatGroups: z.array(RepeatGroup).optional(),
 });
@@ -190,6 +234,12 @@ export const QuestionBank = z.object({
   title: z.string(),
   estimatedMinutes: z.string(),
   intro: z.string(),                    // informant-facing welcome text
+  /** Four-step respondent flow labels (handoff 03); optional pre-v1.5 banks. */
+  steps: z
+    .array(z.object({ step: z.number().int().min(1).max(4), title: z.string() }))
+    .optional(),
+  /** Version of the grade→band mapping this bank was authored against. */
+  gradeBandSetVersion: z.string().optional(),
   modules: z.array(Module).min(1),
   branchRules: z.array(BranchRule),
   /** Optional derived concern-set config (D-028); absent = base question only. */

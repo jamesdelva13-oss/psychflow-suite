@@ -4,6 +4,7 @@ export * from "./entities";
 export * from "./crosswalk.schema";
 export * from "./question-bank.schema";
 export * from "./block-scope.schema";
+export * from "./grade-bands";
 export { default as taxonomyV04 } from "./taxonomy.v0-4.json";
 
 // Export hygiene (D-023): ConstructId and Topography are each declared in two

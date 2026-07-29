@@ -149,13 +149,31 @@ function withConcernSet(bank: TQuestionBank, responses: ResponseMap): ResponseMa
 
 /* ---------------- visibility ---------------- */
 
+/**
+ * Session rendering context (v1.5.0, D-119). `gradeBand` drives grade/
+ * developmental routing: items and modules that declare `gradeBands` are
+ * excluded when the session band is not among them. Absent context (or a
+ * pre-band bank) disables routing — nothing is hidden.
+ */
+export interface RenderContext {
+  gradeBand?: string;
+}
+
+const inBand = (declared: string[] | undefined, ctx?: RenderContext): boolean =>
+  !declared || !ctx?.gradeBand || declared.includes(ctx.gradeBand);
+
 /** Which modules are active given current responses (alwaysShown + branch rules). */
-export function activeModules(bank: TQuestionBank, responses: ResponseMap): Set<string> {
+export function activeModules(bank: TQuestionBank, responses: ResponseMap, ctx?: RenderContext): Set<string> {
   const ik = new Map<string, string[]>(); // branch conditions never target repeat questions
   const branchResponses = withConcernSet(bank, responses);
   const active = new Set<string>();
-  for (const m of bank.modules) if (m.alwaysShown) active.add(m.id);
+  for (const m of bank.modules) {
+    if (!inBand(m.gradeBands, ctx)) continue;
+    if (m.alwaysShown) active.add(m.id);
+  }
   for (const br of bank.branchRules) {
+    const target = bank.modules.find((m) => m.id === br.target);
+    if (!inBand(target?.gradeBands, ctx)) continue;
     if (allConditions(br.when, branchResponses, ik)) active.add(br.target);
   }
   return active;
@@ -190,14 +208,15 @@ function repeatInstanceKeys(bank: TQuestionBank, responses: ResponseMap, active:
 }
 
 /** The ordered, fully expanded list of currently visible question instances. */
-export function visibleQuestions(bank: TQuestionBank, responses: ResponseMap): QuestionInstance[] {
-  const active = activeModules(bank, responses);
+export function visibleQuestions(bank: TQuestionBank, responses: ResponseMap, ctx?: RenderContext): QuestionInstance[] {
+  const active = activeModules(bank, responses, ctx);
   const ik = repeatInstanceKeys(bank, responses, active);
   const out: QuestionInstance[] = [];
 
   for (const m of bank.modules) {
     if (!active.has(m.id)) continue;
     for (const q of m.questions) {
+      if (!inBand(q.gradeBands, ctx)) continue;
       if (allConditions(q.showIf, responses, ik)) {
         out.push({ key: q.id, question: q, moduleId: m.id });
       }
@@ -235,8 +254,8 @@ export interface ValidationResult {
   unknownKeys: string[];       // response keys that map to nothing visible or known
 }
 
-export function validateSubmission(bank: TQuestionBank, responses: ResponseMap): ValidationResult {
-  const visible = visibleQuestions(bank, responses);
+export function validateSubmission(bank: TQuestionBank, responses: ResponseMap, ctx?: RenderContext): ValidationResult {
+  const visible = visibleQuestions(bank, responses, ctx);
   const visibleKeys = new Set(visible.map((v) => v.key));
   const allKnownIds = new Set<string>();
   for (const m of bank.modules) {
@@ -263,9 +282,33 @@ export interface PendingFollowUp {
   description: string;
 }
 
+/** An item the respondent explicitly could not observe (T1-obs, D-049). */
+export interface ObservationGap {
+  key: string;
+  questionId: string;
+  moduleId: string;
+}
+
+/**
+ * Items answered with their declared observation escape. These are ABSENCE OF
+ * EVIDENCE, never evidence of absence: downstream rendering must not treat
+ * them as "no concern" (acceptance test 9) and, when material, they become
+ * collect-elsewhere flags rather than cleared domains.
+ */
+export function observationGaps(bank: TQuestionBank, responses: ResponseMap, ctx?: RenderContext): ObservationGap[] {
+  const out: ObservationGap[] = [];
+  for (const v of visibleQuestions(bank, responses, ctx)) {
+    const q = v.question;
+    if (!q.observationEscape) continue;
+    const esc = q.observationEscapeValue ?? "not_observed";
+    if (responses[v.key] === esc) out.push({ key: v.key, questionId: q.id, moduleId: v.moduleId });
+  }
+  return out;
+}
+
 /** Layer 2: deterministic completeness rules → queued approved follow-ups. */
-export function pendingFollowUps(bank: TQuestionBank, responses: ResponseMap): PendingFollowUp[] {
-  const active = activeModules(bank, responses);
+export function pendingFollowUps(bank: TQuestionBank, responses: ResponseMap, ctx?: RenderContext): PendingFollowUp[] {
+  const active = activeModules(bank, responses, ctx);
   const ik = repeatInstanceKeys(bank, responses, active);
   const fuById = new Map(bank.followUps.map((f) => [f.id, f]));
   const out: PendingFollowUp[] = [];
@@ -291,6 +334,13 @@ export interface LockedSubmission {
     taxonomyVersion: string;
     responses: ResponseMap;
     followUpResponses?: ResponseMap; // answers to Layer 2/3 follow-ups, keyed by FU id
+    /**
+     * Session routing context (v1.5.0): resolved developmental band and the
+     * grade→band mapping version it came from. With the bank version pin,
+     * this makes every routed-hidden item reconstructable (acceptance test 11)
+     * — no per-hidden-item records are stored (superseded, handoff 02).
+     */
+    sessionContext?: { gradeBand: string; gradeBandSetVersion: string };
     submittedAt: string;
   };
 }
@@ -309,10 +359,14 @@ export function lockSubmission(args: {
   informantId: string;
   collectedOn: string; // YYYY-MM-DD
   payloadRef: string;
+  sessionContext?: { gradeBand: string; gradeBandSetVersion: string };
   now?: Date;
 }): LockedSubmission {
   const bank = QuestionBank.parse(args.bank);
-  const v = validateSubmission(bank, args.responses);
+  const ctx: RenderContext | undefined = args.sessionContext
+    ? { gradeBand: args.sessionContext.gradeBand }
+    : undefined;
+  const v = validateSubmission(bank, args.responses, ctx);
   if (!v.ok) {
     throw new Error(
       `Submission invalid - missingRequired: [${v.missingRequired.join(", ")}] unknownKeys: [${v.unknownKeys.join(", ")}]`
@@ -325,6 +379,7 @@ export function lockSubmission(args: {
     taxonomyVersion: bank.taxonomyVersion,
     responses: args.responses,
     ...(args.followUpResponses ? { followUpResponses: args.followUpResponses } : {}),
+    ...(args.sessionContext ? { sessionContext: args.sessionContext } : {}),
     submittedAt,
   };
   const source = Source.parse({
