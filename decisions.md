@@ -1163,6 +1163,14 @@ that affirmative data **by design**. Interaction with the tier ladder (D-049) to
 be specified in v0.7.
 **Status:** Accepted · 2026-07-25 · Proposed: JD (EdPlan orientation training) · Ratified: JD
 
+> **Amendment note (2026-07-29, per D-038):** Amended by **D-119**. The
+> universal-consideration and conditional-depth requirements remain in force;
+> the **paired can-do/difficulty checklist mechanism is superseded** — response
+> formats are selected per the information being elicited, always-shown items
+> carry an explicit observation escape where non-observation is coherent, and
+> grade/developmental routing excludes categorically irrelevant content. See
+> D-119. Original text preserved above.
+
 ## D-090 · [PsychReport] Clarification (non-change): evaluation-planning coverage is not a report concern
 PsychReport reports **assessments administered** — what a given instrument found.
 Documentation of which domains were **considered but not evaluated** during
@@ -1527,3 +1535,16 @@ Verified finding (Session B, Gate 3): the running PsychReport app enforces **no*
 - **G8 · Prohibited-transformations sequencing (C4)** — **OPEN / still pending** (not covered by Session B). Nine transformations stay in runtime until the QA regression suite exists.
 
 *Also verified (not an original G1–G8 gate): mode-taxonomy sharing — CONFIRMED (Gate 4); C2 stands (see the D-032 note).*
+
+## D-119 · [RIE] D-089 amendment — universal consideration without a universal instrument format
+
+Every grade/developmentally applicable domain must produce an interpretable disposition. D-089's universal-consideration and conditional-depth requirements remain in force. Its paired can-do/difficulty checklist mechanism is superseded.
+
+Question authors must select response formats according to the information being elicited. Structured responses are used when nonselection would be clinically ambiguous; checklists may be used when identifying nonexhaustive examples is sufficient. This is a governing authoring principle, not a ratified assignment of formats to domains or items. Item-level decisions belong to versioned clinical-bank review.
+
+Every always-shown item for which insufficient opportunity to observe is logically possible must provide an explicit observation escape. This requirement does not apply to factual/contextual items — such as respondent role — for which non-observation is not a coherent response.
+
+Grade/developmental routing is the preferred mechanism for excluding categorically irrelevant content. Respondent burden is governed through pilot-measured completion, abandonment, and clinical yield rather than a fixed item-count ceiling. Form configuration resides with the relevant form and optional case-specific setup rather than global navigation.
+
+Design test recorded with this decision: safe specification requires the system to preserve meaningful states, provenance, or professional control; risky specification prescribes extensive content, fixed item assignments, or broad prose prohibitions before demonstrated failure justifies them. This amendment primarily removes unnecessary mechanism while preserving clinical correctness.
+**Status:** Accepted · 2026-07-29 · Proposed: JD · Ratified: JD
