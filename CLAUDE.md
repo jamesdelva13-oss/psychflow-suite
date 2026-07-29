@@ -75,6 +75,8 @@ Do not rely on this file for specific rules; it goes stale. Read these:
   for any prompt work.
 - **`library/wisc-v.draft.md`** — DRAFT instrument-library content, unverified. Needs
   practitioner review before use.
+- RIE build work: see `docs/rie-handoff/` — `README-FIRST.md` governs read order and
+  source-conflict precedence.
 
 ---
 
