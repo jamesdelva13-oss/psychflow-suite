@@ -1548,3 +1548,8 @@ Grade/developmental routing is the preferred mechanism for excluding categorical
 
 Design test recorded with this decision: safe specification requires the system to preserve meaningful states, provenance, or professional control; risky specification prescribes extensive content, fixed item assignments, or broad prose prohibitions before demonstrated failure justifies them. This amendment primarily removes unnecessary mechanism while preserving clinical correctness.
 **Status:** Accepted · 2026-07-29 · Proposed: JD · Ratified: JD
+
+## D-120 · [RIE] Respondent-facing student identity: first name + last initial
+
+Respondent-facing student identity is first name plus last initial. The Case contract adds these as minimal identity fields; full name is never stored, and links, logs, and model payloads continue to exclude them. Supersedes initials-only display.
+**Status:** Accepted · 2026-07-29 · Proposed: Claude (handoff reconciliation, per handoff 01 respondent-experience requirement) · Ratified: JD

@@ -53,6 +53,19 @@ check("Case: referral provenance fields default clean (D-030)",
   okCase.success && okCase.data.referralContributors.length === 0 &&
   okCase.data.concernOnset === null && okCase.data.contributingInformants.length === 0);
 
+// D-120: respondent-facing identity is first name + last initial; never a full last name
+const d120 = Case.safeParse({
+  caseId: "case_0002", state: "SC", evalType: "initial", referralDate: "2026-09-08",
+  student: { studentRef: "stu_y1", firstName: "Maya", lastInitial: "R", displayInitials: "M.R.", grade: "3" },
+  referralSource: "unknown_not_yet_captured", createdAt: now,
+});
+check("Case: accepts first name + last initial (D-120)", d120.success);
+check("Case: REJECTS a multi-character last 'initial' (D-120 minimal-PII guard)", !Case.safeParse({
+  caseId: "case_0003", state: "SC", evalType: "initial", referralDate: "2026-09-08",
+  student: { studentRef: "stu_y2", firstName: "Maya", lastInitial: "Rivera", displayInitials: "M.R.", grade: "3" },
+  referralSource: "unknown_not_yet_captured", createdAt: now,
+}).success);
+
 // D-030: referralSource is required — a Case cannot omit it
 check("Case: REJECTS missing referralSource (required, D-030)", !Case.safeParse({
   caseId: "c", state: "SC", evalType: "initial", referralDate: "2026-09-08",

@@ -135,6 +135,13 @@ export const Case = z.object({
   /** Minimal PII by design (D-006). The psychologist's own records hold identity. */
   student: z.object({
     studentRef: z.string(),          // internal pseudonymous reference
+    /**
+     * Respondent-facing identity is first name + last initial (D-120). Full
+     * name is never stored; links, logs, and model payloads exclude these.
+     */
+    firstName: z.string().max(40).optional(),
+    lastInitial: z.string().regex(/^[A-Za-z]$/).optional(),
+    /** Pre-D-120 display form, superseded by firstName + lastInitial. */
     displayInitials: z.string().max(5),
     grade: z.string(),
     ageYearsMonths: z.string().regex(/^\d{1,2}:\d{1,2}$/).optional(),
