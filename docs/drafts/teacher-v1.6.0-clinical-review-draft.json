@@ -1,0 +1,1746 @@
+{
+  "draftId": "teacher-v1.6.0-clinical-review-draft",
+  "status": "DRAFT — clinical review copy. NOT a published question bank.",
+  "date": "2026-07-30",
+  "supersedes": "teacher-form.v1.5.0.json (draft, never published)",
+  "governing": [
+    "D-089",
+    "D-119",
+    "D-120",
+    "JD ruling 2026-07-30 (district REM arrangement + disposition-chooses-checklist)"
+  ],
+  "taxonomyVersion": "0.4",
+  "gradeBandSetVersion": "1.0 (ratified 2026-07-30)",
+  "pattern": {
+    "disposition": {
+      "prompt": "Area of concern?",
+      "options": [
+        "Yes",
+        "No",
+        "Not enough opportunity to observe"
+      ],
+      "required": true,
+      "observationEscape": "Not enough opportunity to observe"
+    },
+    "yes": "magnitude (where interpretable) → difficulty checklist → topography/extras → optional example → Step-3 depth",
+    "no": "strengths / current-functioning checklist (optional, with nudge) → optional data point",
+    "not_observed": "no checklist; observation gap preserved explicitly",
+    "nudge": "Select any statements or data that describe the student's current functioning. If none are selected, the section will state only that no concerns were reported.",
+    "uncheckedNote": "Check all that apply. Leave an item unchecked if it does not apply, you have not observed it, or you are unsure — an unchecked item is never read as either a strength or a difficulty."
+  },
+  "steps": [
+    {
+      "step": 1,
+      "title": "About your work with the student"
+    },
+    {
+      "step": 2,
+      "title": "What have you noticed?"
+    },
+    {
+      "step": 3,
+      "title": "Relevant follow-up"
+    },
+    {
+      "step": 4,
+      "title": "Impact, support, and hopes"
+    }
+  ],
+  "step1": [
+    {
+      "id": "S1-01",
+      "prompt": "Your role with this student",
+      "format": "single_select",
+      "options": [
+        "General education teacher",
+        "Special education teacher",
+        "Interventionist or specialist",
+        "Related-service provider",
+        "Other school professional"
+      ],
+      "constructIds": []
+    },
+    {
+      "id": "S1-02",
+      "prompt": "Which subjects or settings do you share with this student?",
+      "format": "short_text",
+      "options": [],
+      "constructIds": []
+    },
+    {
+      "id": "S1-03",
+      "prompt": "How long have you worked with this student?",
+      "format": "single_select",
+      "options": [
+        "Less than 1 month",
+        "1–3 months",
+        "3–6 months",
+        "6–12 months",
+        "More than one year"
+      ],
+      "constructIds": []
+    },
+    {
+      "id": "S1-04",
+      "prompt": "How often do you work with this student?",
+      "format": "frequency_scale",
+      "options": [
+        "Most of each school day",
+        "Daily for one period",
+        "Several times weekly",
+        "Less often"
+      ],
+      "constructIds": []
+    },
+    {
+      "id": "S1-05",
+      "prompt": "Overall, how much opportunity have you had to observe this student's academic work?",
+      "format": "single_select",
+      "options": [
+        "Extensive — I see their academic work regularly",
+        "Moderate — I see some of their academic work",
+        "Limited — my contact is mostly non-academic"
+      ],
+      "constructIds": []
+    },
+    {
+      "id": "S1-06",
+      "prompt": "What are this student's strengths and interests?",
+      "format": "open_text",
+      "options": [],
+      "constructIds": []
+    }
+  ],
+  "contextItems": [
+    {
+      "id": "S1-07",
+      "prompt": "Have you noticed a marked change in, or loss of, skills, behavior, or mood this student previously demonstrated?",
+      "options": [
+        "Yes",
+        "No",
+        "Not sure"
+      ],
+      "tags": [
+        "CTX.HEALTH_MEDICAL"
+      ],
+      "followup": [
+        "What changed?",
+        "What was the student previously able to do?",
+        "Approximately when did you notice the change?"
+      ],
+      "note": "A 'Yes' here is one of the highest-signal answers on the form and always opens the three follow-ups."
+    },
+    {
+      "id": "S1-08",
+      "prompt": "Are attendance or tardiness affecting this student's access to instruction?",
+      "options": [
+        "Yes",
+        "No",
+        "Not enough opportunity to observe"
+      ],
+      "tags": [
+        "CTX.ATTENDANCE"
+      ],
+      "followup": [
+        "Briefly describe the pattern you have noticed, and how it affects the student's progress."
+      ],
+      "note": "Explicit item — an exclusionary-factor consideration, no longer a checkbox inside Other/Miscellaneous."
+    }
+  ],
+  "domains": [
+    {
+      "order": 1,
+      "code": "RDG",
+      "districtLabel": "Reading",
+      "description": "Word reading, fluency, vocabulary, and comprehension",
+      "magnitude": {
+        "prompt": "Compared with grade-level peers, this student's overall reading is:",
+        "format": "comparison_scale",
+        "constructIds": [
+          "ACAD.READ"
+        ],
+        "options": [
+          "Well below grade-level peers",
+          "Somewhat below peers",
+          "About the same as peers",
+          "Above peers",
+          "Not enough opportunity to observe"
+        ]
+      },
+      "magnitudeNote": null,
+      "difficultyChecklist": [
+        {
+          "id": "RDG.D1",
+          "label": "Connecting speech sounds with letters or word parts",
+          "constructIds": [
+            "ACAD.READ.PHONOLOGICAL_AWARENESS"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "RDG.D2",
+          "label": "Sounding out unfamiliar words",
+          "constructIds": [
+            "ACAD.READ.DECODING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "RDG.D3",
+          "label": "Recognizing familiar words quickly and accurately",
+          "constructIds": [
+            "ACAD.READ.WORD_RECOGNITION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "RDG.D4",
+          "label": "Reading connected text at a workable pace",
+          "constructIds": [
+            "ACAD.READ.FLUENCY"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "RDG.D5",
+          "label": "Understanding what was read",
+          "constructIds": [
+            "ACAD.READ.COMPREHENSION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "RDG.D6",
+          "label": "Retaining or recalling important information from what was read",
+          "constructIds": [
+            "ACAD.READ.COMPREHENSION",
+            "EF.WORKING_MEMORY"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "RDG.D7",
+          "label": "Understanding or using grade-level vocabulary",
+          "constructIds": [
+            "ACAD.READ.VOCABULARY"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "RDG.D8",
+          "label": "Avoids or resists reading tasks",
+          "constructIds": [
+            "ACAD.READ",
+            "CTX.MOTIVATION_ENGAGEMENT"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "RDG.S1",
+          "label": "Reads grade-level material accurately",
+          "constructIds": [
+            "ACAD.READ.WORD_RECOGNITION"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "RDG.S2",
+          "label": "Understands and can discuss what was read",
+          "constructIds": [
+            "ACAD.READ.COMPREHENSION"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "RDG.S3",
+          "label": "Uses grade-level vocabulary",
+          "constructIds": [
+            "ACAD.READ.VOCABULARY"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "RDG.S4",
+          "label": "Current reading grade or benchmark is at or above expectations",
+          "constructIds": [
+            "ACAD.READ"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "academic",
+      "safetyItem": null,
+      "note": null
+    },
+    {
+      "order": 2,
+      "code": "MTH",
+      "districtLabel": "Math",
+      "description": "Calculation, reasoning, fluency, and application",
+      "magnitude": {
+        "prompt": "Compared with grade-level peers, this student's overall mathematics performance is:",
+        "format": "comparison_scale",
+        "constructIds": [
+          "ACAD.MATH"
+        ],
+        "options": [
+          "Well below grade-level peers",
+          "Somewhat below peers",
+          "About the same as peers",
+          "Above peers",
+          "Not enough opportunity to observe"
+        ]
+      },
+      "magnitudeNote": null,
+      "difficultyChecklist": [
+        {
+          "id": "MTH.D1",
+          "label": "Understanding quantities and number relationships",
+          "constructIds": [
+            "ACAD.MATH"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MTH.D2",
+          "label": "Recalling or efficiently deriving basic facts",
+          "constructIds": [
+            "ACAD.MATH.FLUENCY"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MTH.D3",
+          "label": "Completing calculations accurately",
+          "constructIds": [
+            "ACAD.MATH.CALCULATION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MTH.D4",
+          "label": "Choosing the right operation for a word problem",
+          "constructIds": [
+            "ACAD.MATH.PROBLEM_SOLVING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MTH.D5",
+          "label": "Applying previously taught procedures",
+          "constructIds": [
+            "ACAD.MATH.CALCULATION",
+            "COG.GL.TRANSFER"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MTH.D6",
+          "label": "Explaining mathematical thinking",
+          "constructIds": [
+            "ACAD.MATH.PROBLEM_SOLVING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MTH.D7",
+          "label": "Keeping pace with grade-level mathematics work",
+          "constructIds": [
+            "ACAD.MATH.FLUENCY"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "MTH.S1",
+          "label": "Completes grade-level computation accurately",
+          "constructIds": [
+            "ACAD.MATH.CALCULATION"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "MTH.S2",
+          "label": "Solves word problems with typical support",
+          "constructIds": [
+            "ACAD.MATH.PROBLEM_SOLVING"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "MTH.S3",
+          "label": "Explains their mathematical thinking",
+          "constructIds": [
+            "ACAD.MATH.PROBLEM_SOLVING"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "MTH.S4",
+          "label": "Current math grade or benchmark is at or above expectations",
+          "constructIds": [
+            "ACAD.MATH"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "academic",
+      "safetyItem": null,
+      "note": null
+    },
+    {
+      "order": 3,
+      "code": "WRT",
+      "districtLabel": "Writing",
+      "description": "Handwriting, spelling, sentence construction, and composition",
+      "magnitude": {
+        "prompt": "Compared with grade-level peers, this student's written work is:",
+        "format": "comparison_scale",
+        "constructIds": [
+          "ACAD.WRIT"
+        ],
+        "options": [
+          "Well below grade-level peers",
+          "Somewhat below peers",
+          "About the same as peers",
+          "Above peers",
+          "Not enough opportunity to observe"
+        ]
+      },
+      "magnitudeNote": null,
+      "difficultyChecklist": [
+        {
+          "id": "WRT.D1",
+          "label": "Handwriting legibility or letter formation",
+          "constructIds": [
+            "ACAD.WRIT",
+            "MOTOR_SENS.FINE_MOTOR"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "WRT.D2",
+          "label": "Spelling",
+          "constructIds": [
+            "ACAD.WRIT.SPELLING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "WRT.D3",
+          "label": "Constructing complete sentences",
+          "constructIds": [
+            "ACAD.WRIT.EXPRESSION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "WRT.D4",
+          "label": "Organizing ideas in a logical sequence",
+          "constructIds": [
+            "ACAD.WRIT.EXPRESSION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "WRT.D5",
+          "label": "Including relevant detail",
+          "constructIds": [
+            "ACAD.WRIT.EXPRESSION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "WRT.D6",
+          "label": "Using grammar and punctuation expected at this grade",
+          "constructIds": [
+            "ACAD.WRIT.EXPRESSION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "WRT.D7",
+          "label": "Completing written work within available time",
+          "constructIds": [
+            "ACAD.WRIT.FLUENCY"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "WRT.S1",
+          "label": "Produces readable written work",
+          "constructIds": [
+            "ACAD.WRIT"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "WRT.S2",
+          "label": "Writes complete, organized sentences",
+          "constructIds": [
+            "ACAD.WRIT.EXPRESSION"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "WRT.S3",
+          "label": "Spells grade-appropriate words",
+          "constructIds": [
+            "ACAD.WRIT.SPELLING"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "WRT.S4",
+          "label": "Current writing grade or assessment is at or above expectations",
+          "constructIds": [
+            "ACAD.WRIT"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "academic",
+      "safetyItem": null,
+      "note": null
+    },
+    {
+      "order": 4,
+      "code": "COM",
+      "districtLabel": "Communication",
+      "description": "Articulation, fluency, voice, and receptive/expressive/social language",
+      "magnitude": {
+        "prompt": "Compared with grade-level peers, this student's spoken communication is:",
+        "format": "comparison_scale",
+        "constructIds": [
+          "LANG"
+        ],
+        "options": [
+          "Well below grade-level peers",
+          "Somewhat below peers",
+          "About the same as peers",
+          "Above peers",
+          "Not enough opportunity to observe"
+        ]
+      },
+      "magnitudeNote": null,
+      "difficultyChecklist": [
+        {
+          "id": "COM.D1",
+          "label": "Speech is hard to understand",
+          "constructIds": [
+            "LANG.ARTIC"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COM.D2",
+          "label": "Repetitions, prolonged sounds, or blocks when speaking",
+          "constructIds": [
+            "LANG"
+          ],
+          "polarity": "concern",
+          "flag": "no-tag"
+        },
+        {
+          "id": "COM.D3",
+          "label": "Unusual voice quality (nasal, hoarse, or breathy)",
+          "constructIds": [
+            "LANG"
+          ],
+          "polarity": "concern",
+          "flag": "no-tag"
+        },
+        {
+          "id": "COM.D4",
+          "label": "Understanding spoken directions",
+          "constructIds": [
+            "LANG.RECEPTIVE"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COM.D5",
+          "label": "Understanding vocabulary or basic concepts",
+          "constructIds": [
+            "LANG.RECEPTIVE"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COM.D6",
+          "label": "Putting thoughts into words, or sentence structure and grammar",
+          "constructIds": [
+            "LANG.EXPRESSIVE"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COM.D7",
+          "label": "Explaining events or telling a coherent story",
+          "constructIds": [
+            "LANG.EXPRESSIVE"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COM.D8",
+          "label": "Using language effectively with peers and adults",
+          "constructIds": [
+            "LANG.PRAGMATIC"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "COM.S1",
+          "label": "Is understood by familiar and unfamiliar listeners",
+          "constructIds": [
+            "LANG.ARTIC"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "COM.S2",
+          "label": "Follows spoken directions typical for the grade",
+          "constructIds": [
+            "LANG.RECEPTIVE"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "COM.S3",
+          "label": "Expresses ideas in organized sentences",
+          "constructIds": [
+            "LANG.EXPRESSIVE"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "COM.S4",
+          "label": "Converses effectively with peers and adults",
+          "constructIds": [
+            "LANG.PRAGMATIC"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "communication",
+      "safetyItem": null,
+      "note": null
+    },
+    {
+      "order": 5,
+      "code": "ADP",
+      "districtLabel": "Adaptive Behavior",
+      "description": "Functional, self-help, and daily-living skills; independence in school routines",
+      "magnitude": {
+        "prompt": "Compared with grade-level peers, this student's day-to-day independence at school is:",
+        "format": "comparison_scale",
+        "constructIds": [
+          "ADAPT.DAILY_LIVING"
+        ],
+        "options": [
+          "Well below grade-level peers",
+          "Somewhat below peers",
+          "About the same as peers",
+          "Above peers",
+          "Not enough opportunity to observe"
+        ]
+      },
+      "magnitudeNote": null,
+      "difficultyChecklist": [
+        {
+          "id": "ADP.D1",
+          "label": "Managing belongings and materials",
+          "constructIds": [
+            "ADAPT.DAILY_LIVING.DOMESTIC"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "ADP.D2",
+          "label": "Following familiar routines without step-by-step prompting",
+          "constructIds": [
+            "ADAPT.DAILY_LIVING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "ADP.D3",
+          "label": "Personal-care routines relevant at school",
+          "constructIds": [
+            "ADAPT.DAILY_LIVING.PERSONAL"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "ADP.D4",
+          "label": "Everyday safety awareness in class, hallways, or outdoors",
+          "constructIds": [
+            "ADAPT.DAILY_LIVING.COMMUNITY"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "ADP.D5",
+          "label": "Asking for help when it is needed",
+          "constructIds": [
+            "ADAPT.COMMUNICATION.EXPRESSIVE"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "ADP.D6",
+          "label": "Adjusting to changes in the daily routine",
+          "constructIds": [
+            "ADAPT.SOCIALIZATION.COPING"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "ADP.S1",
+          "label": "Manages belongings and materials independently",
+          "constructIds": [
+            "ADAPT.DAILY_LIVING.DOMESTIC"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "ADP.S2",
+          "label": "Follows classroom routines without extra prompting",
+          "constructIds": [
+            "ADAPT.DAILY_LIVING"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "ADP.S3",
+          "label": "Asks for help appropriately",
+          "constructIds": [
+            "ADAPT.COMMUNICATION.EXPRESSIVE"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "ADP.S4",
+          "label": "Meets school safety expectations",
+          "constructIds": [
+            "ADAPT.DAILY_LIVING.COMMUNITY"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "functional",
+      "safetyItem": null,
+      "note": null
+    },
+    {
+      "order": 6,
+      "code": "SOC",
+      "districtLabel": "Social/Emotional",
+      "description": "Peer and adult relationships, emotional regulation and expression, social understanding",
+      "magnitude": {
+        "prompt": "Compared with grade-level peers, this student's social participation with peers is:",
+        "format": "comparison_scale",
+        "constructIds": [
+          "BEH.SOCIAL"
+        ],
+        "options": [
+          "Well below grade-level peers",
+          "Somewhat below peers",
+          "About the same as peers",
+          "Above peers",
+          "Not enough opportunity to observe"
+        ]
+      },
+      "magnitudeNote": null,
+      "difficultyChecklist": [
+        {
+          "id": "SOC.D1",
+          "label": "Initiating or responding to peers",
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SOC.D2",
+          "label": "Maintaining age-expected peer relationships",
+          "constructIds": [
+            "ADAPT.SOCIALIZATION.INTERPERSONAL"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SOC.D3",
+          "label": "Interpreting common social cues",
+          "constructIds": [
+            "BEH.SOCIAL",
+            "LANG.PRAGMATIC"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SOC.D4",
+          "label": "Expressing emotions in an understandable way",
+          "constructIds": [
+            "EF.EMOT_REGULATION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SOC.D5",
+          "label": "Recovering after disappointment or correction",
+          "constructIds": [
+            "ADAPT.SOCIALIZATION.COPING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SOC.D6",
+          "label": "Appears worried, sad, or withdrawn in ways that affect participation",
+          "constructIds": [
+            "BEH.INTERNALIZING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SOC.D7",
+          "label": "Frequent physical complaints without a clear medical cause",
+          "constructIds": [
+            "BEH.INTERNALIZING.SOMATIZATION"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "SOC.S1",
+          "label": "Has at least one steady friendship",
+          "constructIds": [
+            "ADAPT.SOCIALIZATION.INTERPERSONAL"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "SOC.S2",
+          "label": "Joins and participates in group activities",
+          "constructIds": [
+            "BEH.SOCIAL"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "SOC.S3",
+          "label": "Expresses feelings in an understandable way",
+          "constructIds": [
+            "EF.EMOT_REGULATION"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "SOC.S4",
+          "label": "Recovers from setbacks within a reasonable time",
+          "constructIds": [
+            "ADAPT.SOCIALIZATION.COPING"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "functional",
+      "safetyItem": "emotional",
+      "note": null
+    },
+    {
+      "order": 7,
+      "code": "BEH",
+      "districtLabel": "Behavioral",
+      "description": "Organization, attention, concentration, impulse control, observable classroom behavior",
+      "magnitude": {
+        "prompt": "Compared with grade-level peers, this student's attention and self-management during classroom work is:",
+        "format": "comparison_scale",
+        "constructIds": [
+          "EF.SUSTAINED_ATTENTION"
+        ],
+        "options": [
+          "Well below grade-level peers",
+          "Somewhat below peers",
+          "About the same as peers",
+          "Above peers",
+          "Not enough opportunity to observe"
+        ]
+      },
+      "magnitudeNote": null,
+      "difficultyChecklist": [
+        {
+          "id": "BEH.D1",
+          "label": "Sustaining attention for expected tasks",
+          "constructIds": [
+            "EF.SUSTAINED_ATTENTION",
+            "BEH.ATTENTION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "BEH.D2",
+          "label": "Starting work with typical prompting",
+          "constructIds": [
+            "EF.TASK_INITIATION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "BEH.D3",
+          "label": "Organizing materials and assignments",
+          "constructIds": [
+            "EF.PLANNING_ORG"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "BEH.D4",
+          "label": "Controlling impulses sufficiently for the setting",
+          "constructIds": [
+            "EF.IMPULSE_CONTROL",
+            "BEH.HYPER_IMPULSIVE"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "BEH.D5",
+          "label": "Following classroom and school expectations",
+          "constructIds": [
+            "BEH.EXTERNALIZING.CONDUCT"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "BEH.D6",
+          "label": "Transitioning between activities",
+          "constructIds": [
+            "EF.COG_FLEXIBILITY"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "BEH.D7",
+          "label": "Completing work within available time",
+          "constructIds": [
+            "EF.PLANNING_ORG"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "BEH.D8",
+          "label": "Responding to redirection",
+          "constructIds": [
+            "BEH.EXTERNALIZING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "BEH.D9",
+          "label": "Noticing and correcting their own errors",
+          "constructIds": [
+            "EF.SELF_MONITORING"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "BEH.S1",
+          "label": "Follows classroom expectations most of the time",
+          "constructIds": [
+            "BEH.EXTERNALIZING.CONDUCT"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "BEH.S2",
+          "label": "Responds to redirection without escalating",
+          "constructIds": [
+            "BEH.EXTERNALIZING"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "BEH.S3",
+          "label": "Begins and completes work with typical prompting",
+          "constructIds": [
+            "EF.TASK_INITIATION"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "BEH.S4",
+          "label": "Has stretches of settled, engaged days",
+          "constructIds": [
+            "BEH"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": [
+        {
+          "label": "Refusing or not following adult directions",
+          "topography": "noncompliance"
+        },
+        {
+          "label": "Avoiding or escaping tasks or places",
+          "topography": "avoidance"
+        },
+        {
+          "label": "Physical or verbal aggression",
+          "topography": "aggression"
+        },
+        {
+          "label": "Withdrawing from peers or activities",
+          "topography": "withdrawal"
+        },
+        {
+          "label": "Disrupting class (calling out, noises, out of seat)",
+          "topography": "disruption"
+        }
+      ],
+      "depthBlock": "functional",
+      "safetyItem": "behavioral",
+      "note": null
+    },
+    {
+      "order": 8,
+      "code": "COG",
+      "districtLabel": "Cognitive",
+      "description": "Classroom-observed memory, problem-solving, reasoning, and learning processes",
+      "magnitude": {
+        "prompt": "Compared with grade-level peers, how readily does this student learn new academic material?",
+        "format": "comparison_scale",
+        "constructIds": [
+          "COG.GL.ACQUISITION"
+        ],
+        "options": [
+          "Well below grade-level peers",
+          "Somewhat below peers",
+          "About the same as peers",
+          "Above peers",
+          "Not enough opportunity to observe"
+        ]
+      },
+      "magnitudeNote": null,
+      "difficultyChecklist": [
+        {
+          "id": "COG.D1",
+          "label": "Learning new concepts or routines at the expected pace",
+          "constructIds": [
+            "COG.GL.ACQUISITION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COG.D2",
+          "label": "Remembering previously taught information",
+          "constructIds": [
+            "COG.GL.MEMORY"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COG.D3",
+          "label": "Applying learning to a new task or setting",
+          "constructIds": [
+            "COG.GL.TRANSFER"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COG.D4",
+          "label": "Identifying patterns or relationships",
+          "constructIds": [
+            "COG.GF"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COG.D5",
+          "label": "Solving unfamiliar problems",
+          "constructIds": [
+            "COG.GF"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COG.D6",
+          "label": "Explaining their reasoning",
+          "constructIds": [
+            "COG.GF"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "COG.D7",
+          "label": "Working speed on familiar, well-practiced tasks",
+          "constructIds": [
+            "COG.GS"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "COG.S1",
+          "label": "Learns new material at a pace similar to peers",
+          "constructIds": [
+            "COG.GL.ACQUISITION"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "COG.S2",
+          "label": "Retains previously taught skills",
+          "constructIds": [
+            "COG.GL.MEMORY"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "COG.S3",
+          "label": "Reasons through unfamiliar problems",
+          "constructIds": [
+            "COG.GF"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "COG.S4",
+          "label": "Transfers learning to new situations",
+          "constructIds": [
+            "COG.GL.TRANSFER"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "functional",
+      "safetyItem": null,
+      "note": "Teacher input here is attributed classroom observation of learning and thinking. It is never an informal ability estimate and is never scored or summed."
+    },
+    {
+      "order": 9,
+      "code": "MOT",
+      "districtLabel": "Motor Skills",
+      "description": "Gross motor (walking, balance, coordination, posture) and fine motor (handwriting, cutting, hand-eye)",
+      "magnitude": {
+        "prompt": "Compared with grade-level peers, this student's handwriting and fine-motor classroom work is:",
+        "format": "comparison_scale",
+        "constructIds": [
+          "MOTOR_SENS.FINE_MOTOR"
+        ],
+        "options": [
+          "Well below grade-level peers",
+          "Somewhat below peers",
+          "About the same as peers",
+          "Above peers",
+          "Not enough opportunity to observe"
+        ]
+      },
+      "magnitudeNote": null,
+      "difficultyChecklist": [
+        {
+          "id": "MOT.D1",
+          "label": "Pencil grasp or controlled hand movements",
+          "constructIds": [
+            "MOTOR_SENS.FINE_MOTOR"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MOT.D2",
+          "label": "Cutting or manipulating classroom materials",
+          "constructIds": [
+            "MOTOR_SENS.FINE_MOTOR"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MOT.D3",
+          "label": "Coordinating what they see with hand movement",
+          "constructIds": [
+            "MOTOR_SENS.VISUAL_MOTOR"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MOT.D4",
+          "label": "Balance and posture",
+          "constructIds": [
+            "MOTOR_SENS.GROSS_MOTOR"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MOT.D5",
+          "label": "Moving safely around the school environment",
+          "constructIds": [
+            "MOTOR_SENS.GROSS_MOTOR"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "MOT.D6",
+          "label": "Participating in age-appropriate movement activities",
+          "constructIds": [
+            "MOTOR_SENS.GROSS_MOTOR"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "MOT.S1",
+          "label": "Handwriting and fine-motor tasks are age-appropriate",
+          "constructIds": [
+            "MOTOR_SENS.FINE_MOTOR"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "MOT.S2",
+          "label": "Moves safely and confidently around school",
+          "constructIds": [
+            "MOTOR_SENS.GROSS_MOTOR"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "MOT.S3",
+          "label": "Participates fully in movement activities",
+          "constructIds": [
+            "MOTOR_SENS.GROSS_MOTOR"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "functional",
+      "safetyItem": null,
+      "note": null
+    },
+    {
+      "order": 10,
+      "code": "SEN",
+      "districtLabel": "Sensory",
+      "description": "Responses to sound, light, texture, and movement; regulation of sensory needs",
+      "magnitude": null,
+      "magnitudeNote": "Peer comparison is not interpretable here; Step 3 asks frequency and impact instead.",
+      "difficultyChecklist": [
+        {
+          "id": "SEN.D1",
+          "label": "Unusually bothered by everyday classroom sounds",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SEN.D2",
+          "label": "Unusually affected by lighting or visual input",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SEN.D3",
+          "label": "Avoids or reacts strongly to textures or touch",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SEN.D4",
+          "label": "Frequently seeks movement, pressure, chewing, or touch",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SEN.D5",
+          "label": "Difficulty settling after stimulating or sensory-rich activity",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING",
+            "EF.EMOT_REGULATION"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "SEN.D6",
+          "label": "Sensory responses interfere with participation or comfort",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "SEN.S1",
+          "label": "Tolerates typical classroom noise, lighting, and activity",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "SEN.S2",
+          "label": "Participates in messy or hands-on activities",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "SEN.S3",
+          "label": "Settles after transitions or stimulating activities",
+          "constructIds": [
+            "MOTOR_SENS.SENSORY_PROCESSING"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "sensory",
+      "safetyItem": null,
+      "note": null
+    },
+    {
+      "order": 11,
+      "code": "VHR",
+      "districtLabel": "Vision & Hearing",
+      "description": "Observable access signs only — screening records are assembled at the case level",
+      "magnitude": null,
+      "magnitudeNote": "Peer comparison is not interpretable here; these are observed signs, not a rated skill.",
+      "difficultyChecklist": [
+        {
+          "id": "VHR.D1",
+          "label": "Squints, moves very close to materials, or loses place visually",
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "VHR.D2",
+          "label": "Appears to have difficulty seeing instructional materials",
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "VHR.D3",
+          "label": "Frequently asks for repetition",
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "VHR.D4",
+          "label": "Turns one ear toward the speaker or appears not to hear",
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "VHR.D5",
+          "label": "Difficulty hearing in noisy settings",
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [
+        {
+          "id": "VHR.S1",
+          "label": "Sees board and instructional materials without apparent difficulty",
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "polarity": "strength"
+        },
+        {
+          "id": "VHR.S2",
+          "label": "Responds to a normal speaking voice",
+          "constructIds": [
+            "CTX.VISION_HEARING"
+          ],
+          "polarity": "strength"
+        }
+      ],
+      "topography": null,
+      "depthBlock": "vision_hearing",
+      "safetyItem": null,
+      "note": "Screening dates and results are NOT requested from the teacher. This section is completed at the case level from the nurse, a record, or an upload. A 'No' here never implies that vision or hearing screening was passed or is on file."
+    },
+    {
+      "order": 12,
+      "code": "OTH",
+      "districtLabel": "Other/Miscellaneous",
+      "description": "Relevant observations not captured above",
+      "magnitude": null,
+      "magnitudeNote": "Peer comparison is not interpretable for a catch-all section.",
+      "difficultyChecklist": [
+        {
+          "id": "OTH.D1",
+          "label": "Health or medical factors may be affecting school functioning",
+          "constructIds": [
+            "CTX.HEALTH_MEDICAL"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "OTH.D2",
+          "label": "Frequent school changes or interrupted instruction",
+          "constructIds": [
+            "CTX.INSTRUCTION_ADEQUACY"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "OTH.D3",
+          "label": "Language or cultural factors affect access to instruction",
+          "constructIds": [
+            "CTX.ELL_CULTURAL"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "OTH.D4",
+          "label": "Life events or circumstances the team should be aware of",
+          "constructIds": [
+            "CTX.ENVIRONMENT_TRAUMA"
+          ],
+          "polarity": "concern"
+        },
+        {
+          "id": "OTH.D5",
+          "label": "Another strength, concern, or contextual factor should be considered",
+          "constructIds": [],
+          "polarity": "concern"
+        }
+      ],
+      "strengthsChecklist": [],
+      "topography": null,
+      "depthBlock": "other",
+      "safetyItem": null,
+      "note": null
+    }
+  ],
+  "safety": {
+    "items": [
+      {
+        "id": "SAFE-BEH",
+        "domain": "Behavioral",
+        "prompt": "Have you observed behavior at school that has placed, or could reasonably place, the student or another person at risk of harm?",
+        "tags": [
+          "BEH.EXTERNALIZING.AGGRESSION"
+        ],
+        "followup": "Briefly describe what happened and approximately when."
+      },
+      {
+        "id": "SAFE-EMO",
+        "domain": "Social/Emotional",
+        "prompt": "Has the student said or done anything that has caused you concern about self-harm, suicide, or the student's immediate safety?",
+        "tags": [
+          "BEH.INTERNALIZING"
+        ],
+        "followup": "Briefly describe what you saw or heard, and approximately when."
+      }
+    ],
+    "notice": "If you have an immediate safety concern, do not wait for this form. Follow your school or district's urgent response procedure now.",
+    "rule": "Always asked regardless of disposition. Yes sets the case priority flag server-side, independent of form submission or summary review."
+  },
+  "autismObservationSet": {
+    "name": "Autism-related school observation set",
+    "trigger": {
+      "prompt": "Have you observed persistent repetitive behavior, strong inflexibility around changes or routines, or unusually focused interests that affect the student's participation at school?",
+      "options": [
+        "Yes",
+        "No",
+        "Not enough opportunity to observe"
+      ]
+    },
+    "alsoShownWhen": "Communication, Social/Emotional, and Sensory are all marked Yes",
+    "items": [
+      "Difficulty with back-and-forth social interaction or sharing attention around an activity",
+      "Uses or interprets eye gaze, facial expression, gesture, or tone differently from peers",
+      "Difficulty developing, understanding, or adjusting to peer relationships",
+      "Repetitive movements, speech, play, or object use",
+      "Marked distress with change, transitions, or unexpected events",
+      "Unusually intense or narrow interests that affect participation",
+      "Sensory responses or sensory-seeking behavior that affects school functioning"
+    ],
+    "scale": [
+      "Not enough opportunity to observe",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Very often"
+    ],
+    "constraints": [
+      "Never summed, scored, or norm-referenced",
+      "Never presented as an autism probability",
+      "Never determines diagnosis, eligibility, or test selection",
+      "Seven separate attributed observations",
+      "Rename only if replaced by a validated screening instrument"
+    ]
+  },
+  "step3Blocks": [
+    {
+      "key": "academic",
+      "title": "Academic performance and intervention",
+      "when": "Shown when Reading, Math, or Writing is marked as a concern.",
+      "fields": [
+        [
+          "Current grade or performance indicator",
+          "short_text"
+        ],
+        [
+          "Assessment or data source",
+          "short_text"
+        ],
+        [
+          "Date and result, if known",
+          "short_text"
+        ]
+      ],
+      "checklists": [
+        [
+          "Supports or accommodations currently in place",
+          [
+            "Small-group or targeted instruction",
+            "Repeated or clarified directions",
+            "Extended time or reduced workload",
+            "Read-aloud, text-to-speech, or audio support",
+            "Graphic organizer, models, or worked examples",
+            "Other classroom accommodation"
+          ]
+        ]
+      ],
+      "fields2": [
+        [
+          "Intervention name or tier",
+          "short_text"
+        ],
+        [
+          "Frequency and duration",
+          "short_text"
+        ],
+        [
+          "Response to intervention",
+          "single_select"
+        ]
+      ],
+      "rti": [
+        "Improved as expected",
+        "Some improvement",
+        "Little or no improvement",
+        "Variable response",
+        "Not enough data yet"
+      ]
+    },
+    {
+      "key": "functional",
+      "title": "Context, impact, and what has been tried",
+      "when": "Shown when Adaptive Behavior, Social/Emotional, Behavioral, Cognitive, or Motor Skills is marked as a concern. Asked once across those domains, not repeated per domain.",
+      "prose": [
+        [
+          "Where or when is this most evident, and how does it affect participation, independence, or progress?",
+          "Combined from two separate questions per the ruling."
+        ],
+        [
+          "What has been tried, and what happened when it was used?",
+          "Combined from two separate questions per the ruling."
+        ]
+      ]
+    },
+    {
+      "key": "communication",
+      "title": "Communication follow-up",
+      "when": "Shown when Communication is marked as a concern.",
+      "checklists": [
+        [
+          "Where is this most evident?",
+          [
+            "Across classroom activities",
+            "In conversation or group work",
+            "With complex language or multi-step directions",
+            "Affects being understood, understanding others, or participating"
+          ]
+        ]
+      ],
+      "prose": [
+        [
+          "Example or additional context",
+          "Optional."
+        ]
+      ]
+    },
+    {
+      "key": "sensory",
+      "title": "Sensory follow-up",
+      "when": "Shown when Sensory is marked as a concern. Frequency and impact rather than peer comparison.",
+      "fields": [
+        [
+          "How often do these responses interfere with participation?",
+          "frequency_scale"
+        ]
+      ],
+      "prose": [
+        [
+          "What helps the student settle or participate?",
+          "Optional."
+        ]
+      ],
+      "freq": [
+        "Rarely",
+        "Weekly",
+        "Daily",
+        "Multiple times a day",
+        "Not enough opportunity to observe"
+      ]
+    },
+    {
+      "key": "vision_hearing",
+      "title": "Vision and hearing follow-up",
+      "when": "Shown when Vision & Hearing is marked as a concern.",
+      "prose": [
+        [
+          "What have you observed, and has it been shared with the school nurse or family?",
+          "Screening dates and results are assembled at the case level, not requested here."
+        ]
+      ]
+    },
+    {
+      "key": "other",
+      "title": "Other/Miscellaneous follow-up",
+      "when": "Shown when Other/Miscellaneous is marked as a concern.",
+      "prose": [
+        [
+          "Please describe what the team should understand.",
+          ""
+        ]
+      ]
+    }
+  ],
+  "step4": [
+    {
+      "id": "S4-01",
+      "prompt": "Overall, how do these concerns affect the student's learning, participation, relationships, independence, or access to instruction?",
+      "format": "open_text",
+      "options": []
+    },
+    {
+      "id": "S4-02",
+      "prompt": "Which current supports are most helpful for this student?",
+      "format": "open_text",
+      "options": []
+    },
+    {
+      "id": "S4-03",
+      "prompt": "Which of these are available if the evaluation team needs them?",
+      "format": "checklist",
+      "options": [
+        "Work samples",
+        "Progress-monitoring data",
+        "Benchmark or screening results",
+        "Behavior or discipline records",
+        "Attendance record",
+        "Prior intervention documentation",
+        "None that I have access to"
+      ]
+    },
+    {
+      "id": "S4-04",
+      "prompt": "Looking one year ahead, what would you most like this student to be able to do more successfully or independently?",
+      "format": "open_text",
+      "options": []
+    },
+    {
+      "id": "S4-05",
+      "prompt": "Is there anything else the evaluation team should understand?",
+      "format": "open_text",
+      "options": []
+    }
+  ],
+  "outputLicensing": [
+    {
+      "disposition": "No",
+      "selections": "no selections",
+      "licenses": "“No concerns were reported in this area at this time.” Nothing further."
+    },
+    {
+      "disposition": "No",
+      "selections": "one or more selections",
+      "licenses": "A short affirmative paragraph built only from what was selected, followed by that same conclusion."
+    },
+    {
+      "disposition": "Yes",
+      "selections": "difficulty items + depth",
+      "licenses": "An attributed concern paragraph using only the specifics given — never escalated in severity, frequency, or cause."
+    },
+    {
+      "disposition": "Not enough opportunity to observe",
+      "selections": "—",
+      "licenses": "“Not enough opportunity to observe was reported by this informant.” Never rendered as no concern, and never used to check the district's N box."
+    }
+  ],
+  "removed": [
+    "The one fixed checklist shown regardless of disposition",
+    "The master “which areas are concerning” checklist (TCH-CORE-008)",
+    "The derived concern-set machinery, provenance tracking, and the two affirmative screeners",
+    "The twelve reconciliation completeness rules (CR-010 … CR-021)",
+    "The diagnostic-sounding autism routing question",
+    "Vision/hearing screening availability as a teacher checklist item",
+    "The editable grade question (case grade is displayed read-only)",
+    "Attendance as an Other/Miscellaneous checkbox",
+    "The five-question ABC interview repeated for every behavior topography",
+    "The nine uniform comparison scales of v1.5.0 (kept only where interpretable)"
+  ],
+  "openQuestions": [
+    {
+      "topic": "Taxonomy gap — speech fluency and voice",
+      "detail": "The district asks about stuttering (repetitions, prolongations, blocks) and voice quality (nasal, hoarse, breathy). The taxonomy has LANG.ARTIC but no construct for either. Those two items are tagged to the parent LANG and marked — they need a taxonomy v0.5 addition before this becomes a bank, or their evidence will be under-specified."
+    },
+    {
+      "topic": "Placement of the two context items",
+      "detail": "The regression and attendance questions are drafted at the end of Step 1. They are about the student rather than about your work, so they may belong at the head of Step 2 instead. Placement affects nothing downstream — your call."
+    },
+    {
+      "topic": "Magnitude items",
+      "detail": "Nine peer-comparison questions are proposed, one per domain where comparison is interpretable (all except Sensory, Vision & Hearing, and Other). Each appears only when that domain is marked as a concern. Confirm the set, or strike any that read as forced."
+    },
+    {
+      "topic": "Item wording is unratified",
+      "detail": "This draft contains roughly 121 checklist statements plus the scales and follow-ups. Every one is draft content authored against the district arrangement — they determine what evidence the product actually elicits and need item-by-item practitioner review before any of this becomes a published bank."
+    }
+  ]
+}
