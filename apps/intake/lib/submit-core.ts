@@ -37,9 +37,13 @@ export async function submitResponse(deps: {
   sessionInvitationId: string | null;
   inv: InvitationRow;
   bank: TQuestionBank;
+  /** Band routing context (v1.5.0+); same context the respondent was rendered with. */
+  ctx?: { gradeBand?: string };
+  /** Recorded in the locked payload for hidden-item reconstruction (test 11). */
+  sessionContext?: { gradeBand: string; gradeBandSetVersion: string };
   now?: Date;
 }): Promise<SubmitResult> {
-  const { svc, sessionInvitationId, inv, bank } = deps;
+  const { svc, sessionInvitationId, inv, bank, ctx, sessionContext } = deps;
   const now = deps.now ?? new Date();
 
   if (!authorizeRespondent(sessionInvitationId, inv.id)) {
@@ -61,12 +65,12 @@ export async function submitResponse(deps: {
   }
 
   // Only currently-visible answers are part of the submission.
-  const allowed = new Set(visibleKeys(bank, allDrafts));
+  const allowed = new Set(visibleKeys(bank, allDrafts, ctx));
   const responses: ResponseMap = Object.fromEntries(
     Object.entries(allDrafts).filter(([k]) => allowed.has(k))
   );
 
-  const v = validateSubmission(bank, responses);
+  const v = validateSubmission(bank, responses, ctx);
   if (!v.ok) {
     return {
       status: 422,
@@ -85,6 +89,7 @@ export async function submitResponse(deps: {
     informantId: inv.informant_id,
     collectedOn,
     payloadRef: sourceId,
+    ...(sessionContext ? { sessionContext } : {}),
   });
   const checksum = locked.source.checksum ?? "";
 

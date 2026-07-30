@@ -11,7 +11,10 @@ export type FieldResponseType =
   | "multi_select"
   | "open_text"
   | "yes_no"
-  | "likert";
+  | "likert"
+  | "comparison_scale"
+  | "frequency_scale"
+  | "support_scale";
 
 export interface FormField {
   key: string; // response-map / draft key (e.g. "TCH-BEH-G01::avoidance")
@@ -21,6 +24,12 @@ export interface FormField {
   options?: { value: string; label: string }[];
   required: boolean;
   groupLabel?: string; // repeat-group option context, when present
+  /**
+   * Option value meaning "not enough opportunity to observe" (D-119). The
+   * client renders it always-visible but set apart, and offers a domain-level
+   * "mark remaining as not observed" action over fields that carry one.
+   */
+  observationEscapeValue?: string;
 }
 
 export interface FormGroup {
@@ -36,7 +45,20 @@ export interface PendingFollowUpView {
   description: string;
 }
 
+/** One respondent step (four-step flow, handoff 03). */
+export interface FormStep {
+  step: number;
+  title: string;
+  groups: FormGroup[];
+}
+
 export interface FormView {
   groups: FormGroup[];
+  /**
+   * Present when the bank declares steps (v1.5.0+): the same content grouped
+   * into the four-step flow. Depth questions and repeat-group instances land
+   * in step 3 ("Relevant follow-up") regardless of their module's step.
+   */
+  steps?: FormStep[];
   pendingFollowUps: PendingFollowUpView[];
 }

@@ -4,7 +4,8 @@ import {
   clearRespondentCookie,
 } from "@/lib/respondent-session";
 import { authorizeRespondent } from "@/lib/respondent-guard";
-import { loadInvitationById, bankForInvitation } from "@/lib/respondent-data";
+import { loadInvitationById, bankForInvitation, loadCaseContext } from "@/lib/respondent-data";
+import { bandContextFor } from "@/lib/band";
 import { createServiceClient } from "@/lib/supabase/service";
 import { submitResponse } from "@/lib/submit-core";
 
@@ -23,11 +24,16 @@ export async function POST(
   const inv = await loadInvitationById(invitationId);
   if (!inv) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
+  const bank = bankForInvitation(inv);
+  const caseRow = await loadCaseContext(inv.case_id);
+  const { ctx, sessionContext } = bandContextFor(bank, caseRow?.grade);
   const result = await submitResponse({
     svc: createServiceClient(),
     sessionInvitationId: sessionId,
     inv,
-    bank: bankForInvitation(inv),
+    bank,
+    ctx,
+    sessionContext,
   });
 
   if (result.ok) await clearRespondentCookie();

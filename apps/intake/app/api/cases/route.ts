@@ -9,6 +9,10 @@ const Body = z.object({
   state: z.enum(["SC", "NC"]),
   evalType: z.enum(["initial", "reevaluation"]),
   referralDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  // D-120: respondent-facing identity is first name + last initial. The
+  // single-character regex makes storing a full last name impossible.
+  firstName: z.string().min(1).max(40),
+  lastInitial: z.string().regex(/^[A-Za-z]$/),
   displayInitials: z.string().min(1).max(5),
   grade: z.string().min(1).max(20),
   ageYearsMonths: z.string().max(10).optional(),
@@ -40,6 +44,8 @@ export async function POST(req: Request) {
       state: b.state,
       eval_type: b.evalType,
       referral_date: b.referralDate,
+      first_name: b.firstName,
+      last_initial: b.lastInitial,
       display_initials: b.displayInitials,
       grade: b.grade,
       age_years_months: b.ageYearsMonths ?? null,

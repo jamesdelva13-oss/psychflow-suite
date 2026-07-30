@@ -5,7 +5,10 @@ import {
   invitationUsable,
   bankForInvitation,
   loadDrafts,
+  loadCaseContext,
 } from "@/lib/respondent-data";
+import { bandContextFor } from "@/lib/band";
+import { studentDisplay } from "@/lib/student-display";
 import { buildFormView } from "@/lib/form-view";
 import { FormRunner } from "@/components/form-runner";
 
@@ -20,8 +23,10 @@ export default async function RespondPage() {
   if (!usable.ok) redirect(`/respond/unavailable?reason=${usable.reason}`);
 
   const bank = bankForInvitation(inv);
+  const caseRow = await loadCaseContext(inv.case_id);
+  const { ctx } = bandContextFor(bank, caseRow?.grade);
   const responses = await loadDrafts(inv.id);
-  const view = buildFormView(bank, responses);
+  const view = buildFormView(bank, responses, ctx);
 
   return (
     <FormRunner
@@ -29,6 +34,7 @@ export default async function RespondPage() {
       title={bank.title}
       intro={bank.intro}
       estimatedMinutes={bank.estimatedMinutes}
+      studentLabel={caseRow ? studentDisplay(caseRow) : ""}
       initialView={view}
       initialAnswers={responses}
     />

@@ -16,11 +16,17 @@ export function NewCaseForm() {
     setBusy(true);
     setError(null);
     const fd = new FormData(e.currentTarget);
+    const firstName = ((fd.get("firstName") as string) ?? "").trim();
+    const lastInitial = ((fd.get("lastInitial") as string) ?? "").trim();
     const body = {
       state: fd.get("state"),
       evalType: fd.get("evalType"),
       referralDate: fd.get("referralDate"),
-      displayInitials: fd.get("displayInitials"),
+      // D-120: respondent-facing identity is first name + last initial; the
+      // legacy initials display form is derived, never asked for.
+      firstName,
+      lastInitial,
+      displayInitials: `${firstName.charAt(0).toUpperCase()}.${lastInitial.toUpperCase()}.`,
       grade: fd.get("grade"),
       ageYearsMonths: (fd.get("ageYearsMonths") as string) || undefined,
     };
@@ -59,7 +65,8 @@ export function NewCaseForm() {
         <Select label="State" name="state" options={["SC", "NC"]} />
         <Select label="Eval type" name="evalType" options={["initial", "reevaluation"]} />
         <Input label="Referral date" name="referralDate" type="date" defaultValue={today()} />
-        <Input label="Initials" name="displayInitials" maxLength={5} placeholder="A.B." required />
+        <Input label="First name" name="firstName" maxLength={40} placeholder="Maya" required />
+        <Input label="Last initial" name="lastInitial" maxLength={1} pattern="[A-Za-z]" placeholder="R" required />
         <Input label="Grade" name="grade" placeholder="3" required />
         <Input label="Age (opt.)" name="ageYearsMonths" placeholder="8-4" />
       </div>

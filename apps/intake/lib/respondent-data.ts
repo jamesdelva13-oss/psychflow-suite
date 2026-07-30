@@ -63,6 +63,24 @@ export function bankForInvitation(inv: InvitationRow): TQuestionBank {
   return bank;
 }
 
+/** Case fields the respondent flow needs: band routing + D-120 display. */
+export type CaseContextRow = {
+  grade: string | null;
+  first_name: string | null;
+  last_initial: string | null;
+  display_initials: string | null;
+};
+
+export async function loadCaseContext(caseId: string): Promise<CaseContextRow | null> {
+  const svc = createServiceClient();
+  const { data } = await svc
+    .from("cases")
+    .select("grade, first_name, last_initial, display_initials")
+    .eq("id", caseId)
+    .maybeSingle();
+  return (data as CaseContextRow) ?? null;
+}
+
 export async function loadDrafts(invitationId: string): Promise<ResponseMap> {
   const svc = createServiceClient();
   const { data } = await svc

@@ -7,7 +7,9 @@ import {
   invitationUsable,
   bankForInvitation,
   loadDrafts,
+  loadCaseContext,
 } from "@/lib/respondent-data";
+import { bandContextFor } from "@/lib/band";
 import { buildFormView } from "@/lib/form-view";
 import { createServiceClient } from "@/lib/supabase/service";
 
@@ -56,6 +58,8 @@ export async function PATCH(
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
   const bank = bankForInvitation(inv);
+  const caseRow = await loadCaseContext(inv.case_id);
+  const { ctx } = bandContextFor(bank, caseRow?.grade);
   const responses = await loadDrafts(invitationId);
-  return NextResponse.json({ view: buildFormView(bank, responses) });
+  return NextResponse.json({ view: buildFormView(bank, responses, ctx) });
 }
