@@ -3,10 +3,11 @@
   "private": true,
   "version": "0.3.0",
   "workspaces": [
+    "apps/*",
     "packages/case-model",
     "packages/content",
-    "packages/referral-engine-core",
     "packages/extraction-core",
-    "apps/*"
+    "packages/reasoning-contracts",
+    "packages/referral-engine-core"
   ]
 }
