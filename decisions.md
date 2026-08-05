@@ -1553,3 +1553,77 @@ Design test recorded with this decision: safe specification requires the system 
 
 Respondent-facing student identity is first name plus last initial. The Case contract adds these as minimal identity fields; full name is never stored, and links, logs, and model payloads continue to exclude them. Supersedes initials-only display.
 **Status:** Accepted · 2026-07-29 · Proposed: Claude (handoff reconciliation, per handoff 01 respondent-experience requirement) · Ratified: JD
+
+## D-121 · [suite] · Psych Suite v6 product architecture adopted (design package)
+*(v6 reconciliation session, 2026-08-04. Records a ratification JD made in the
+v6 package documents; entry text by Claude — corrections go in as amendments.)*
+Adopts the v6 product direction: **three standalone, independently purchasable
+evaluation products — PsychReport, Speech Studio, OT Studio (working names) —
+plus a district Evaluation Platform that is a coordination layer, not another
+writer; Documentation Support tools; and Sped QA remaining a separate review
+product.** Distribution is bottom-up: individual purchase is the entry motion in
+three provable markets; cohesion activates when providers on the same evaluation
+are on the platform; the district purchase is the expansion event, never the
+entry. Integration bar: if the only integration is a shared homepage, it is a
+bundle and has failed.
+The package lives at `docs/psych-suite-v6/`. Precedence inside the package
+(JD-designated): the ChatGPT v6 implementation handoff
+(`v6-handoff-chatgpt.md`) governs over the Cowork decision set
+(`v6-decisions-cowork.md`, package-local numbering D1–D14) and the Cowork
+process handoff. The package's D1–D14 are recorded as ratified product
+direction; they are **not** a second canonical log — this log governs, and any
+conflict is resolved only by a numbered entry here. The Cowork instruction to
+create `docs/decisions/DECISIONS.md` is superseded (it would have created a
+competing canon). The referenced `V6-BUILD-DIRECTIVE.md` was never delivered;
+its scope is reconstructed in `docs/psych-suite-v6/build-plan-v6.md`.
+**Reconciliation notes:**
+- Package D10 does **not** reinstate the flat adverse-impact/SDI wall. The
+  artifact-profile model (D-005 amendments, D-115) still governs; the package's
+  "separately authorized and gated" is the configured-workflow permission.
+- Package silence on **RIE** does not retire RIE (later-governs applies to
+  actual conflict only, D-038). RIE remains a product and step 1 of the
+  ratified build sequence.
+- Speech Studio and OT Studio enter this log as products; scope tags
+  `[Speech]` and `[OT]` are now valid.
+- Package D4 §Sped QA confirms D-012/D-035 (QA independence).
+- Package D6 (profile isolation) extends the D-003/D-004 lineage and is a
+  data-layer requirement from the first schema.
+- Keeper line, verbatim (package D14): "Added once, available where it
+  belongs."
+**OPEN GATE (sequencing):** the Cowork handoff's "build v6" instruction
+conflicts with the JD-ratified 2026-07-28 build sequence (RIE → D-046 → Sped QA
+design → PsychReport). This entry does NOT resolve it. Recommendation recorded
+in `build-plan-v6.md` §0 (keep the sequence; v6 workspace build absorbs the
+"PsychReport redesign" step). Resolution requires a new numbered entry.
+**Status:** Accepted · 2026-08-04 · Proposed: Claude (v6 reconciliation) · Ratified: JD (per v6 package ratification, August 2026)
+
+## D-122 · [suite] · "Documentation Support" naming; standalone Documentation Support tab
+*(v6 reconciliation session, 2026-08-04. ChatGPT handoff §4.3 governs over the
+Cowork package's "Team Documentation" label per D-121 precedence.)*
+The label is **Documentation Support** everywhere; "Team Documentation" is
+retired in current and future UI. District Documentation Support tools: IEP
+Drafting, MDR Documentation, Eligibility Preparation, Meeting Brief — case
+tools, not disciplines, never peer product cards. Standalone products carry a
+case-level Documentation Support tab with **product-appropriate tools only**:
+Parent Summary, Meeting Brief, Information Request. District team tools (IEP,
+MDR, Eligibility Preparation, cross-discipline coordination) never appear in a
+standalone case absent a separately licensed future commercial model. MDR
+remains incident-driven and deadline-sensitive (package D12): it rises to Home
+and the global Documentation Support queue only while active.
+**Status:** Accepted · 2026-08-04 · Proposed: Claude (v6 reconciliation, per ChatGPT handoff §4.3/§7.7) · Ratified: JD (per v6 package ratification)
+
+## D-123 · [suite] · Shared case-tab framework in every profile
+*(v6 reconciliation session, 2026-08-04. ChatGPT handoff §5.3 — "the latest
+architecture correction" — governs over the Cowork package D7, which specified
+case tabs for district only.)*
+Opening a case/client in **every** profile — district, PsychReport, Speech
+Studio, OT Studio — reveals the same five tabs: **Overview · Case Materials ·
+Evaluations · Documentation Support · Timeline.** The framework is constant;
+contents are capability-driven (`WorkspaceCapabilities`, handoff §16):
+district cases may show assigned disciplines and district tools; standalone
+cases show only the licensed product's evaluation and standalone Documentation
+Support tools, with no shared-team language. "Case tabs exist" must never be
+encoded as a district-only condition. Global navigation remains product-first
+in standalone shells and case-first in the district shell (package D7,
+unchanged on this point).
+**Status:** Accepted · 2026-08-04 · Proposed: Claude (v6 reconciliation, per ChatGPT handoff §5.3/§16) · Ratified: JD (per v6 package ratification)

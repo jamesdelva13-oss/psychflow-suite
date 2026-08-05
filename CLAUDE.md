@@ -61,7 +61,7 @@ competitor reaching the QA differentiator first is the risk being raced.
 
 Do not rely on this file for specific rules; it goes stale. Read these:
 
-- **`decisions.md`** — the ratified decision log (currently through the D-110s). The
+- **`decisions.md`** — the ratified decision log (currently through the D-120s). The
   provenance record. Amendments are dated and appended, never rewritten (D-038).
   When two decisions conflict, the later governs and the earlier gets a dated note.
   Canonical; must stay identical across all copies (D-029).
@@ -77,6 +77,13 @@ Do not rely on this file for specific rules; it goes stale. Read these:
   practitioner review before use.
 - RIE build work: see `docs/rie-handoff/` — `README-FIRST.md` governs read order and
   source-conflict precedence.
+- **v6 product architecture** (PsychReport / Speech Studio / OT Studio standalone
+  products + district coordination layer + Documentation Support): adopted by
+  **D-121–D-123**. Design package at `docs/psych-suite-v6/` — its `README-FIRST.md`
+  governs precedence (the ChatGPT v6 handoff is authoritative within the package).
+  Build plan and the **open sequencing gate** live in
+  `docs/psych-suite-v6/build-plan-v6.md` — do not start v6 shell work before that
+  gate is resolved in `decisions.md`.
 
 ---
 
