@@ -6,6 +6,8 @@ import {
   type InvitationSummary,
 } from "@/components/invitations-panel";
 import { DeleteCase } from "@/components/delete-case";
+import { createServiceClient } from "@/lib/supabase/service";
+import { describeAuditEvent } from "@/lib/audit-labels";
 
 // Case overview: everything about one referral in one place — invitations
 // (respondent intake) and capture sessions (the psychologist's own notes).
@@ -61,6 +63,24 @@ export default async function CasePage({
     .order("created_at", { ascending: false })
     .limit(3);
   const captures = (capRows ?? []) as CaptureRow[];
+
+  // Activity: audit_events has no authenticated-role read policy (writes go
+  // through the service role), so read it server-side with the service client
+  // — safe here because RLS already proved this case belongs to the caller.
+  const svc = createServiceClient();
+  const { data: auditRows } = await svc
+    .from("audit_events")
+    .select("id, actor, event_type, metadata, created_at")
+    .eq("case_id", caseId)
+    .order("created_at", { ascending: false })
+    .limit(20);
+  const activity = (auditRows ?? []) as {
+    id: string;
+    actor: string;
+    event_type: string;
+    metadata: Record<string, unknown>;
+    created_at: string;
+  }[];
 
   return (
     <AppShell active="cases" userName={name}>
@@ -150,6 +170,42 @@ export default async function CasePage({
               </li>
             ))}
           </ul>
+        )}
+      </section>
+
+      <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          Activity
+        </h2>
+        <p className="mt-1 text-sm text-slate-500">
+          The case's audit trail — what happened and when. Content never
+          appears here, only the record of actions.
+        </p>
+        {activity.length === 0 ? (
+          <p className="mt-3 text-sm text-slate-400">No activity yet.</p>
+        ) : (
+          <ol className="mt-4 space-y-0">
+            {activity.map((e) => (
+              <li
+                key={e.id}
+                className="flex items-baseline justify-between gap-4 border-t border-slate-100 py-2.5 first:border-t-0"
+              >
+                <span className="text-sm text-ink">
+                  {describeAuditEvent(e.event_type, e.metadata, {
+                    self: e.actor === user.id,
+                  })}
+                </span>
+                <time className="shrink-0 text-xs tabular-nums text-slate-400">
+                  {new Date(e.created_at).toLocaleString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })}
+                </time>
+              </li>
+            ))}
+          </ol>
         )}
       </section>
 
