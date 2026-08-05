@@ -1,5 +1,6 @@
 import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { AppShell } from "@/components/app-shell";
 import { NewCaptureForm } from "@/components/new-capture-form";
 
 // Capture (D-125): list of this case's capture sessions + start a new one.
@@ -27,6 +28,13 @@ export default async function CapturePage({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const { data: me } = await supabase
+    .from("psychologists")
+    .select("display_name")
+    .eq("id", user.id)
+    .maybeSingle();
+  const userName = me?.display_name ?? user.email?.split("@")[0] ?? "there";
+
   const { data: theCase } = await supabase
     .from("cases")
     .select("id, display_initials, grade, eval_type")
@@ -50,9 +58,9 @@ export default async function CapturePage({
   };
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-8">
-      <a href="/dashboard" className="text-sm text-slate-500 hover:underline">
-        ← Cases
+    <AppShell active="cases" userName={userName}>
+      <a href={`/cases/${caseId}`} className="text-sm text-slate-500 hover:underline">
+        ← Case
       </a>
       <header className="mt-2">
         <p className="text-xs font-bold uppercase tracking-wide text-brand-accent">
@@ -108,6 +116,6 @@ export default async function CapturePage({
           </a>
         ))}
       </section>
-    </main>
+    </AppShell>
   );
 }

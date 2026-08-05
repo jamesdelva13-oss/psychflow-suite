@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
-export function NewCaseForm() {
+export function NewCaseForm({ startOpen = false }: { startOpen?: boolean } = {}) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,8 +41,13 @@ export function NewCaseForm() {
       setError(j.error ?? "Could not create case");
       return;
     }
-    setOpen(false);
-    router.refresh();
+    const { id } = await res.json().catch(() => ({ id: null }));
+    if (id) {
+      router.push(`/cases/${id}`);
+    } else {
+      setOpen(false);
+      router.refresh();
+    }
   }
 
   if (!open) {

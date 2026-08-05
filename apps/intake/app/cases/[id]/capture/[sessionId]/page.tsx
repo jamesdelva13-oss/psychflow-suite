@@ -1,5 +1,6 @@
 import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { AppShell } from "@/components/app-shell";
 import { CaptureEditor } from "@/components/capture-editor";
 
 export default async function CaptureSessionPage({
@@ -14,6 +15,13 @@ export default async function CaptureSessionPage({
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+
+  const { data: me } = await supabase
+    .from("psychologists")
+    .select("display_name")
+    .eq("id", user.id)
+    .maybeSingle();
+  const userName = me?.display_name ?? user.email?.split("@")[0] ?? "there";
 
   const { data: session } = await supabase
     .from("capture_sessions")
@@ -32,7 +40,7 @@ export default async function CaptureSessionPage({
     .maybeSingle();
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-8">
+    <AppShell active="cases" userName={userName}>
       <a
         href={`/cases/${caseId}/capture`}
         className="text-sm text-slate-500 hover:underline"
@@ -63,6 +71,6 @@ export default async function CaptureSessionPage({
         initialProposal={session.summary_proposal}
         initialSummaryFinal={session.summary_final}
       />
-    </main>
+    </AppShell>
   );
 }
