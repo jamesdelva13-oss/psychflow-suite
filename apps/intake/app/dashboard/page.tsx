@@ -97,11 +97,19 @@ export default async function DashboardPage() {
                   Referred {c.referral_date} · status {c.status}
                 </p>
               </div>
-              {c.priority_flag && (
-                <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700">
-                  Priority review
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                {c.priority_flag && (
+                  <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700">
+                    Priority review
+                  </span>
+                )}
+                <a
+                  href={`/cases/${c.id}/capture`}
+                  className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  Capture
+                </a>
+              </div>
             </div>
             <InvitationsPanel
               caseId={c.id}

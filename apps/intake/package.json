@@ -11,6 +11,7 @@
     "test": "NODE_OPTIONS=--conditions=react-server RESPONDENT_COOKIE_SECRET=test-secret SUPABASE_SERVICE_ROLE_KEY=test-key NEXT_PUBLIC_SUPABASE_URL=http://test tsx --test tests/*.test.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
     "@suite/case-model": "*",
     "@suite/content": "*",
     "@suite/referral-engine-core": "*",
