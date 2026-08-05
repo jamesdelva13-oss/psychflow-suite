@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "NODE_OPTIONS=--conditions=react-server RESPONDENT_COOKIE_SECRET=test-secret SUPABASE_SERVICE_ROLE_KEY=test-key NEXT_PUBLIC_SUPABASE_URL=http://test tsx --test tests/*.test.ts"
+    "test": "NODE_OPTIONS=--conditions=react-server RESPONDENT_COOKIE_SECRET=test-secret SUPABASE_SERVICE_ROLE_KEY=test-key NEXT_PUBLIC_SUPABASE_URL=http://test tsx --test tests/*.test.ts",
+    "test:rls": "node --env-file=.env.local tests-integration/rls.integration.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
