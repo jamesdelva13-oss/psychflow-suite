@@ -74,8 +74,14 @@ job is collected, and nothing else.
 
 ## 7. What reaches an AI model
 
-- **Phase 1 (current slice): nothing.** Intake, routing, validation, and
-  locking are fully deterministic; no model is called.
+- **Respondent intake: nothing.** Intake, routing, validation, and locking
+  are fully deterministic; no model is called.
+- **Capture summarization (D-125, built 2026-08-04):** the one existing model
+  call. Server-side only; the D-120 identity fields are replaced with a
+  neutral placeholder before the call (unit-tested); output is
+  schema-constrained; every proposal stores pinned prompt, schema, and model
+  versions; a proposal never enters a Source without explicit clinician
+  confirmation.
 - **Phases 2+ (extraction, summaries):** model calls are server-side through a
   provider adapter. Payloads are pseudonymous (the D-120 fields are replaced
   with neutral placeholders before any call), schema-constrained, and logged
@@ -97,13 +103,13 @@ job is collected, and nothing else.
 | Control | State today |
 |---|---|
 | Token hashing, expiry, revocation, one-invitation sessions | **Implemented and tested** |
-| RLS psychologist scoping; service-role isolation | **Implemented**; policies not yet exercised by automated integration tests (planned before any deployed environment holds non-synthetic data) |
+| RLS psychologist scoping; service-role isolation | **Implemented and exercised**: 19-check two-account integration suite (`npm run test:rls`, 2026-08-05) — cross-account reads/writes, respondent-only and audit tables, anon blindness. First run caught and closed a capture-policy write hole (migration 0005) |
 | TLS + provider encryption at rest | Provider defaults; verified at deployment |
 | D-120 minimal identity (first name + last initial, single-char enforced) | **Contract implemented**; UI display lands with the four-step build |
-| Pseudonymization before model calls | Specified; no model calls exist yet |
-| Per-case deletion | Partial (retention fields exist; deletion flow is Phase-1 work) |
+| Pseudonymization before model calls | **Implemented** for the one existing call path (Capture summarization); unit-tested |
+| Per-case deletion | **Implemented** (2026-08-05): FK-safe hard deletion of every case-scoped record; content-free audit rows retained and a `case_deleted` event recorded; type-to-confirm UI |
 | Auto-purge job; relay-and-purge mode | Committed, not yet built |
-| Formal audit-event log | Committed, not yet built (route-level logs only) |
+| Formal audit-event log | **Implemented** (2026-08-05): every state-changing route records an event; in-app Activity view; mechanical no-narrative guard; label-completeness test |
 | Accessibility (WCAG) verification | Committed; testing planned with the four-step UI |
 
 ## 10. Environments and pilots
