@@ -13,7 +13,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen antialiased">{children}</body>
+      {/* suppressHydrationWarning: browser extensions (Grammarly et al.) inject
+          attributes into <body> before React hydrates; without this, dev mode
+          shows a false-positive hydration error overlay. Scope: body only. */}
+      <body className="min-h-screen antialiased" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
