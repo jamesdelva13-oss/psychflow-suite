@@ -23,6 +23,7 @@ export function AppShell({
   const item = (key: ShellNav, href: string, icon: string, label: string) => (
     <a
       href={href}
+      aria-current={active === key ? "page" : undefined}
       className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm ${
         active === key
           ? "bg-white/10 font-semibold text-white"

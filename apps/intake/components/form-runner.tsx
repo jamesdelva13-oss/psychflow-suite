@@ -26,6 +26,7 @@ export function FormRunner({
   initialView: FormView;
   initialAnswers: FormResponseMap;
 }) {
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
   const [answers, setAnswers] = useState<FormResponseMap>(initialAnswers);
   const [view, setView] = useState<FormView>(initialView);
   const [stepIdx, setStepIdx] = useState(0);
@@ -96,10 +97,15 @@ export function FormRunner({
     for (const f of targets) onAnswer(f.key, f.observationEscapeValue!);
   }
 
+  const prefersReducedMotion = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   function scrollToField(key: string) {
-    document
-      .getElementById(`f-${key}`)
-      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById(`f-${key}`)?.scrollIntoView({
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+      block: "center",
+    });
   }
 
   async function onSubmit() {
@@ -155,7 +161,13 @@ export function FormRunner({
         <p className="text-xs font-bold uppercase tracking-wide text-brand-accent">
           Referral Intelligence Engine
         </p>
-        <h1 className="mt-1 text-2xl font-semibold text-brand">{title}</h1>
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="mt-1 text-2xl font-semibold text-brand outline-none"
+        >
+          {title}
+        </h1>
         <p className="mt-1 text-xs text-slate-500">
           {studentLabel && <>About <strong>{studentLabel}</strong> · </>}
           about {estimatedMinutes} minutes · saved automatically as you go
@@ -257,12 +269,12 @@ export function FormRunner({
       )}
 
       <div className="sticky bottom-0 mt-4 flex items-center justify-between rounded-xl border border-slate-200 bg-white/95 p-4 shadow-sm backdrop-blur">
-        <span className="text-xs text-slate-500">
+        <span role="status" aria-live="polite" className="text-xs text-slate-500">
           {saving ? "Saving…" : "All changes saved"}
         </span>
         <div className="flex items-center gap-3">
           {missing.length > 0 && (
-            <span className="text-sm text-red-700">
+            <span role="alert" className="text-sm text-red-700">
               {missing.length} required item{missing.length > 1 ? "s" : ""} left
             </span>
           )}
@@ -272,6 +284,7 @@ export function FormRunner({
               onClick={() => {
                 setStepIdx((i) => Math.max(0, i - 1));
                 window.scrollTo({ top: 0 });
+                headingRef.current?.focus({ preventScroll: true });
               }}
               className="rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-50"
             >
@@ -285,6 +298,7 @@ export function FormRunner({
                 await flush();
                 setStepIdx((i) => Math.min(steps.length - 1, i + 1));
                 window.scrollTo({ top: 0 });
+                headingRef.current?.focus({ preventScroll: true });
               }}
               className="rounded-md bg-brand px-5 py-2 font-medium text-white hover:opacity-90"
             >
@@ -337,29 +351,57 @@ function Field({
   const mainOptions = field.options?.filter((o) => o.value !== escVal) ?? [];
   const escOption = field.options?.find((o) => o.value === escVal);
 
-  return (
-    <div
-      id={`f-${field.key}`}
-      className={missing ? "rounded-lg border border-red-300 bg-red-50 p-3" : ""}
-    >
-      <div className="flex items-baseline gap-2">
-        {field.groupLabel && (
-          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
-            {field.groupLabel}
-          </span>
+  // A11y: choice groups are fieldsets, so screen readers announce the question
+  // (legend) with every option; free text gets an explicit label/htmlFor pair.
+  const isChoiceGroup =
+    RADIO_TYPES.has(field.responseType) ||
+    field.responseType === "yes_no" ||
+    field.responseType === "multi_select";
+  const helpId = field.helpText ? `h-${field.key}` : undefined;
+  const inputId = `in-${field.key}`;
+
+  const promptContent = (
+    <span className="flex items-baseline gap-2">
+      {field.groupLabel && (
+        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+          {field.groupLabel}
+        </span>
+      )}
+      <span className="font-medium text-ink">
+        {field.prompt}
+        {field.required && (
+          <>
+            <span aria-hidden className="text-red-600"> *</span>
+            <span className="sr-only"> (required)</span>
+          </>
         )}
-        <label className="font-medium text-ink">
-          {field.prompt}
-          {field.required && <span className="text-red-600"> *</span>}
-        </label>
-      </div>
+      </span>
+    </span>
+  );
+
+  const body = (
+    <>
+      {isChoiceGroup ? (
+        <legend className="p-0">{promptContent}</legend>
+      ) : (
+        <label htmlFor={inputId}>{promptContent}</label>
+      )}
       {field.helpText && (
-        <p className="mt-1 text-sm text-slate-500">{field.helpText}</p>
+        <p id={helpId} className="mt-1 text-sm text-slate-500">
+          {field.helpText}
+        </p>
+      )}
+      {missing && (
+        <p className="mt-1 text-sm font-medium text-red-700">
+          This item still needs an answer.
+        </p>
       )}
 
       <div className="mt-2">
         {field.responseType === "open_text" && (
           <textarea
+            id={inputId}
+            aria-describedby={helpId}
             value={str}
             onChange={(e) => onChange(e.target.value)}
             rows={3}
@@ -370,13 +412,13 @@ function Field({
         {RADIO_TYPES.has(field.responseType) && (
           <>
             {mainOptions.map((o) => (
-              <label key={o.value} className="flex items-start gap-2 py-1 text-sm">
+              <label key={o.value} className="flex items-start gap-2 py-1.5 text-sm">
                 <input
                   type="radio"
                   name={field.key}
                   checked={str === o.value}
                   onChange={() => onChange(o.value)}
-                  className="mt-1"
+                  className="mt-0.5 h-4 w-4"
                 />
                 <span>{o.label}</span>
               </label>
@@ -388,7 +430,7 @@ function Field({
                   name={field.key}
                   checked={str === escOption.value}
                   onChange={() => onChange(escOption.value)}
-                  className="mt-1"
+                  className="mt-0.5 h-4 w-4"
                 />
                 <span>
                   {escOption.label}
@@ -410,6 +452,7 @@ function Field({
                 name={field.key}
                 checked={str === v}
                 onChange={() => onChange(v)}
+                className="h-4 w-4"
               />
               <span className="capitalize">{v}</span>
             </label>
@@ -419,7 +462,7 @@ function Field({
           field.options?.map((o) => {
             const checked = arr.includes(o.value);
             return (
-              <label key={o.value} className="flex items-start gap-2 py-1 text-sm">
+              <label key={o.value} className="flex items-start gap-2 py-1.5 text-sm">
                 <input
                   type="checkbox"
                   checked={checked}
@@ -430,13 +473,29 @@ function Field({
                         : [...arr, o.value]
                     )
                   }
-                  className="mt-1"
+                  className="mt-0.5 h-4 w-4"
                 />
                 <span>{o.label}</span>
               </label>
             );
           })}
       </div>
+    </>
+  );
+
+  const wrapperClass = missing
+    ? "rounded-lg border border-red-300 bg-red-50 p-3"
+    : "";
+
+  // Fieldset for choice groups (Tailwind preflight zeroes fieldset/legend
+  // chrome); plain div for free text, which carries its own label pair.
+  return isChoiceGroup ? (
+    <fieldset id={`f-${field.key}`} className={wrapperClass}>
+      {body}
+    </fieldset>
+  ) : (
+    <div id={`f-${field.key}`} className={wrapperClass}>
+      {body}
     </div>
   );
 }

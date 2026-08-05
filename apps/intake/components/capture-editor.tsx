@@ -131,7 +131,7 @@ export function CaptureEditor(props: CaptureEditorProps) {
         <section className="rounded-xl border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-600">Your notes</h2>
-            <span className="text-xs text-slate-400">
+            <span role="status" aria-live="polite" className="text-xs text-slate-400">
               {saveState === "saved" && "Saved"}
               {saveState === "saving" && "Saving…"}
               {saveState === "dirty" && "Unsaved changes"}
@@ -212,7 +212,7 @@ export function CaptureEditor(props: CaptureEditorProps) {
         >
           {busy === "finalize" ? "Finalizing…" : "Finalize session"}
         </button>
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {error && <p role="alert" className="mt-2 text-sm text-red-600">{error}</p>}
       </section>
     </div>
   );
