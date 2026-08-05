@@ -81,9 +81,12 @@ Do not rely on this file for specific rules; it goes stale. Read these:
   products + district coordination layer + Documentation Support): adopted by
   **D-121–D-123**. Design package at `docs/psych-suite-v6/` — its `README-FIRST.md`
   governs precedence (the ChatGPT v6 handoff is authoritative within the package).
-  Build plan and the **open sequencing gate** live in
-  `docs/psych-suite-v6/build-plan-v6.md` — do not start v6 shell work before that
-  gate is resolved in `decisions.md`.
+  Build plan and the sequencing gate live in
+  `docs/psych-suite-v6/build-plan-v6.md`. **Gate partially resolved (D-124):**
+  RIE first, then D-046; the rest of the sequence is deferred until after D-046
+  — v6 shell work stays blocked until JD revisits. **D-125:** Capture
+  (clinician notetaking + summarization, verification-gated) is in scope for
+  the first deployable RIE.
 
 ---
 

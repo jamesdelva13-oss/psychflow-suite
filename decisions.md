@@ -1627,3 +1627,34 @@ encoded as a district-only condition. Global navigation remains product-first
 in standalone shells and case-first in the district shell (package D7,
 unchanged on this point).
 **Status:** Accepted · 2026-08-04 · Proposed: Claude (v6 reconciliation, per ChatGPT handoff §5.3/§16) · Ratified: JD (per v6 package ratification)
+
+## D-124 · [suite] · D-121 sequencing gate partially resolved: RIE, then D-046; remainder deferred
+Resolves the immediate portion of the OPEN GATE recorded in D-121. **The build
+order for now is: (1) finish RIE and make it deployable, (2) D-046 shared-layer
+consolidation.** The ordering of what follows — Sped QA design pass versus the
+v6 workspace build (which would absorb the step-4 PsychReport redesign per
+`docs/psych-suite-v6/build-plan-v6.md` §0) — is **deliberately deferred**; JD
+will revisit the sequence after D-046. Until then, v6 shell construction
+remains blocked, and the 2026-07-28 sequence stands for steps 1–2 unchanged.
+**Status:** Accepted · 2026-08-04 · Proposed: JD · Ratified: JD
+
+## D-125 · [RIE] · Capture (clinician notetaking + summarization) ships in the first deployable RIE
+The live clinician-capture mode — quick notetaking during interviews,
+observations, and calls, with model-drafted summarization — is **in scope for
+the first working/deployable RIE**, not a later phase. This amends the
+rie-handoff roadmap's "Phase 1 — intake foundation, no AI" boundary: the
+deployable v1 includes async forms AND Capture, so a narrow slice of
+summarization AI enters v1. Guardrails, consistent with existing decisions:
+- Captured notes are **clinician-authored Sources**; model summaries are
+  **proposals** reviewed and confirmed by the clinician before anything enters
+  Evidence (the D-081 verification pattern: draft shown beside the raw notes,
+  confirmed/corrected first).
+- `referral_package` remains capture-mode agnostic (D-080); per-domain
+  functional capture (D-089/D-119) applies in both async-form and live-capture
+  modes.
+- Unchanged exclusions: no autonomous interviewing, no unrestricted
+  model-authored interview questions (approved-bank follow-up stays Phase 4),
+  no parent conversational AI (D-005 lineage; handoff 01 exclusions).
+- Data posture per `docs/data-posture.md`; summarization calls carry
+  minimum-necessary content (D-110).
+**Status:** Accepted · 2026-08-04 · Proposed: JD · Ratified: JD

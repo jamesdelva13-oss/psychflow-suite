@@ -9,6 +9,14 @@ D-123 (universal case-tab framework) — see `/decisions.md`.
 
 ## 0. The open sequencing gate — resolve before building
 
+> **Update 2026-08-04 (D-124):** JD partially resolved this gate. **RIE first,
+> then D-046 consolidation** — confirmed. The ordering of what follows (Sped QA
+> design pass vs. the v6 workspace build) is deliberately deferred until after
+> D-046. v6 shell construction remains blocked until JD revisits. Also note
+> **D-125**: the Capture feature (clinician notetaking + summarization, with
+> the D-081-style verification gate) is in scope for the first deployable RIE.
+> Original gate text preserved below.
+
 The Cowork handoff says "build v6." The JD-ratified build sequence (2026-07-28,
 recorded in `/CLAUDE.md` §4) says: **RIE first → D-046 shared-layer
 consolidation → Sped QA design pass → PsychReport rebuild last**, and "do not
