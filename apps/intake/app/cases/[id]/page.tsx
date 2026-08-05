@@ -5,6 +5,7 @@ import {
   InvitationsPanel,
   type InvitationSummary,
 } from "@/components/invitations-panel";
+import { DeleteCase } from "@/components/delete-case";
 
 // Case overview: everything about one referral in one place — invitations
 // (respondent intake) and capture sessions (the psychologist's own notes).
@@ -150,6 +151,10 @@ export default async function CasePage({
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="mt-8">
+        <DeleteCase caseId={caseId} displayInitials={theCase.display_initials} />
       </section>
     </AppShell>
   );
