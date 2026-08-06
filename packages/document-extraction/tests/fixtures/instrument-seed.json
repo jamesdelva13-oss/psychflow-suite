@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "_fixture_note": "TEST FIXTURE ONLY (D-046 relocation). This is a frozen copy of the QA repo's rulepacks/instruments/seed.json taken 2026-08-06 so the extraction tests are self-contained. Runtime instrument libraries are injected by each consumer from its own rulepacks; do not treat this file as a rulepack and do not extend it — regenerate from the consumer's canonical copy if the schema changes.",
+  "status": "DRAFT — starter library authored 2026-07-12, NOT audited. Scale lists, score types, and descriptor ranges must be verified against current publisher manuals before any check output relies on them. Instruments are added by editing this JSON (or adding sibling files) — never by a core code change.",
+  "instruments": [
+    {
+      "id": "wisc-v",
+      "name": "Wechsler Intelligence Scale for Children, Fifth Edition",
+      "aliases": ["WISC-V", "WISC-5", "WISC V"],
+      "publisher": "Pearson",
+      "scales": [
+        { "name": "Full Scale IQ", "aliases": ["FSIQ"], "score_type": "standard_score", "kind": "composite" },
+        { "name": "Verbal Comprehension Index", "aliases": ["VCI", "Verbal Comprehension"], "score_type": "standard_score", "kind": "index" },
+        { "name": "Visual Spatial Index", "aliases": ["VSI", "Visual Spatial"], "score_type": "standard_score", "kind": "index" },
+        { "name": "Fluid Reasoning Index", "aliases": ["FRI", "Fluid Reasoning"], "score_type": "standard_score", "kind": "index" },
+        { "name": "Working Memory Index", "aliases": ["WMI", "Working Memory"], "score_type": "standard_score", "kind": "index" },
+        { "name": "Processing Speed Index", "aliases": ["PSI", "Processing Speed"], "score_type": "standard_score", "kind": "index" },
+        { "name": "General Ability Index", "aliases": ["GAI"], "score_type": "standard_score", "kind": "composite" },
+        { "name": "Cognitive Proficiency Index", "aliases": ["CPI"], "score_type": "standard_score", "kind": "composite" },
+        { "name": "Similarities", "score_type": "scaled_score", "kind": "subtest" },
+        { "name": "Vocabulary", "score_type": "scaled_score", "kind": "subtest" },
+        { "name": "Block Design", "score_type": "scaled_score", "kind": "subtest" },
+        { "name": "Visual Puzzles", "score_type": "scaled_score", "kind": "subtest" },
+        { "name": "Matrix Reasoning", "score_type": "scaled_score", "kind": "subtest" },
+        { "name": "Figure Weights", "score_type": "scaled_score", "kind": "subtest" },
+        { "name": "Digit Span", "score_type": "scaled_score", "kind": "subtest" },
+        { "name": "Picture Span", "score_type": "scaled_score", "kind": "subtest" },
+        { "name": "Coding", "score_type": "scaled_score", "kind": "subtest" },
+        { "name": "Symbol Search", "score_type": "scaled_score", "kind": "subtest" }
+      ],
+      "descriptor_ranges": {
+        "standard_score": [
+          { "min": 130, "label": "Extremely High" },
+          { "min": 120, "max": 129, "label": "Very High" },
+          { "min": 110, "max": 119, "label": "High Average" },
+          { "min": 90, "max": 109, "label": "Average" },
+          { "min": 80, "max": 89, "label": "Low Average" },
+          { "min": 70, "max": 79, "label": "Very Low" },
+          { "max": 69, "label": "Extremely Low" }
+        ]
+      }
+    },
+    {
+      "id": "wiat-4",
+      "name": "Wechsler Individual Achievement Test, Fourth Edition",
+      "aliases": ["WIAT-4", "WIAT-IV", "WIAT 4"],
+      "publisher": "Pearson",
+      "scales": [
+        { "name": "Total Achievement", "score_type": "standard_score", "kind": "composite" },
+        { "name": "Word Reading", "score_type": "standard_score", "kind": "subtest" },
+        { "name": "Reading Comprehension", "score_type": "standard_score", "kind": "subtest" },
+        { "name": "Pseudoword Decoding", "score_type": "standard_score", "kind": "subtest" },
+        { "name": "Oral Reading Fluency", "score_type": "standard_score", "kind": "subtest" },
+        { "name": "Sentence Composition", "score_type": "standard_score", "kind": "subtest" },
+        { "name": "Essay Composition", "score_type": "standard_score", "kind": "subtest" },
+        { "name": "Spelling", "score_type": "standard_score", "kind": "subtest" },
+        { "name": "Math Problem Solving", "score_type": "standard_score", "kind": "subtest" },
+        { "name": "Numerical Operations", "score_type": "standard_score", "kind": "subtest" },
+        { "name": "Math Fluency", "score_type": "standard_score", "kind": "subtest" }
+      ],
+      "descriptor_ranges": {
+        "standard_score": [
+          { "min": 130, "label": "Extremely High" },
+          { "min": 120, "max": 129, "label": "Very High" },
+          { "min": 110, "max": 119, "label": "High Average" },
+          { "min": 90, "max": 109, "label": "Average" },
+          { "min": 80, "max": 89, "label": "Low Average" },
+          { "min": 70, "max": 79, "label": "Very Low" },
+          { "max": 69, "label": "Extremely Low" }
+        ]
+      }
+    },
+    {
+      "id": "basc-3",
+      "name": "Behavior Assessment System for Children, Third Edition",
+      "aliases": ["BASC-3", "BASC 3", "BASC-III"],
+      "publisher": "Pearson",
+      "scales": [
+        { "name": "Behavioral Symptoms Index", "aliases": ["BSI"], "score_type": "t_score", "kind": "composite" },
+        { "name": "Externalizing Problems", "score_type": "t_score", "kind": "composite" },
+        { "name": "Internalizing Problems", "score_type": "t_score", "kind": "composite" },
+        { "name": "Adaptive Skills", "score_type": "t_score", "kind": "composite" },
+        { "name": "Hyperactivity", "score_type": "t_score", "kind": "scale" },
+        { "name": "Aggression", "score_type": "t_score", "kind": "scale" },
+        { "name": "Conduct Problems", "score_type": "t_score", "kind": "scale" },
+        { "name": "Anxiety", "score_type": "t_score", "kind": "scale" },
+        { "name": "Depression", "score_type": "t_score", "kind": "scale" },
+        { "name": "Somatization", "score_type": "t_score", "kind": "scale" },
+        { "name": "Attention Problems", "score_type": "t_score", "kind": "scale" },
+        { "name": "Learning Problems", "score_type": "t_score", "kind": "scale" },
+        { "name": "Atypicality", "score_type": "t_score", "kind": "scale" },
+        { "name": "Withdrawal", "score_type": "t_score", "kind": "scale" },
+        { "name": "Adaptability", "score_type": "t_score", "kind": "scale" },
+        { "name": "Social Skills", "score_type": "t_score", "kind": "scale" },
+        { "name": "Leadership", "score_type": "t_score", "kind": "scale" },
+        { "name": "Activities of Daily Living", "score_type": "t_score", "kind": "scale" },
+        { "name": "Functional Communication", "score_type": "t_score", "kind": "scale" }
+      ],
+      "descriptor_ranges": {
+        "t_score_clinical": [
+          { "min": 70, "label": "Clinically Significant" },
+          { "min": 60, "max": 69, "label": "At-Risk" },
+          { "min": 41, "max": 59, "label": "Average" },
+          { "min": 31, "max": 40, "label": "Low" },
+          { "max": 30, "label": "Very Low" }
+        ],
+        "t_score_adaptive": [
+          { "min": 70, "label": "Very High" },
+          { "min": 60, "max": 69, "label": "High" },
+          { "min": 41, "max": 59, "label": "Average" },
+          { "min": 31, "max": 40, "label": "At-Risk" },
+          { "max": 30, "label": "Clinically Significant" }
+        ]
+      }
+    },
+    {
+      "id": "conners-4",
+      "name": "Conners Fourth Edition",
+      "aliases": ["Conners-4", "Conners 4", "Conners-IV"],
+      "publisher": "MHS",
+      "scales": [
+        { "name": "Inattention/Executive Dysfunction", "aliases": ["Inattention and Executive Dysfunction"], "score_type": "t_score", "kind": "scale" },
+        { "name": "Hyperactivity", "score_type": "t_score", "kind": "scale" },
+        { "name": "Impulsivity", "score_type": "t_score", "kind": "scale" },
+        { "name": "Emotional Dysregulation", "score_type": "t_score", "kind": "scale" },
+        { "name": "Depressed Mood", "score_type": "t_score", "kind": "scale" },
+        { "name": "Anxious Thoughts", "score_type": "t_score", "kind": "scale" },
+        { "name": "Schoolwork", "score_type": "t_score", "kind": "scale" },
+        { "name": "Peer Interactions", "score_type": "t_score", "kind": "scale" },
+        { "name": "Family Life", "score_type": "t_score", "kind": "scale" }
+      ],
+      "descriptor_ranges": {
+        "t_score": [
+          { "min": 70, "label": "Very Elevated" },
+          { "min": 65, "max": 69, "label": "Elevated" },
+          { "min": 60, "max": 64, "label": "High Average" },
+          { "min": 40, "max": 59, "label": "Average" },
+          { "max": 39, "label": "Low" }
+        ]
+      }
+    }
+  ]
+}

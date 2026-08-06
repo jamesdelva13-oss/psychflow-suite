@@ -1,0 +1,21 @@
+{
+  "name": "@suite/document-extraction",
+  "version": "0.1.0",
+  "description": "Source-document ingestion: parsers (docx first) -> IR -> entity extraction (names, dates, pronouns, instruments, score candidates) -> EntityMap. Relocated from the Sped QA Engine repo per D-046: one shared stack, reused by QA for report review and by PsychReport for source-document ingestion (D-077). Instrument libraries are injected by the consumer; this package reads no rulepacks. Distinct from @suite/extraction-core, which turns RIE bank responses into Evidence.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "fixtures": "node tests/fixtures/generate.mjs"
+  },
+  "dependencies": {
+    "@suite/reasoning-contracts": "*",
+    "fast-xml-parser": "^4.5.0",
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^2.1.0"
+  }
+}

@@ -6,6 +6,7 @@
     "apps/*",
     "packages/case-model",
     "packages/content",
+    "packages/document-extraction",
     "packages/extraction-core",
     "packages/reasoning-contracts",
     "packages/referral-engine-core"
