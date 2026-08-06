@@ -225,10 +225,61 @@ export const Source = z.object({
   payloadRef: z.string().nullable().default(null),
   locked: z.boolean().default(false),              // true once submitted/final
   checksum: z.string().nullable().default(null),
+  /**
+   * Version/supersession (directive §12.2, D-046). A finalized (locked)
+   * Source is immutable: corrections and updates are NEW Sources that point
+   * back via supersedesSourceId, never in-place edits. "Superseded" is
+   * derived — a Source is superseded when a newer Source points at it (see
+   * isSuperseded) — so locked rows need no status mutation at all.
+   */
+  version: z.number().int().positive().default(1),
+  supersedesSourceId: z.string().nullable().default(null),
   retention: Retention.default({ autoPurgeDays: null, deletedAt: null }),
   createdAt: z.string().datetime(),
 });
 export type TSource = z.infer<typeof Source>;
+
+/** Finalized = locked. The immutability boundary (directive §12.2). */
+export function isFinalized(s: TSource): boolean {
+  return s.locked;
+}
+
+/** Derived supersession state: some other Source points at this one. */
+export function isSuperseded(sourceId: string, all: TSource[]): boolean {
+  return all.some((s) => s.supersedesSourceId === sourceId);
+}
+
+/**
+ * The rules a superseding Source must satisfy. Returns the violations (empty
+ * = legal). Enforced here as the canonical statement; the database mirrors
+ * it with an immutability trigger on locked rows.
+ *
+ *   1. Only a finalized Source can be superseded — an unlocked draft is
+ *      simply edited, not versioned.
+ *   2. Supersession never crosses cases.
+ *   3. The superseding Source's version must be exactly original + 1.
+ *   4. The original is untouched: supersession adds a record, it never
+ *      mutates one.
+ */
+export function validateSupersession(
+  original: TSource,
+  superseding: TSource,
+): string[] {
+  const problems: string[] = [];
+  if (!original.locked) {
+    problems.push("only a finalized (locked) Source can be superseded; edit the draft instead");
+  }
+  if (superseding.caseId !== original.caseId) {
+    problems.push("supersession cannot cross cases");
+  }
+  if (superseding.supersedesSourceId !== original.sourceId) {
+    problems.push("superseding Source must reference the original via supersedesSourceId");
+  }
+  if (superseding.version !== original.version + 1) {
+    problems.push(`superseding version must be ${original.version + 1} (got ${superseding.version})`);
+  }
+  return problems;
+}
 
 /* ---------- Evidence ---------- */
 

@@ -14,7 +14,8 @@ import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { Taxonomy, validateTaxonomy, isKnownConstruct } from "../src/taxonomy.schema";
-import { Case, Informant, Source, Evidence, Claim, Topography, referralSourceForSingleIntake } from "../src/entities";
+import { Case, Informant, Source, Evidence, Claim, Topography, referralSourceForSingleIntake, isFinalized, isSuperseded, validateSupersession } from "../src/entities";
+import { ProfessionalProfile, CaseAssignment, ActorRef, mayActOnCase, mayContributeContent } from "../src/contributors";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const read = (p: string) => JSON.parse(fs.readFileSync(path.join(here, p), "utf8"));
@@ -157,6 +158,94 @@ check("Claim: REJECTS approved status without approver (audit rule)", !Claim.saf
   claimId: "cl_004", caseId: "case_0001", outputSection: "referral_summary.strengths",
   text: "x", claimType: "reported_fact", evidenceIds: ["ev_001"], status: "approved",
 }).success);
+
+/* 5 ── multidisciplinary model (D-131, landed with D-046) */
+
+const psychProfile = ProfessionalProfile.parse({
+  profileId: "prof_psych", authUserId: "auth_1", discipline: "school_psychology",
+  displayName: "Psych One", createdAt: now,
+});
+const slpProfile = ProfessionalProfile.parse({
+  profileId: "prof_slp", authUserId: "auth_2", discipline: "speech_language",
+  displayName: "SLP Two", createdAt: now,
+});
+check("Profile: two disciplines coexist (D-131)", psychProfile.discipline !== slpProfile.discipline);
+
+const leadAssignment = CaseAssignment.parse({
+  assignmentId: "as_1", caseId: "case_0001", profileId: "prof_psych",
+  role: "lead_evaluator", startedAt: now, createdAt: now,
+});
+const slpAssignment = CaseAssignment.parse({
+  assignmentId: "as_2", caseId: "case_0001", profileId: "prof_slp",
+  role: "contributor", startedAt: now, createdAt: now,
+});
+const assignments = [leadAssignment, slpAssignment];
+
+check("Assignment: REJECTS endedAt before startedAt", !CaseAssignment.safeParse({
+  assignmentId: "as_x", caseId: "case_0001", profileId: "prof_psych",
+  role: "contributor", startedAt: "2026-08-06T12:00:00Z",
+  endedAt: "2026-08-06T11:00:00Z", createdAt: now,
+}).success);
+
+// Case identity is untouched by contributors: the same pre-D-131 Case record
+// still parses, with no contributor-shaped fields required or added.
+check("D-131: Case schema unchanged — pre-D-131 record still parses", okCase.success);
+
+check("D-131: both disciplines authorized on the one case",
+  mayActOnCase("prof_psych", "case_0001", assignments) &&
+  mayActOnCase("prof_slp", "case_0001", assignments));
+
+check("D-131: unassigned profile is NOT authorized (no ad-hoc grants)",
+  !mayActOnCase("prof_other", "case_0001", assignments));
+
+check("D-131: assignment on another case grants nothing here",
+  !mayActOnCase("prof_psych", "case_9999", assignments));
+
+const endedSlp = { ...slpAssignment, endedAt: "2026-08-06T00:00:00Z" };
+check("D-131: ended assignment removes authorization…",
+  !mayActOnCase("prof_slp", "case_0001", [leadAssignment, endedSlp],
+    "2026-08-07T00:00:00Z"));
+check("…but attribution survives: ActorRef is by stable profileId",
+  ActorRef.safeParse({ profileId: endedSlp.profileId }).success);
+
+check("D-131: reviewers read, leads and contributors write",
+  mayContributeContent("lead_evaluator") && mayContributeContent("contributor") &&
+  !mayContributeContent("reviewer"));
+
+/* 6 ── Source version/supersession (directive §12.2, landed with D-046) */
+
+const baseSource = {
+  sourceId: "src_1", caseId: "case_0001", kind: "referral_form" as const,
+  collectedOn: "2026-09-08", locked: true, checksum: "abc", createdAt: now,
+};
+const orig = Source.parse(baseSource);
+check("Source: pre-supersession record parses with version=1, supersedes=null",
+  orig.version === 1 && orig.supersedesSourceId === null);
+check("Source: finalized = locked (immutability boundary)", isFinalized(orig));
+
+const correction = Source.parse({
+  ...baseSource, sourceId: "src_2", version: 2, supersedesSourceId: "src_1",
+});
+check("Supersession: legal correction chain validates",
+  validateSupersession(orig, correction).length === 0);
+check("Supersession: derived state — original is superseded, correction is not",
+  isSuperseded("src_1", [orig, correction]) && !isSuperseded("src_2", [orig, correction]));
+
+check("Supersession: REJECTS superseding an unlocked draft",
+  validateSupersession(Source.parse({ ...baseSource, locked: false }), correction).length > 0);
+
+check("Supersession: REJECTS crossing cases",
+  validateSupersession(orig,
+    Source.parse({ ...baseSource, sourceId: "src_2", caseId: "case_0002",
+      version: 2, supersedesSourceId: "src_1" })).length > 0);
+
+check("Supersession: REJECTS version skips",
+  validateSupersession(orig,
+    Source.parse({ ...baseSource, sourceId: "src_2", version: 3,
+      supersedesSourceId: "src_1" })).length > 0);
+
+check("Supersession: original untouched — validation never mutates",
+  orig.version === 1 && orig.supersedesSourceId === null && orig.locked);
 
 console.log(failures === 0 ? "\nALL CHECKS PASSED ✓" : `\n${failures} CHECK(S) FAILED ✗`);
 process.exit(failures === 0 ? 0 : 1);
