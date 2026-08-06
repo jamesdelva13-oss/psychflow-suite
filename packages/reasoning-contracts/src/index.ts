@@ -5,19 +5,21 @@
  * generation constraints and by the QA Engine as detection targets.
  *
  * DEPENDENCY DIRECTION IS ONE-WAY. This package depends on nothing.
- *   reasoning-contracts -> (nothing)
- *   case-model          -> reasoning-contracts
- *   psychreport         -> reasoning-contracts, case-model
- *   qa-engine           -> reasoning-contracts   (NOT case-model, NOT psychreport)
- *   eligibility         -> reasoning-contracts, case-model
+ *   reasoning-contracts  -> (nothing)
+ *   case-model           -> reasoning-contracts
+ *   document-extraction  -> reasoning-contracts   (parser/IR/entity stack, D-046)
+ *   psychreport          -> reasoning-contracts, case-model, document-extraction
+ *   qa-engine            -> reasoning-contracts, document-extraction
+ *                           (NOT case-model, NOT psychreport)
+ *   eligibility          -> reasoning-contracts, case-model
  *
  * Neither product may import the other. QA must never assume PsychReport
  * headings, tables, prompts, or provenance.
  *
- * Version: 0.1.0-pilot
+ * Version: 0.2.0-pilot
  */
 
-export const CONTRACTS_VERSION = "0.1.0-pilot";
+export const CONTRACTS_VERSION = "0.2.0-pilot";
 
 /* ------------------------------------------------------------------ *
  * 0. SHARED EPISTEMIC TYPES — OWNED HERE
@@ -600,3 +602,23 @@ export function tierAssignmentLegal(t: Tier, instrumentSuppliedAffirmative: bool
   if (isAffirmativeTier(t)) return instrumentSuppliedAffirmative;
   return true; // T0 / T1 / T1-obs never require affirmative data
 }
+
+/* ------------------------------------------------------------------ *
+ * 8. PARSE-TRUST VOCABULARY (D-046 consolidation)
+ *
+ * How far a structured extraction of a source document may be trusted.
+ * Shared epistemic vocabulary, owned here: the QA Engine's status
+ * ceilings consume it (a finding built on a `parsed_low_confidence`
+ * element is capped at "Review suggested"; a Confirmed finding can
+ * never be built from a shaky parse), and @suite/document-extraction
+ * stamps it onto every IR element it emits. Formerly defined in the QA
+ * repo's `packages/core/findings.ts`; single-sourced here per D-046.
+ * ------------------------------------------------------------------ */
+
+export type ParserConfidence = "parsed_ok" | "parsed_low_confidence" | "failed";
+
+export const PARSER_CONFIDENCES: readonly ParserConfidence[] = [
+  "parsed_ok",
+  "parsed_low_confidence",
+  "failed",
+] as const;

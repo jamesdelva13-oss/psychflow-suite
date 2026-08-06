@@ -19,11 +19,13 @@ import {
   satisfiesDomainAddressed,
   tierAssignmentLegal,
   isAffirmativeTier,
+  PARSER_CONFIDENCES,
   type SourceInterpretationPolicy,
   type SourceScope,
   type SectionMode,
   type RuleMetadata,
   type Tier,
+  type ParserConfidence,
 } from "../src/index.js";
 
 let failures = 0;
@@ -257,9 +259,24 @@ ok(
 const _tierExhaustive: Tier[] = ["T0", "T1", "T1-obs", "T2", "T3"];
 void _tierExhaustive;
 
+ok(
+  "30. parse-trust vocabulary is exactly the three QA ceiling inputs (D-046)",
+  PARSER_CONFIDENCES.length === 3 &&
+    PARSER_CONFIDENCES.includes("parsed_ok") &&
+    PARSER_CONFIDENCES.includes("parsed_low_confidence") &&
+    PARSER_CONFIDENCES.includes("failed"),
+);
+
+const _confidenceExhaustive: ParserConfidence[] = [
+  "parsed_ok",
+  "parsed_low_confidence",
+  "failed",
+];
+void _confidenceExhaustive;
+
 console.log(
   failures === 0
-    ? `\nALL PASS (29/29) · contracts ${CONTRACTS_VERSION}`
+    ? `\nALL PASS (30/30) · contracts ${CONTRACTS_VERSION}`
     : `\n${failures} FAILED`,
 );
 declare const process: { exitCode?: number };
