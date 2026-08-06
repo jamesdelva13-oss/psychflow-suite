@@ -761,6 +761,8 @@ VERSION BUMP, not a spec migration.
 **Status:** Accepted · 2026-07-18 (orig.) · merged 2026-07-23 · Proposed: JD (settled) / Claude (implementation) · Ratified: JD
 > **Amendment note (2026-07-25, per D-038):** Partially reopened by **D-089**. Affirmative per-domain capture is **no longer scoped to Cognitive and Adaptive only** — every domain must capture can-do / area-of-difficulty, so the instrument must supply affirmative data by design (via a per-domain checklist). The tier-ladder interaction (D-049) is deferred to v0.7. Original scoping text preserved above.
 
+> **Amendment note (2026-08-06, per D-038):** Reconciled by **D-132** — refined, not abandoned. The middle position ratified: baseline affirmative capture extends to **all domains** (capped, checkbox-only); deeper clinical capture remains conditional on selected pathways. The completion-rate concern that motivated the original scoping is honored by the cap and by confining free text to one optional field on the concern path. See D-132.
+
 ## D-051 · [RIE] Closed lists over stated principle for licensed T2/T3 language
 *(Fork reconciliation: was RIE `decisions.md` D-027, origin repo psychflow-suite. Original wording preserved, per the amendment rule in D-038.)*
 Licensed affirmative language (drafting-spec P30) is governed by a CLOSED set of
@@ -1173,6 +1175,17 @@ be specified in v0.7.
 > grade/developmental routing excludes categorically irrelevant content. See
 > D-119. Original text preserved above.
 
+> **Amendment note (2026-08-06, per D-038):** Further amended by **D-132** —
+> an amendment, not a supersession. The objective of universal domain
+> consideration is retained; the implementation mechanism is amended from
+> comprehensive per-domain capture to **concise baseline capture with
+> conditional depth**: an affirmative baseline checklist in every domain
+> (initial cap: five items, subject to clinical bank review and pilot
+> validation), derived from the district referral form's per-domain fields,
+> with difficulty capture conditional on a reported concern. The lesson is
+> not "collect less" — it is "collect each thing once, at the right depth,
+> for the right purpose." See D-132. Original text preserved above.
+
 ## D-090 · [PsychReport] Clarification (non-change): evaluation-planning coverage is not a report concern
 PsychReport reports **assessments administered** — what a given instrument found.
 Documentation of which domains were **considered but not evaluated** during
@@ -1551,6 +1564,17 @@ Grade/developmental routing is the preferred mechanism for excluding categorical
 Design test recorded with this decision: safe specification requires the system to preserve meaningful states, provenance, or professional control; risky specification prescribes extensive content, fixed item assignments, or broad prose prohibitions before demonstrated failure justifies them. This amendment primarily removes unnecessary mechanism while preserving clinical correctness.
 **Status:** Accepted · 2026-07-29 · Proposed: JD · Ratified: JD
 
+> **Amendment note (2026-08-06, per D-038):** Narrowed by **D-132**. The
+> format-follows-information principle and the pilot-governed burden rule
+> remain in force. The supersession of the paired can-do/difficulty
+> checklist is narrowed: the paired structure returns in bounded form — a
+> capped affirmative baseline shown regardless of disposition, plus a
+> conditional difficulty checklist — justified by the district referral
+> form's per-domain strengths fields (an output contract), not by richer
+> narratives. The five-item baseline cap is an authoring bound on baseline
+> lists, not a reintroduction of the fixed item-count ceiling this decision
+> rejected for burden governance. See D-132. Original text preserved above.
+
 ## D-120 · [RIE] Respondent-facing student identity: first name + last initial
 
 Respondent-facing student identity is first name plus last initial. The Case contract adds these as minimal identity fields; full name is never stored, and links, logs, and model payloads continue to exclude them. Supersedes initials-only display.
@@ -1710,3 +1734,99 @@ contributor records. Psychology is the first discipline through the full
 pipe; additional disciplines phase in after slice validation, sequenced by
 design-partner demand. No multidisciplinary UI is built in the slice.
 **Status:** Accepted · 2026-08-06 · Proposed: Claude (Aug 6 governance pass) · Ratified: JD (ratification instruction of 2026-08-06, A-1..A-9)
+
+## D-132 · [RIE] · Teacher Intake v1.6.1 ratified — universal baseline capture, conditional depth
+Teacher Intake v1.6.1 adopts universal domain consideration through concise
+baseline observation capture. Additional clinical detail is conditional on
+identified concerns, developmental applicability, and evaluation planning
+relevance. Future revisions should be guided by practitioner review and
+observed completion data rather than predetermined expansion of the
+instrument.
+
+**Mechanism ratified (the hybrid change set of 2026-08-06, replacing the
+compression pass of the same date):**
+
+- Every domain shows an affirmative baseline checklist regardless of
+  disposition; a Yes disposition **adds** a deficit-phrased difficulty
+  checklist plus one optional example field. Conditional depth, not
+  conditional existence. "Not enough opportunity to observe" skips the
+  baseline as well and is stored as an explicit observation gap — never
+  rendered as "No".
+- **Grounds for baseline capture — an output contract, not narrative
+  enrichment:** the district referral form carries a per-domain strengths
+  field, and RIE's job is to populate the district's document. Baseline item
+  sets are derived from the district form's per-domain fields and are not
+  freely authored. Downstream prose, evidence-tier, and rendering
+  requirements still do not independently create respondent questions — but
+  the district form's own fields legitimately do.
+- **Initial baseline item cap: five statements per domain, subject to
+  clinical bank review and pilot validation.** This is an authoring bound
+  whose purpose is to prevent each domain from becoming a mini rating scale
+  — it is NOT a burden-governance ceiling and does not reopen D-119's rule
+  that respondent burden is governed by pilot-measured completion,
+  abandonment, and clinical yield. Not a permanent architectural constraint.
+- **One meaning per list.** Ratified hint strings — baseline: "Check what
+  you have observed this student do. Leaving an item unchecked means you
+  have not observed it or it does not apply at this grade — it is not
+  recorded as a difficulty." Difficulty: "Check the difficulties you have
+  observed. Leaving an item unchecked means it is not a difficulty you have
+  observed — it is not recorded as a strength." "Not observed" is carried by
+  the disposition, never by an empty checkbox. Observation-escape and the
+  baseline cap are enforced in `question-bank.schema.ts`, not stated as
+  principle.
+- **Both safety items restored** (Social/Emotional: self-harm/suicide
+  statements; Behavioral: risk-of-harm behavior), always asked regardless of
+  disposition, escalation sentence beside each; emergency notice at the top
+  of Step 1 and the end of Step 4. The self-harm overlap is deliberate: one
+  item measures observed behavioral risk, the other a statement indicating
+  ideation. Safety items are risk management, not burden.
+- **Grade renders read-only from the case record** — the teacher never
+  re-enters it, and grade-band routing depends on data that exists before
+  the invitation is sent.
+- The autism set is named **"Autism-related observation questions"** — never
+  "screener." Four restricted/repetitive items on a four-point verbal
+  frequency (Never observed · Occasionally observed · Frequently observed ·
+  Not sure), no neutral midpoint, never summed, scored, or presented as a
+  probability. The social-communication half is already collected under
+  Communication and Social/Emotional — collect each thing once.
+- **Attention/organization items are authored once** (under Behavioral) and
+  mapped to relevant constructs; the teacher answers once and the evidence
+  may inform Behavioral, Cognitive, and ADHD/OHI consideration. No duplicate
+  item set; no elaborate provenance system. The depth-entry case (Cognitive
+  flagged, Behavioral not) surfaces the same authored set, not a second one.
+- **Vision & Hearing** moves from a Step-2 domain to a Step-1 access screen
+  of four observable signs. Screening records assemble at case level;
+  teachers are never asked records questions. Vision/hearing is a case-level
+  information source, not a teacher judgment domain.
+- **Other/Miscellaneous domain deleted; all four contents relocated** —
+  attendance and regression as first-class Step-1 items, health/medical and
+  environmental context as one light school-observable Step-1 item, the
+  residual caught by Step 4's "anything else."
+- **Magnitude ratings are not reintroduced.** If ever reintroduced,
+  non-academic domains only — the academic block already collects objective
+  performance data, and a teacher severity judgment beside a benchmark
+  number is the weaker of two fields that can then contradict each other.
+
+**Relation to prior decisions.** D-089's objective of universal domain
+consideration is retained; its implementation mechanism is amended from
+comprehensive per-domain capture to concise baseline capture with
+conditional depth. The lesson is not "collect less" — it is "collect each
+thing once, at the right depth, for the right purpose." D-119's
+format-follows-information principle and pilot-governed burden rule remain
+in force; its supersession of the paired can-do/difficulty checklist is
+narrowed — the paired structure returns in bounded form (capped affirmative
+baseline + conditional difficulty), justified by the district output
+contract. D-050 is thereby refined, not abandoned: baseline affirmative
+capture extends to all domains; deeper clinical capture remains conditional
+on selected pathways. D-049's T1 vs T1-obs distinction is unchanged. D-091
+is untouched — evaluation-coverage verification stays in the case process;
+the teacher form captures referral-stage information only.
+
+**Draft artifact:** `docs/drafts/teacher-v1.6.1-clinical-review-draft.json`.
+This decision ratifies the structure, the quoted strings above, and the
+change set; item wording remains draft until practitioner review and pilot
+(per D-119, item-level decisions belong to versioned clinical-bank review).
+Open items logged in the draft: attention depth-entry routing, grade-band
+applicability, the baseline-to-district-field mapping, magnitude, escalation
+wording, and the LANG fluency/voice taxonomy gap.
+**Status:** Accepted · 2026-08-06 · Proposed: Claude (hybrid change set) with ChatGPT advisory review · Ratified: JD (ratification instruction of 2026-08-06)
