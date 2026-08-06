@@ -1658,3 +1658,53 @@ summarization AI enters v1. Guardrails, consistent with existing decisions:
 - Data posture per `docs/data-posture.md`; summarization calls carry
   minimum-necessary content (D-110).
 **Status:** Accepted · 2026-08-04 · Proposed: JD · Ratified: JD
+
+## D-126 · [suite] · Vertical-slice build ratified
+The Vertical-Slice Build Directive (v1.1, as amended by the Aug 6, 2026
+governance pass) is the ratified build at the sequence-revisit point required
+by existing D-124. Prerequisites unchanged: deployable RIE, then D-046, then
+the slice.
+**Status:** Accepted · 2026-08-06 · Proposed: Claude (Aug 6 governance pass) · Ratified: JD (ratification instruction of 2026-08-06, A-1..A-9)
+
+## D-127 · [RIE] · RIE rescope ratified; name open
+RIE is rescoped as the suite's multi-modal intake/evidence layer: forms,
+document upload, and structured interview/observation/call capture first;
+voice phased later. "RIE" remains the internal codename. No user-facing
+product name ships without a ratified naming decision. Naming constraint of
+record: the prior candidate failed as accurate-but-generic-and-passive; the
+replacement must name the value created (organized, reusable, attributed
+professional case information), not the input action, and must not presume
+"referral" scope.
+**Status:** Accepted · 2026-08-06 · Proposed: Claude (Aug 6 governance pass) · Ratified: JD (ratification instruction of 2026-08-06, A-1..A-9)
+
+## D-128 · [PsychReport] · PsychReport standalone excellence protected
+PsychReport must be independently excellent and independently purchasable.
+No ecosystem prerequisite, ever. Suite integration adds value; it never
+gates value.
+**Status:** Accepted · 2026-08-06 · Proposed: Claude (Aug 6 governance pass) · Ratified: JD (ratification instruction of 2026-08-06, A-1..A-9)
+
+## D-129 · [SpedQA] · QA independence positioning
+The Sped QA Engine is positioned as independent review regardless of
+authoring source — machine-drafted, competitor-drafted, or human-written.
+Attorney involvement is design input; no marketing or product surface may
+state or imply legal certification or legal review of an individual
+document. "AI grading AI" is retired as external language.
+**Status:** Accepted · 2026-08-06 · Proposed: Claude (Aug 6 governance pass) · Ratified: JD (ratification instruction of 2026-08-06, A-1..A-9)
+
+## D-130 · [suite] · Polish is release-gated
+No slice surface ships without passing Gate C of the directive, which
+incorporates Design System §8 at fixed viewports 1440/1024/390 against the
+canonical fixture. The internal checklist is the standard of record; no
+competitor is named in decision text.
+**Status:** Accepted · 2026-08-06 · Proposed: Claude (Aug 6 governance pass) · Ratified: JD (ratification instruction of 2026-08-06, A-1..A-9)
+
+## D-131 · [suite] · Multidisciplinary architecture is first-class
+The canonical case model must support multiple professional
+contributors/assignments across disciplines without changing case identity
+or Source/Evidence semantics. Case activity preserves actor attribution.
+Authorization remains governed by the canonical
+organization/profile/role/assignment model — not embedded ad hoc in
+contributor records. Psychology is the first discipline through the full
+pipe; additional disciplines phase in after slice validation, sequenced by
+design-partner demand. No multidisciplinary UI is built in the slice.
+**Status:** Accepted · 2026-08-06 · Proposed: Claude (Aug 6 governance pass) · Ratified: JD (ratification instruction of 2026-08-06, A-1..A-9)

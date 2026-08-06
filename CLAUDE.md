@@ -187,3 +187,20 @@ narrow a suite rule or widen a product rule (D-117); a clinical/regulatory judgm
 call (JD is the domain expert — surface it, don't guess); MVP scope decisions;
 anything touching student-data handling, deployment posture, or the eligibility
 boundary. State the fork, your recommendation, and why — one question, not a list.
+
+---
+
+UI RULES (non-negotiable)
+1. Compose all UI from @suite/ui components per DESIGN-SYSTEM.md §5. Never write ad-hoc UI.
+2. All style values come from tokens.css. No inline hex, px sizes, or font names.
+3. The --ai-* family marks unaccepted AI content only; nothing else in the product may
+   be visually confusable with that state. Cobalt marks interaction only. Green marks
+   verified only. Never repurpose these.
+4. Every component implements ALL states listed in DESIGN-SYSTEM.md before use.
+5. Machine-written content always renders inside AIProposal (Proposal or Revision
+   variant). Conversation never mutates content directly. No exceptions.
+6. The Evidence Spine renders only where provenance/review is action-relevant
+   (DESIGN-SYSTEM.md §2); never in reading mode, export preview, or exports.
+7. Before committing UI: screenshot at 1440/1024/390 against the Avery Williams
+   fixture and verify the DESIGN-SYSTEM.md §8 items within Gate C.
+8. If a needed component or token doesn't exist: stop, propose it, wait for ratification.
