@@ -7,6 +7,7 @@ export const KNOWN_EVENT_TYPES = [
   "case_created",
   "case_deleted",
   "invitation_created",
+  "invitation_email_sent",
   "invitation_revoked",
   "response_opened",
   "response_submitted",
@@ -28,6 +29,8 @@ const LABELS: Record<KnownEventType, (m: Meta, self: boolean) => string> = {
   case_deleted: () => "The case was permanently deleted",
   invitation_created: (m) =>
     `A secure ${typeof m.role === "string" ? String(m.role).replace(/_/g, " ") : "respondent"} intake was created`,
+  invitation_email_sent: (m) =>
+    `The secure ${typeof m.role === "string" ? String(m.role).replace(/_/g, " ") : "respondent"} intake was emailed to the respondent`,
   invitation_revoked: () => "An intake invitation was revoked",
   response_opened: () => "The respondent opened their intake form",
   response_submitted: () =>

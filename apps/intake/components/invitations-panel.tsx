@@ -12,7 +12,22 @@ export type InvitationSummary = {
   max_uses: number;
 };
 
-type NewLink = { url: string; qrDataUrl: string; expiresAt: string };
+type EmailDelivery =
+  | { attempted: false }
+  | { attempted: true; sent: true; maskedRecipient: string }
+  | { attempted: true; sent: false; reason: string };
+
+type NewLink = {
+  url: string;
+  qrDataUrl: string;
+  expiresAt: string;
+  emailDelivery?: EmailDelivery;
+};
+
+const DELIVERY_FAILURE_HINT: Record<string, string> = {
+  email_not_configured:
+    "Email sending isn't set up on this deployment yet — share the link below instead.",
+};
 
 const STATUS_STYLE: Record<string, string> = {
   pending: "bg-slate-100 text-slate-600",
@@ -41,14 +56,19 @@ export function InvitationsPanel({
   const [fresh, setFresh] = useState<NewLink | null>(null);
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
+  const [recipientEmail, setRecipientEmail] = useState("");
 
   async function generate() {
     setBusy(true);
     setError(null);
+    const email = recipientEmail.trim();
     const res = await fetch(`/api/cases/${caseId}/invitations`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ role: "teacher" }),
+      body: JSON.stringify({
+        role: "teacher",
+        ...(email ? { recipientEmail: email } : {}),
+      }),
     });
     setBusy(false);
     if (!res.ok) {
@@ -56,6 +76,7 @@ export function InvitationsPanel({
       return;
     }
     setFresh(await res.json());
+    setRecipientEmail(""); // used once for delivery; never kept around
     setShowQr(false);
     setCopied(false);
     router.refresh();
@@ -112,6 +133,18 @@ export function InvitationsPanel({
       )}
 
       <div className="flex flex-wrap items-center gap-2">
+        <label htmlFor={`invite-email-${caseId}`} className="sr-only">
+          Teacher email for delivery (optional)
+        </label>
+        <input
+          id={`invite-email-${caseId}`}
+          type="email"
+          value={recipientEmail}
+          onChange={(e) => setRecipientEmail(e.target.value)}
+          placeholder="Teacher's email (optional)"
+          autoComplete="off"
+          className="w-56 rounded-md border border-slate-300 px-3 py-1.5 text-sm placeholder:text-slate-400"
+        />
         <button
           onClick={generate}
           disabled={busy}
@@ -119,9 +152,11 @@ export function InvitationsPanel({
         >
           {busy
             ? "Working…"
-            : invitations.some((i) => i.status !== "revoked")
-              ? "Regenerate teacher link"
-              : "Generate teacher invitation"}
+            : recipientEmail.trim()
+              ? "Send email invitation"
+              : invitations.some((i) => i.status !== "revoked")
+                ? "Regenerate teacher link"
+                : "Generate teacher invitation"}
         </button>
         {fresh && (
           <>
@@ -145,6 +180,25 @@ export function InvitationsPanel({
 
       {fresh && (
         <div className="mt-3 space-y-2">
+          {fresh.emailDelivery?.attempted && fresh.emailDelivery.sent && (
+            <p
+              role="status"
+              className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
+            >
+              Invitation emailed to {fresh.emailDelivery.maskedRecipient}. The
+              link below is the same one — keep it as a backup if needed.
+            </p>
+          )}
+          {fresh.emailDelivery?.attempted && !fresh.emailDelivery.sent && (
+            <p
+              role="status"
+              className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800"
+            >
+              The invitation was created, but the email could not be sent.{" "}
+              {DELIVERY_FAILURE_HINT[fresh.emailDelivery.reason] ??
+                "Copy the link below and share it directly."}
+            </p>
+          )}
           <code className="block break-all rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-700">
             {fresh.url}
           </code>

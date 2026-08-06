@@ -71,6 +71,16 @@ job is collected, and nothing else.
   hash is stored. Regeneration mints a new link; revocation is immediate.
 - The teacher-facing page shows the student as first name + last initial only
   (D-120). Full identity never appears in a link, a page, or a log line.
+- **Email delivery (built 2026-08-06):** the psychologist may have the
+  invitation emailed to the respondent. The email contains **no student
+  information at all** — not even the D-120 first name + last initial; the
+  student is identified only after the recipient opens the secured form. The
+  recipient address is used transiently for the send and **never persisted**
+  (storing it would presume the open retention decision); the audit trail
+  records only that delivery happened (structural fields, no address).
+  Provider failures reduce to status codes — the recipient, message body,
+  and token-bearing URL never appear in logs or error reporting. The
+  copy-link/QR flow remains available whether or not email is configured.
 
 ## 7. What reaches an AI model
 
@@ -111,6 +121,7 @@ job is collected, and nothing else.
 | Auto-purge job; relay-and-purge mode | Committed, not yet built |
 | Formal audit-event log | **Implemented** (2026-08-05): every state-changing route records an event; in-app Activity view; mechanical no-narrative guard; label-completeness test |
 | Accessibility (WCAG) verification | Committed; testing planned with the four-step UI |
+| Invitation email delivery | **Implemented** (2026-08-06): optional send-at-creation through a vendor-swappable adapter; no student content in the message; recipient address never persisted, audited, or logged; unit-tested authorization (unauthenticated/non-owner callers can never trigger a send). Provider account + verified From domain are deployment configuration pending JD's vendor/DPA choice |
 
 ## 10. Environments and pilots
 
