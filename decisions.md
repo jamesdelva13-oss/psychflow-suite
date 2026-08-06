@@ -652,7 +652,7 @@ Supabase identity. A cookie minted for one invitation cannot act on another
 <!-- (cross-cutting), [QA], [RIE], or [PsychReport]. Entries D-001→D-041     -->
 <!-- predate the convention and are not retro-tagged. -->
 
-## D-046 · [suite] Shared-layer consolidation [OPEN]
+## D-046 · [suite] Shared-layer consolidation [COMPLETED 2026-08-06]
 `@suite/*` is currently split across two repos. The QA Engine repo holds
 `suite/packages/reasoning-contracts` (and a broken `suite/packages/case-model`
 missing its taxonomy files); the `psychflow-suite` repo holds a working
@@ -673,7 +673,8 @@ Not yet ruled: whether the QA Engine (`packages/core`, a separate app tree)
 folds into the same monorepo or stays its own repo consuming `@suite/*` as
 dependencies. Blocks: nothing today; blocks any clean cross-package import wiring
 until resolved.
-**Status:** OPEN · Logged 2026-07-23 · Proposed: Claude · Ratified: —
+**Status:** Accepted · Logged 2026-07-23 · Proposed: Claude · Ratified: JD (D-046 completion instruction of 2026-08-06)
+> **Amendment note (2026-08-06, per D-038; COMPLETION RECORD):** The leading option is implemented: **psychflow-suite is the single home for all `@suite/*` packages.** What landed: **(1)** `@suite/reasoning-contracts` (already rescued into this repo 2026-08-x) is canonical here; version 0.2.0 adds the parse-trust vocabulary (`ParserConfidence`), formerly defined in the QA repo's `findings.ts`. **(2)** New package `@suite/document-extraction` — the Sped QA parser / IR / entity-extraction stack relocated wholesale from the QA repo (per amendment 1 below), with its tests and docx fixtures; instrument libraries are injected by consumers, and a frozen copy of the QA seed serves as a test fixture only. **(3)** The QA repo's local `RuleAuthority` mirror (D-041 debt) is deleted; QA now imports `@suite/reasoning-contracts` and `@suite/document-extraction` as **`file:` dependencies** — the QA repo stays its own repo consuming `@suite/*` as dependencies. The "fold QA into the monorepo" question is thereby resolved *for now* as consume-as-dependency; folding in later would be its own decision. **(4)** `@suite/case-model` 0.4.0 adds the canonical organization/profile/role/assignment model (D-131) — additive; Case/Source/Evidence schemas' identity and semantics unchanged — and Source version/supersession semantics (directive §12.2): finalized Sources are immutable, corrections are new Sources chained by `supersedesSourceId`, "superseded" is derived, with migrations 0006 (contributor tables + RLS) and 0007 (supersession columns + DB immutability triggers), both additive; migrations are **authored, not yet applied** to the dev instance, and the RLS integration suite must gain per-table checks for the three new tables when applied. RIE behavior unchanged; all suites green both repos. **Open remainder noted, not resolved here:** sharing the *evidence-object model* with Sped QA (amendment 2 below) collides with the standing dependency law "qa-engine never imports case-model" — reconciling those is a separate ruling. Original text preserved below.
 > **Amendment note (2026-07-23, per D-038; stays OPEN):** Two consolidation consequences added. **(1)** The Sped QA parser / IR / entity-extraction stack must become a **shared package** — PsychReport reuses it for source-document ingestion (D-077) and cannot import from the Sped QA repo. **(2)** The **evidence-object model should be shared** across Sped QA and PsychReport rather than duplicated, alongside the parser stack. **Caveat:** QA judges *actual prose*, so shared extraction **supports** its checks but **never replaces reading the source sentence**. Still OPEN. Original text preserved above.
 > **Amendment note (2026-07-27, per D-038; Session B — Gate 5 confirmation):** Session B (Gate 5) confirmed the starting state — `reasoning-contracts` lives in the QA-Engine repo (no workspaces field); the working `case-model` + npm workspaces live in psychflow-suite, which does NOT contain `reasoning-contracts`; the QA-repo `case-model` is missing its taxonomy files; and PsychReport cannot yet cleanly import the shared `reasoning-contracts` (the app is unwired vanilla JS with zero imports). Consolidation remains the prerequisite as logged; no change to disposition. Original text preserved above.
 
@@ -715,6 +716,7 @@ vocabulary is added to the Sped-QA-Engine copy as the current canonical and is
 **not** duplicated into psychflow-suite; it **relocates wholesale when D-046
 resolves** (psychflow-suite as single `@suite` home).
 **Status:** Accepted · 2026-07-23 · Proposed: Claude · Ratified: JD
+> **Amendment note (2026-08-06, per D-038; location caveat discharged):** D-046 resolved; the relocation contemplated above is complete. The psychflow-suite `packages/reasoning-contracts` is the single canonical copy (v0.2.0), and the QA repo now consumes it as a dependency rather than holding its own. The evidence-tier vocabulary, `satisfiesDomainAddressed()`, and the no-inference-upgrade rule all live there unchanged. Original text preserved above.
 
 ---
 
