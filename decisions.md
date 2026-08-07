@@ -1931,3 +1931,56 @@ regenerate the case, Sources, and downstream objects against the new bank —
 fixture that would make the re-seed expensive; any test pinned to fixture
 content must survive a re-seed or pin the bank version explicitly.
 **Status:** Accepted · 2026-08-07 · Proposed: Claude (VS-0 map §3, CF-1 option a) · Ratified: JD (VS-1A ruling instruction of 2026-08-07, with the fixture-disposability condition)
+
+## D-137 · [suite] · Authorization enforcement boundary — database-authoritative time, enforced at the mutation
+D-131 defines WHO may act on a case: the canonical
+organization/profile/role/assignment model, with `mayActOnCase` in
+`@suite/case-model` as the single canonical *definition* of the active-
+assignment question. D-131 is left intact; this decision answers WHERE that
+authorization must be enforced.
+
+**The rule.** For protected contributor mutations (today: profile-attributed
+`audit_events` writes, actor form `profile:<profileId>`), authorization must
+ALSO be enforced at the database mutation boundary, using database-
+authoritative time. Application-layer checks (`mayActOnCase` and its
+callers) provide preflight/UX behavior — fast refusals, useful messages —
+but do not independently confer authority. The database's answer is final.
+
+**Mechanics ratified:**
+- **Database time is authoritative** for assignment activity. No local
+  machine clock participates in an authorization decision; the app preflight
+  obtains `now` from the database (`db_now()`), and the boundary check runs
+  on the database's own clock. (Origin: the VS-1 harness flake of
+  2026-08-07 — clock skew between the dev machine and the dev instance made
+  a just-created assignment "not yet started".)
+- **The boundary check serializes against revocation.** The enforcement
+  trigger locks the relevant assignment rows (`FOR UPDATE`) before judging
+  them, so a concurrent write and revocation order deterministically:
+  whichever wins the row lock, the loser sees the winner's committed state.
+  No interval exists in which a contributor is simultaneously revoked and
+  authorized. Placement inside a trigger alone is NOT assumed to establish
+  atomicity; the lock is the requirement.
+- **The boundary mirrors the canonical rule exactly, plus profile liveness**
+  (`deleted_at is null`). It must never be weaker than `mayActOnCase`; it is
+  also not stricter — any active assignment role authorizes *attributable
+  activity* (a reviewer's review is attributable), while role-based CONTENT
+  gating remains `mayContributeContent` at the app layer until a content
+  mutation path exists. RLS cannot serve as this boundary for these writes:
+  the service-role write path bypasses RLS, so the trigger (migration 0008,
+  precedent: 0007's Source-immutability triggers) is the enforcement point
+  unless the service architecture itself changes — such a change would
+  revisit this mechanism, not this rule.
+- **Contract tests keep the layers aligned** (VS-1 suite, D-137 block):
+  (1) started assignment → immediate write accepted; (2) ended assignment →
+  immediate write refused; (3) a write reaching the database WITHOUT a valid
+  preflight (the stale-preflight/TOCTOU shape) is refused by the boundary;
+  (4) app/database clock disagreement → database time governs. A true
+  two-transaction interleaving test of the lock ordering requires direct
+  Postgres access the harness does not currently have (PostgREST holds no
+  open transactions); it becomes mandatory when direct DB access enters the
+  toolchain (district tier at latest).
+
+Comment corrections accompany this decision: `contributors.ts` and
+`attribution.ts` no longer describe `mayActOnCase` as the sole authorization
+*answer* — it is the sole canonical *definition* and the preflight.
+**Status:** Accepted · 2026-08-07 · Proposed: Claude Code + external review (ChatGPT), three-round exchange of 2026-08-07 · Ratified: JD (enforcement-boundary ruling of 2026-08-07: "Proceed, with D-131 left intact")

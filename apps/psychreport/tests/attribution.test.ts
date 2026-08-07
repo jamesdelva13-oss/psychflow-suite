@@ -78,6 +78,42 @@ test("no assignment at all: refused", async () => {
   assert.equal(db.inserts.length, 0);
 });
 
+test("database-boundary refusal (42501) maps to the same 403, nothing recorded", async () => {
+  // Preflight passes (active assignment) but the mutation-boundary trigger
+  // refuses — the stale-preflight/TOCTOU shape D-137 exists to close.
+  const db = makeMockDb({
+    case_assignments: { rows: [asg()] },
+    audit_events: {
+      insertError: { message: "no_active_assignment", code: "42501" },
+    },
+  });
+  const res = await recordAttributedActivity({
+    svc: db,
+    caseId: "case-1",
+    profileId: "prof-slp",
+    eventType: "contributor_note_added",
+  });
+  assert.equal(res.ok, false);
+  assert.equal(res.status, 403);
+  assert.equal(res.body.boundary, "database");
+  assert.equal(db.inserts.length, 0);
+});
+
+test("non-authorization insert errors still throw (not swallowed into 403)", async () => {
+  const db = makeMockDb({
+    case_assignments: { rows: [asg()] },
+    audit_events: { insertError: { message: "connection reset" } },
+  });
+  await assert.rejects(
+    recordAttributedActivity({
+      svc: db,
+      caseId: "case-1",
+      profileId: "prof-slp",
+      eventType: "contributor_note_added",
+    })
+  );
+});
+
 test("narrative metadata is refused before any authorization read", async () => {
   const db = makeMockDb({ case_assignments: { rows: [asg()] } });
   await assert.rejects(

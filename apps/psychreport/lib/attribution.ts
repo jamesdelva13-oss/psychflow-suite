@@ -19,13 +19,22 @@ import {
  * migration: the actor vocabulary widens, the table does not.
  *
  * Authorization vs. attribution (D-131): whether the contributor MAY act is
- * answered only by the canonical `mayActOnCase` over their assignments —
- * never by the profile record itself. Ending an assignment removes
- * authorization; the attributed history keeps its profileId forever.
+ * defined by the canonical `mayActOnCase` over their assignments — never by
+ * the profile record itself. Ending an assignment removes authorization; the
+ * attributed history keeps its profileId forever.
+ *
+ * Enforcement boundary (D-137): `mayActOnCase` here is the PREFLIGHT — it
+ * controls UX and produces useful refusals, evaluated at database-
+ * authoritative time (db_now()). The final security boundary is the
+ * database itself: migration 0008's trigger re-checks the assignment at the
+ * mutation, serialized against concurrent revocation, so a stale or skipped
+ * preflight cannot let a write through. A boundary refusal surfaces as the
+ * same 403 the preflight produces.
  */
 
 export interface SupabaseLike {
   from(table: string): any;
+  rpc(fn: string, args?: Record<string, unknown>): any;
 }
 
 /* ---------- actor strings (additive vocabulary) ---------- */
@@ -149,12 +158,17 @@ export interface AttributedWriteResult {
   body: Record<string, unknown>;
 }
 
+/** Postgres errcode raised by migration 0008's mutation-boundary trigger. */
+const DB_AUTHZ_REFUSED = "42501";
+
 /**
  * Record one case activity attributed to a contributor's stable profileId.
- * Refuses unless the profile holds an ACTIVE assignment on the case — the
- * canonical mayActOnCase answer, evaluated against the live assignment rows.
- * The write itself goes through the caller-supplied client (service role in
- * app routes, after this guard).
+ * Preflight: refuses unless the profile holds an ACTIVE assignment on the
+ * case — the canonical mayActOnCase answer over the live assignment rows,
+ * evaluated at database-authoritative time (db_now(), never the local
+ * clock — D-137). The write itself goes through the caller-supplied client
+ * (service role in app routes); the database trigger re-enforces the same
+ * rule atomically at the insert, and its refusal maps to the same 403.
  */
 export async function recordAttributedActivity(deps: {
   svc: SupabaseLike;
@@ -162,10 +176,12 @@ export async function recordAttributedActivity(deps: {
   profileId: string;
   eventType: string;
   metadata?: Record<string, unknown>;
-  now?: Date;
 }): Promise<AttributedWriteResult> {
   const { svc, caseId, profileId, eventType } = deps;
   assertStructuralMetadata(deps.metadata ?? {});
+
+  const { data: dbNow, error: nowErr } = await svc.rpc("db_now");
+  if (nowErr) throw nowErr;
 
   const { data: asgRows, error: asgErr } = await svc
     .from("case_assignments")
@@ -175,12 +191,12 @@ export async function recordAttributedActivity(deps: {
   if (asgErr) throw asgErr;
 
   const assignments = ((asgRows ?? []) as AssignmentRow[]).map(assignmentFromRow);
-  const at = (deps.now ?? new Date()).toISOString();
+  const at = new Date(dbNow as string).toISOString();
   if (!mayActOnCase(profileId, caseId, assignments, at)) {
     return {
       ok: false,
       status: 403,
-      body: { error: "no_active_assignment" },
+      body: { error: "no_active_assignment", boundary: "preflight" },
     };
   }
 
@@ -190,7 +206,16 @@ export async function recordAttributedActivity(deps: {
     event_type: eventType,
     metadata: deps.metadata ?? {},
   });
-  if (insErr) throw insErr;
+  if (insErr) {
+    if ((insErr as { code?: string }).code === DB_AUTHZ_REFUSED) {
+      return {
+        ok: false,
+        status: 403,
+        body: { error: "no_active_assignment", boundary: "database" },
+      };
+    }
+    throw insErr;
+  }
 
   return { ok: true, status: 200, body: { attributedTo: profileId } };
 }

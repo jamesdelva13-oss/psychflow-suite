@@ -1,7 +1,9 @@
 /**
  * VS-1 exit tests — the full 11-test list from docs/VS0-IMPLEMENTATION-MAP.md
  * §4 (directive §17.2 VS-1 slice + D-131), verbatim, against the live dev
- * Supabase instance.
+ * Supabase instance; plus the D-137 enforcement-boundary contract block
+ * (database-authoritative time, mutation-boundary refusal) between tests
+ * 10 and 11. Requires migration 0008 applied.
  *
  *   npm run test:vs1        (from apps/psychreport; needs .env.local)
  *
@@ -515,6 +517,99 @@ async function main() {
         offenders.length === 0,
         offenders.join(", ")
       );
+    }
+
+    // =======================================================================
+    console.log(
+      "\nD-137 contract — authorization enforced at the database mutation boundary:"
+    );
+    {
+      // Contract tests (1) and (2) — started assignment → write accepted,
+      // ended assignment → write refused — are write1/write2 above. Here the
+      // boundary is proven independent of the app-layer preflight.
+
+      // (3) The TOCTOU shape: a write reaching the database after revocation
+      // with no (equivalently: a stale) preflight. Direct insert, bypassing
+      // recordAttributedActivity entirely — the trigger must refuse it.
+      const { error: toctouErr } = await svc.from("audit_events").insert({
+        case_id: caseA.id,
+        actor: actorForProfile(slp2.id),
+        event_type: "contributor_source_reviewed",
+        metadata: { harness: true },
+      });
+      check(
+        "database boundary refuses a stale-preflight write on an ended assignment",
+        (toctouErr as { code?: string } | null)?.code === "42501"
+      );
+
+      // (4) Clock independence: assignment activity follows the DATABASE
+      // clock at both layers. A profile whose assignment starts 2 minutes in
+      // the DB future must be refused everywhere, whatever the local clock
+      // thinks; backdated past the DB now, the boundary accepts.
+      const { data: dbNowRaw, error: nowErr } = await svc.rpc("db_now");
+      check(
+        "db_now() serves database-authoritative time",
+        !nowErr && Number.isFinite(Date.parse(dbNowRaw))
+      );
+      const dbNowMs = Date.parse(dbNowRaw);
+      const { data: slp3, error: p3Err } = await svc
+        .from("professional_profiles")
+        .insert({ discipline: "speech_language", display_name: "VS1 Harness SLP (D-137)" })
+        .select("id")
+        .single();
+      if (p3Err) throw new Error(`harness SLP3: ${p3Err.message}`);
+      cleanup.profileIds.push(slp3.id);
+      const { data: asg3, error: a3Err } = await svc
+        .from("case_assignments")
+        .insert({
+          case_id: caseA.id,
+          profile_id: slp3.id,
+          role: "contributor",
+          started_at: new Date(dbNowMs + 120_000).toISOString(),
+        })
+        .select("id")
+        .single();
+      if (a3Err) throw new Error(`harness assignment (future start): ${a3Err.message}`);
+
+      const writeFuture = await recordAttributedActivity({
+        svc,
+        caseId: caseA.id,
+        profileId: slp3.id,
+        eventType: "contributor_source_reviewed",
+      });
+      check(
+        "not-yet-started assignment (per DB clock): preflight refuses",
+        !writeFuture.ok && writeFuture.status === 403
+      );
+      const { error: futureDirectErr } = await svc.from("audit_events").insert({
+        case_id: caseA.id,
+        actor: actorForProfile(slp3.id),
+        event_type: "contributor_source_reviewed",
+        metadata: { harness: true },
+      });
+      check(
+        "…and the database boundary refuses it independently",
+        (futureDirectErr as { code?: string } | null)?.code === "42501"
+      );
+
+      const { error: backErr } = await svc
+        .from("case_assignments")
+        .update({ started_at: new Date(dbNowMs - 120_000).toISOString() })
+        .eq("id", asg3.id);
+      if (backErr) throw new Error(`backdate assignment: ${backErr.message}`);
+      const { error: startedDirectErr } = await svc.from("audit_events").insert({
+        case_id: caseA.id,
+        actor: actorForProfile(slp3.id),
+        event_type: "contributor_source_reviewed",
+        metadata: { harness: true },
+      });
+      check(
+        "once started per the DB clock, the boundary accepts the attributed write",
+        startedDirectErr === null
+      );
+      // A true two-transaction lock-ordering test of the FOR UPDATE
+      // serialization needs direct Postgres access; PostgREST holds no open
+      // transactions. Mandatory when direct DB access lands (see D-137).
     }
 
     // =======================================================================

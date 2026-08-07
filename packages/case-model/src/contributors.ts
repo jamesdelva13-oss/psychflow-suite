@@ -10,10 +10,14 @@
  *   - Case activity preserves actor attribution: attribution is by stable
  *     `profileId` and survives an assignment ending. Ending an assignment
  *     removes authorization, never history.
- *   - Authorization is governed HERE — organization/profile/role/assignment —
+ *   - Authorization is DEFINED here — organization/profile/role/assignment —
  *     and is never embedded ad hoc in contributor records. A contributor
  *     record carries no permission flags; whether a professional may act on a
- *     case is answered only by `mayActOnCase` over their assignments.
+ *     case is defined by `mayActOnCase` over their assignments. Enforcement
+ *     is layered (D-137): `mayActOnCase` is the preflight/UX decision; for
+ *     protected mutations the database re-enforces the same rule at the
+ *     mutation boundary using database-authoritative time (migration 0008).
+ *     An application-layer yes does not independently confer authority.
  *
  * Psychology is the first discipline through the full pipe; additional
  * disciplines phase in after slice validation (D-131). The single-psychologist
@@ -115,7 +119,7 @@ export const ActorRef = z.object({
 });
 export type TActorRef = z.infer<typeof ActorRef>;
 
-/* ---------- Authorization guards (the canonical answer, D-131) ---------- */
+/* ---- Authorization guards (canonical definition D-131; enforcement layering D-137) ---- */
 
 /** An assignment currently in force at `at` (default: now). */
 export function isAssignmentActive(a: TCaseAssignment, at?: string): boolean {
@@ -124,9 +128,12 @@ export function isAssignmentActive(a: TCaseAssignment, at?: string): boolean {
 }
 
 /**
- * Whether a professional may act on a case. THE canonical authorization
- * question — nothing else (a contributor record, a discipline, an org
- * membership alone) grants case access.
+ * Whether a professional may act on a case. The canonical DEFINITION of the
+ * authorization question — nothing else (a contributor record, a discipline,
+ * an org membership alone) grants case access. Callers evaluating "now"
+ * must pass database-authoritative time as `at` (D-137); this function as
+ * preflight does not itself constitute the security boundary — the database
+ * enforces the same rule at the mutation (migration 0008).
  */
 export function mayActOnCase(
   profileId: string,

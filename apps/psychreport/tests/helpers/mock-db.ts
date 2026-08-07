@@ -9,6 +9,8 @@ export interface TableConfig {
   rows?: unknown;
   error?: { message: string } | null;
   maybeSingleRow?: unknown;
+  /** Error returned by insert() on this table (e.g. a trigger refusal). */
+  insertError?: { message: string; code?: string } | null;
 }
 
 export interface InsertRecord {
@@ -34,12 +36,16 @@ export function makeMockDb(tables: Record<string, TableConfig>) {
           error: cfg.error ?? null,
         }),
         insert: (values: unknown) => {
-          inserts.push({ table, values });
+          const insErr = cfg.insertError ?? null;
+          if (!insErr) inserts.push({ table, values });
           const insBuilder: any = {
             select: () => insBuilder,
-            single: async () => ({ data: { id: "mock-id" }, error: null }),
+            single: async () => ({
+              data: insErr ? null : { id: "mock-id" },
+              error: insErr,
+            }),
             then: (resolve: (v: unknown) => void) =>
-              resolve({ data: null, error: null }),
+              resolve({ data: null, error: insErr }),
           };
           return insBuilder;
         },
@@ -47,6 +53,11 @@ export function makeMockDb(tables: Record<string, TableConfig>) {
       };
       return builder;
     },
+    /** db_now() answers with the mock's clock; other RPCs must be added here. */
+    rpc: async (fn: string) =>
+      fn === "db_now"
+        ? { data: new Date().toISOString(), error: null }
+        : { data: null, error: { message: `mock-db: no rpc ${fn}` } },
   };
   return db;
 }
