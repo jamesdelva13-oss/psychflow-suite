@@ -432,9 +432,19 @@ async function main() {
         .single();
       if (pErr) throw new Error(`harness SLP: ${pErr.message}`);
       cleanup.profileIds.push(slp2.id);
+      // Explicit timestamps from the harness clock, not the server's now()
+      // default: recordAttributedActivity evaluates activity against the
+      // LOCAL clock, so a server-ahead skew would make a default-now()
+      // assignment "not yet started" and flake the accept check.
+      const asgStartedAt = new Date(Date.now() - 60 * 60 * 1000).toISOString();
       const { data: asg2, error: aErr } = await svc
         .from("case_assignments")
-        .insert({ case_id: caseA.id, profile_id: slp2.id, role: "contributor" })
+        .insert({
+          case_id: caseA.id,
+          profile_id: slp2.id,
+          role: "contributor",
+          started_at: asgStartedAt,
+        })
         .select("id")
         .single();
       if (aErr) throw new Error(`harness assignment: ${aErr.message}`);
@@ -448,10 +458,17 @@ async function main() {
       });
       check("active contributor's activity write is attributed and accepted", write1.ok);
 
-      await svc
+      // ended_at is after started_at (satisfies the DB check and the
+      // case-model zod refine) but firmly in the local past, so the refusal
+      // below is deterministic under any clock skew. Check the update error:
+      // a silently failed update would leave the assignment active and flake
+      // the refusal check.
+      const asgEndedAt = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+      const { error: endErr } = await svc
         .from("case_assignments")
-        .update({ ended_at: new Date().toISOString() })
+        .update({ ended_at: asgEndedAt })
         .eq("id", asg2.id);
+      if (endErr) throw new Error(`end harness assignment: ${endErr.message}`);
       const write2 = await recordAttributedActivity({
         svc,
         caseId: caseA.id,
