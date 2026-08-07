@@ -1,0 +1,32 @@
+{
+  "name": "@suite/psychreport",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start --port 3001",
+    "test": "NODE_OPTIONS=--conditions=react-server SUPABASE_SERVICE_ROLE_KEY=test-key NEXT_PUBLIC_SUPABASE_URL=http://test tsx --test tests/*.test.ts",
+    "test:vs1": "node --env-file=.env.local --conditions=react-server --import tsx tests-integration/vs1.integration.ts"
+  },
+  "dependencies": {
+    "@suite/case-model": "*",
+    "@suite/content": "*",
+    "@suite/reasoning-contracts": "*",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.45.4",
+    "next": "^15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "server-only": "^0.0.1",
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0"
+  }
+}
