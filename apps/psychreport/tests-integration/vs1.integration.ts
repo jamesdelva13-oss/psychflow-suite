@@ -388,6 +388,9 @@ async function main() {
       );
     }
 
+    // Ended-assignment profile from Test 10, reused by the D-137 block below.
+    let endedProfileId = "";
+
     // =======================================================================
     console.log("\nTest 10 — D-131 non-Psychology contributor attribution, zero multidisciplinary UI:");
     {
@@ -434,6 +437,7 @@ async function main() {
         .single();
       if (pErr) throw new Error(`harness SLP: ${pErr.message}`);
       cleanup.profileIds.push(slp2.id);
+      endedProfileId = slp2.id;
       // Explicit timestamps from the harness clock, not the server's now()
       // default: recordAttributedActivity evaluates activity against the
       // LOCAL clock, so a server-ahead skew would make a default-now()
@@ -533,7 +537,7 @@ async function main() {
       // recordAttributedActivity entirely — the trigger must refuse it.
       const { error: toctouErr } = await svc.from("audit_events").insert({
         case_id: caseA.id,
-        actor: actorForProfile(slp2.id),
+        actor: actorForProfile(endedProfileId),
         event_type: "contributor_source_reviewed",
         metadata: { harness: true },
       });

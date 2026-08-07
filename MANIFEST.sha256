@@ -29,7 +29,6 @@
 364403ad2b0e6bd712d4c10b0442de5af997c92da78f3c60f6f12b756b1996a0  governance/operational-spec-v1.md
 372293ae486f1b1500807244eeb4b8765bb2095aec3716cdc2996fc12872c0d9  docs/drafts/teacher-v1.6.0-clinical-review-draft.json
 37a8668a6eacd1703ffe971072d0b99bac9ffd7ba38064b3d652acd1b665f0ec  apps/intake/app/api/invitations/[invitationId]/revoke/route.ts
-37e79ce72c95019204de936b6dfb1853b3ec9e52d29c01ee1870166dbec1a6d5  apps/psychreport/tests-integration/vs1.integration.ts
 3b7dfeaf9a6007049617fb43441185724d7a77338aad88f19b241a7702b0126c  packages/extraction-core/fixtures/teacher-attention-02/source.json
 3c0bbc49b1c5b5ff7de2a10d0b224c992dc694c6cbda87f54dac783d1f44b2f5  packages/case-model/src/taxonomy.v0-4.json
 3febc7d54cb0c6a5585b8bc0849c8bf82ee6dbfc5d5308a99a6cd7fa46cc243a  packages/document-extraction/src/extraction/instruments.ts
@@ -47,6 +46,7 @@
 4febf6db96b1cb8bf3a4e00541db57c08c43811dbee2dffa3ee86a84c2efd129  apps/intake/components/invitations-panel.tsx
 51f4e62ecaa99f8c79ef9666c89f6ee92b35e9bec622dee53a5b96a700993941  packages/referral-engine-core/src/index.ts
 53aaa41d55a6e24e335fc0462be38f1facce30b5f8233f93c63fde5d04a4ac67  apps/intake/lib/email/sender.ts
+557aaeebc440b4428185f1b76f87a5c278fc87c108770c0877170632f116e1b1  apps/psychreport/tests-integration/vs1.integration.ts
 558dfe9052b36dbbb242f6deefd630b5ba021bac3b0d4823c60bb72e99adb265  docs/DESIGN-SYSTEM.md
 57501e8b7a2afc8049884431191f93e8dd03376761f769f6eb1df82cb206176e  packages/document-extraction/src/ir/text-stream.ts
 59194b595fdc4a1704fe5c883cfea79223c9097bcd68a17a7316f65f1b2e418f  packages/case-model/src/contributors.ts
