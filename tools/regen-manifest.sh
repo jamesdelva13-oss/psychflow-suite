@@ -32,9 +32,12 @@ set -euo pipefail
   find docs/psych-suite-v6 governance migrations -type f ! -name ".DS_Store"
   # All packages: source, tests, fixtures, package manifests
   find packages -type f ! -path "*/node_modules/*" ! -name ".DS_Store"
-  # App source: routes, components, lib, tests, the RLS harness
-  find apps/intake -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.mjs" -o -name "*.css" \) \
+  # App source: routes, components, lib, tests, the RLS + VS-1 harnesses
+  find apps/intake apps/psychreport -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.mjs" -o -name "*.css" \) \
     ! -path "*/node_modules/*" ! -path "*/.next/*"
+  # Governance-adjacent tooling: the canonical fixture seed (D-136 re-seed
+  # instrument) and the manifest/render tools themselves
+  find tools -type f \( -name "*.ts" -o -name "*.mjs" -o -name "*.sh" \)
 } | sort -u | while IFS= read -r p; do shasum -a 256 "$p"; done | sort > MANIFEST.sha256
 
 echo "MANIFEST.sha256 regenerated over $(wc -l < MANIFEST.sha256 | tr -d ' ') files."
