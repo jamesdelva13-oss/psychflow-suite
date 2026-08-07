@@ -69,6 +69,10 @@ quietly wrong.
 - [ ] JSON rulepacks parse.
 - [ ] Any claim of the form "X is absent / X is present" was actually
       searched for, not recalled.
+- [ ] `tools/regen-manifest.sh` run and `./verify-suite.sh` all-verified.
+      Coverage is the CF-9 full list (JD approval, 2026-08-07) and lives in
+      the script's globs — changing coverage is a governance change with its
+      own commit, never an inline edit of MANIFEST.sha256.
 
 ## 6. Update the manifest
 
