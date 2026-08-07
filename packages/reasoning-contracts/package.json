@@ -1,6 +1,6 @@
 {
   "name": "@suite/reasoning-contracts",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "The shared epistemic vocabulary of the suite: section modes, evidence status, confidence policy, interpretive ceilings, and rule provenance. Depends on nothing. Every product imports it; products never import each other (decisions.md D-020, Layer 1).",
   "type": "module",
   "main": "src/index.ts",

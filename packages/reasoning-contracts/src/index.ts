@@ -16,10 +16,10 @@
  * Neither product may import the other. QA must never assume PsychReport
  * headings, tables, prompts, or provenance.
  *
- * Version: 0.2.0-pilot
+ * Version: 0.3.0-pilot
  */
 
-export const CONTRACTS_VERSION = "0.2.0-pilot";
+export const CONTRACTS_VERSION = "0.3.0-pilot";
 
 /* ------------------------------------------------------------------ *
  * 0. SHARED EPISTEMIC TYPES — OWNED HERE
@@ -622,3 +622,82 @@ export const PARSER_CONFIDENCES: readonly ParserConfidence[] = [
   "parsed_low_confidence",
   "failed",
 ] as const;
+
+/* ------------------------------------------------------------------ *
+ * 9. EVIDENCE SHAPE (D-134; resolves D-046 amendment 2 vs. D-038)
+ *
+ * The STRUCTURAL shape of an evidence object, shared across products
+ * without sharing persistence or behavior. Pure types only — no zod, no
+ * runtime pipeline. `@suite/case-model`'s zod `Evidence` implements this
+ * shape (a mandatory case-model conformance test asserts assignability,
+ * D-134); QA consumes the shape for its findings without ever importing
+ * the case model, so the D-038 dependency law holds in letter and purpose.
+ *
+ * The D-007/D-008 behavior rules (>=1 construct tag or topography;
+ * LLM-extracted evidence must record generation provenance) are the
+ * IMPLEMENTER's obligation — this shape carries the fields those rules
+ * govern, it does not enforce them.
+ * ------------------------------------------------------------------ */
+
+/** Corroboration status of a construct tag (hypothesis-grade until corroborated, D-012). */
+export type ConstructTagStatus = "reported" | "hypothesis" | "corroborated";
+
+export const CONSTRUCT_TAG_STATUSES: readonly ConstructTagStatus[] = [
+  "reported",
+  "hypothesis",
+  "corroborated",
+] as const;
+
+/** A construct tag on an evidence object. `id` is a permanent dot-path construct id (D-011); taxonomy validation is the implementer's job. */
+export type EvidenceConstructTag = {
+  id: string;
+  status?: ConstructTagStatus;
+};
+
+/** How an evidence object came to exist. */
+export type EvidenceExtractionMethod = "llm" | "rule" | "manual" | "score_import";
+
+export const EVIDENCE_EXTRACTION_METHODS: readonly EvidenceExtractionMethod[] = [
+  "llm",
+  "rule",
+  "manual",
+  "score_import",
+] as const;
+
+/** Provenance descriptor for anything a model produced (the D-008 shape). */
+export type EvidenceGenerationDescriptor = {
+  modelId: string;
+  promptVersion: string;
+  schemaVersion: string;
+  /** ISO datetime. */
+  generatedAt: string;
+};
+
+/**
+ * The shared evidence shape (D-134). Field groups:
+ *  - source link: `sourceId` (+ `evidenceId` identity), the Source/document
+ *    the evidence came from;
+ *  - quote span: `verbatim` (the exact words, when carried — quote
+ *    verification requires them to string-match the source text, D-008)
+ *    anchored by `responseIds` (items/spans within the source);
+ *  - construct tags: `constructTags`;
+ *  - provenance descriptor: `extractionMethod` + `generation`.
+ * Implementations may carry more fields; they may not rename or retype these.
+ */
+export type EvidenceShape = {
+  evidenceId: string;
+  /** Source link: the Source (or document) this evidence was extracted from. */
+  sourceId: string;
+  /** Quote-span anchors: response items / spans within the source. */
+  responseIds?: readonly string[];
+  /** Construct tags (D-007: >=1 tag or a topography — enforced by implementers). */
+  constructTags?: readonly EvidenceConstructTag[];
+  /** Normalized statement of what the evidence says. */
+  statement: string;
+  /** Quote span text: the source's exact words, when carried. */
+  verbatim?: string;
+  /** Provenance descriptor. */
+  extractionMethod: EvidenceExtractionMethod;
+  /** Required by implementers when extractionMethod === "llm" (D-008). */
+  generation?: EvidenceGenerationDescriptor;
+};
