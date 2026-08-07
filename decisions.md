@@ -523,6 +523,7 @@ amendment note pointing to it. Ratified entries are never silently rewritten** �
 the original text stays legible so the change is auditable. This rule is itself
 the mechanism used to reconcile D-020 above.
 **Status:** Accepted · 2026-07-22 · Proposed: session D-04 / Claude (rule) · Ratified: JD
+> **Amendment note (2026-08-07, per D-038; CF-4 correction — QA's legal imports):** The diagram's line `qa-engine → reasoning-contracts ONLY` is amended to **`qa-engine → reasoning-contracts, document-extraction (never case-model, never psychreport)`**. Per the D-046 consolidation, QA also imports `@suite/document-extraction` (verified in the QA repo's package.json and imports; QA imports case-model nowhere). The law's purpose — QA independence from the case model (D-035) — is unchanged; only its letter was outdated. Evidence type-shapes are consumed via reasoning-contracts per **D-134**, which adds no new import. See docs/VS0-IMPLEMENTATION-MAP.md, CF-4. Original text preserved above.
 
 ## D-039 · Style constraints live post-draft in QA (resolves the held D-11 conflict)
 *(Origin: 2026-07-20 session log, D-11, previously held against D-027.)*
@@ -677,6 +678,7 @@ until resolved.
 > **Amendment note (2026-08-06, per D-038; COMPLETION RECORD):** The leading option is implemented: **psychflow-suite is the single home for all `@suite/*` packages.** What landed: **(1)** `@suite/reasoning-contracts` (already rescued into this repo 2026-08-x) is canonical here; version 0.2.0 adds the parse-trust vocabulary (`ParserConfidence`), formerly defined in the QA repo's `findings.ts`. **(2)** New package `@suite/document-extraction` — the Sped QA parser / IR / entity-extraction stack relocated wholesale from the QA repo (per amendment 1 below), with its tests and docx fixtures; instrument libraries are injected by consumers, and a frozen copy of the QA seed serves as a test fixture only. **(3)** The QA repo's local `RuleAuthority` mirror (D-041 debt) is deleted; QA now imports `@suite/reasoning-contracts` and `@suite/document-extraction` as **`file:` dependencies** — the QA repo stays its own repo consuming `@suite/*` as dependencies. The "fold QA into the monorepo" question is thereby resolved *for now* as consume-as-dependency; folding in later would be its own decision. **(4)** `@suite/case-model` 0.4.0 adds the canonical organization/profile/role/assignment model (D-131) — additive; Case/Source/Evidence schemas' identity and semantics unchanged — and Source version/supersession semantics (directive §12.2): finalized Sources are immutable, corrections are new Sources chained by `supersedesSourceId`, "superseded" is derived, with migrations 0006 (contributor tables + RLS) and 0007 (supersession columns + DB immutability triggers), both additive; migrations are **authored, not yet applied** to the dev instance, and the RLS integration suite must gain per-table checks for the three new tables when applied. RIE behavior unchanged; all suites green both repos. **Open remainder noted, not resolved here:** sharing the *evidence-object model* with Sped QA (amendment 2 below) collides with the standing dependency law "qa-engine never imports case-model" — reconciling those is a separate ruling. Original text preserved below.
 > **Amendment note (2026-07-23, per D-038; stays OPEN):** Two consolidation consequences added. **(1)** The Sped QA parser / IR / entity-extraction stack must become a **shared package** — PsychReport reuses it for source-document ingestion (D-077) and cannot import from the Sped QA repo. **(2)** The **evidence-object model should be shared** across Sped QA and PsychReport rather than duplicated, alongside the parser stack. **Caveat:** QA judges *actual prose*, so shared extraction **supports** its checks but **never replaces reading the source sentence**. Still OPEN. Original text preserved above.
 > **Amendment note (2026-07-27, per D-038; Session B — Gate 5 confirmation):** Session B (Gate 5) confirmed the starting state — `reasoning-contracts` lives in the QA-Engine repo (no workspaces field); the working `case-model` + npm workspaces live in psychflow-suite, which does NOT contain `reasoning-contracts`; the QA-repo `case-model` is missing its taxonomy files; and PsychReport cannot yet cleanly import the shared `reasoning-contracts` (the app is unwired vanilla JS with zero imports). Consolidation remains the prerequisite as logged; no change to disposition. Original text preserved above.
+> **Amendment note (2026-08-07, per D-038; CF-3 factual correction):** The completion record's migration-state clause is stale. Verified against the live dev instance (VS-0 session, 2026-08-06): migrations 0006 and 0007 are **applied**, not merely authored, and the per-table RLS checks the record called for exist — the committed 32-check RLS integration suite covers the three D-131 contributor tables and is green. The evidence-object-model remainder noted in the completion record is now resolved by **D-134**. See docs/VS0-IMPLEMENTATION-MAP.md, CF-3. Original text preserved above.
 
 ## D-047 · [RIE] P33 render-layer purity — adopted as an RIE self-check, not a QA row
 The render-layer-purity rule designed in the July 18 chat was never implemented;
@@ -1622,6 +1624,7 @@ design → PsychReport). This entry does NOT resolve it. Recommendation recorded
 in `build-plan-v6.md` §0 (keep the sequence; v6 workspace build absorbs the
 "PsychReport redesign" step). Resolution requires a new numbered entry.
 **Status:** Accepted · 2026-08-04 · Proposed: Claude (v6 reconciliation) · Ratified: JD (per v6 package ratification, August 2026)
+> **Amendment note (2026-08-07, per D-038; CF-7 parent-spec pointer):** The Vertical-Slice Build Directive names a parent spec `Psych_Suite_v6_Claude_Code_Handoff.md`; no file of that name exists. All directive references to the parent spec are read as pointing to the v6 package at `docs/psych-suite-v6/`, where `v6-handoff-chatgpt.md` governs per this entry's precedence. Filename pointer only; no substantive change. See docs/VS0-IMPLEMENTATION-MAP.md, CF-7. Original text preserved above.
 
 ## D-122 · [suite] · "Documentation Support" naming; standalone Documentation Support tab
 *(v6 reconciliation session, 2026-08-04. ChatGPT handoff §4.3 governs over the
@@ -1830,3 +1833,101 @@ Open items logged in the draft: attention depth-entry routing, grade-band
 applicability, the baseline-to-district-field mapping, magnitude, escalation
 wording, and the LANG fluency/voice taxonomy gap.
 **Status:** Accepted · 2026-08-06 · Proposed: Claude (hybrid change set) with ChatGPT advisory review · Ratified: JD (ratification instruction of 2026-08-06)
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- VS-1A rulings, 2026-08-07 (JD-ratified). JD ruled on the VS-0            -->
+<!-- Implementation Map (docs/VS0-IMPLEMENTATION-MAP.md): CF-1 → (a),         -->
+<!-- CF-2 → (b), CF-3–CF-9 as proposed; Deferred (a) → A2, (b) → B1 with      -->
+<!-- mandatory conformance testing, (c) → approved incl. differentiated exit  -->
+<!-- codes; one attached condition (Avery-fixture disposability, see D-136).  -->
+<!-- Standing policy lands as D-133–D-136 below; factual corrections land as  -->
+<!-- dated amendment notes under D-038 (CF-4), D-046 (CF-3), D-121 (CF-7).    -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+## D-133 · [suite] · Two-log policy — the trunk is the only D-numbered canon; product repos may keep architecture logs
+Resolves VS-0 Deferred Ruling (a) as **option A2** (docs/VS0-IMPLEMENTATION-MAP.md
+§5a). A1 (migrate the QA repo's local entries into this trunk) is rejected: those
+entries are implementation-grade, and absorbing them would pull the trunk below
+the altitude it was deliberately kept at.
+
+Permanent policy:
+- **This file is the only place decision IDs (D-NNN) are minted.**
+- A product repo may keep a **local architecture log** for implementation-grade
+  forks, under three mandatory conditions: dated prose entries; **no D-IDs
+  minted there**; a subordination notice at the top naming this file as the
+  canonical log.
+- **Decision-grade line (ruled):** anything touching product scope, shared
+  vocabulary, cross-product contracts, or authority/status semantics is
+  decision-grade and must be minted here per D-058 before session end.
+  Implementation-grade material (parser offsets, section heuristics,
+  table-confidence grading, and similar engineering micro-decisions) may live
+  in the local log.
+- The QA repo's `docs/decisions.md` subordination notice (2026-08-06) is
+  ratified as the reference implementation of this policy.
+
+D-058/D-064 are unchanged and still govern the dangerous case: decision-grade
+content originating where the trunk is not in view must be merged here before
+the session or chat closes.
+**Status:** Accepted · 2026-08-07 · Proposed: Claude (VS-0 map §5a, option A2) · Ratified: JD (VS-1A ruling instruction of 2026-08-07)
+
+## D-134 · [suite] · Evidence contracts — type-shapes in `@suite/reasoning-contracts`; persistence and behavior stay in case-model
+Resolves VS-0 Deferred Ruling (b) as **option B1**, reconciling D-046
+amendment 2 (the evidence-object model should be shared across Sped QA and
+PsychReport) with the D-038 dependency law (qa-engine never imports
+case-model):
+
+- The **structural shape of an evidence object** — construct tags, source
+  link, quote span, provenance descriptor — lives as **pure types in
+  `@suite/reasoning-contracts`** (`EvidenceShape` and its component types).
+  This fits the package's charter: shared epistemic vocabulary, depends on
+  nothing.
+- **case-model's zod `Evidence` implements the shape.** Persistence, the
+  D-007/D-008 behavior-carrying constraints, and the five-entity pipeline stay
+  in case-model; the shape carries structure only.
+- **Conformance testing is mandatory (JD condition):** a case-model test
+  asserts, under the type checker, that `TEvidence` is assignable to
+  `EvidenceShape` and that the shared runtime vocabulary matches the zod
+  enums, so the two cannot drift. Removing or skipping the conformance test
+  is itself a violation of this decision.
+- QA consumes the shape for its findings without ever seeing Case/Source
+  persistence. The D-038 import law is unchanged in letter and purpose (QA
+  independence per D-035 intact); no new import is added to QA's legal set.
+- Rejected: **B2** (a dedicated `@suite/evidence-contracts` package — package
+  overhead for a handful of types) and **B3** (types-only case-model import —
+  dissolves the D-035 boundary and is not mechanically enforceable).
+**Status:** Accepted · 2026-08-07 · Proposed: Claude (VS-0 map §5b, option B1) · Ratified: JD (VS-1A ruling instruction of 2026-08-07, with mandatory conformance testing)
+
+## D-135 · [suite] · Retention/auto-purge semantics are a deployment gate, not a slice gate (resolves CF-2)
+Resolves VS-0 conflict CF-2 as **option (b)**. The retention/auto-purge
+semantics named by the directive's deployable-RIE gate (§3.2) — purge window,
+trigger event, what auto-purge reaches — remain unruled, and the auto-purge
+job remains unbuilt. The vertical slice runs on synthetic data only, so this
+gate does **not** block VS-1–VS-8.
+
+**Explicitly recorded as blocking — so the gate is not silently lost:** no
+district deployment, and no deployment in any configuration carrying real
+student data, may occur before (1) the retention/auto-purge semantics are
+ruled in a numbered entry here, and (2) the auto-purge job is built and
+verified against that ruling. This entry converts a deployable-RIE
+prerequisite into a deployment prerequisite without weakening it. D-004's
+retention fields and commitments (per-case deletion, configurable auto-purge
+window, relay-and-purge as configuration) are unchanged.
+**Status:** Accepted · 2026-08-07 · Proposed: Claude (VS-0 map §3, CF-2 option b) · Ratified: JD (VS-1A ruling instruction of 2026-08-07)
+
+## D-136 · [RIE] · Teacher Bank gate read as satisfied in substance by D-132; slice fixture seeds on v1.3.0; the fixture is disposable (resolves CF-1)
+Resolves VS-0 conflict CF-1 as **option (a)**. The directive §3.2 gate
+("ratify Teacher Bank v1.6.0") is read as satisfied in substance by D-132,
+which post-dates the directive and ratified the v1.6.1 structure and quoted
+strings. VS-1 proceeds now: the Avery Williams fixture (directive §6) seeds
+against the bank the app actually serves — ratified **v1.3.0** — while
+v1.6.1 bank publication proceeds in parallel on the practitioner-review track
+(item wording per D-132/D-119: versioned clinical-bank review).
+
+**Attached condition (JD, binding): the Avery fixture is disposable
+implementation data,** not a governed artifact. When the v1.6.1 bank publishes
+in `@suite/content`, migrating the fixture is a **planned re-seed** —
+regenerate the case, Sources, and downstream objects against the new bank —
+**never an ad hoc edit** of seeded data. Nothing may accrete on the v1.3.0
+fixture that would make the re-seed expensive; any test pinned to fixture
+content must survive a re-seed or pin the bank version explicitly.
+**Status:** Accepted · 2026-08-07 · Proposed: Claude (VS-0 map §3, CF-1 option a) · Ratified: JD (VS-1A ruling instruction of 2026-08-07, with the fixture-disposability condition)
