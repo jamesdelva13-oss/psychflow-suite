@@ -85,12 +85,13 @@ async function main() {
     if (cErr) throw new Error(`seed case as A: ${cErr.message}`);
     cleanupCaseIds.push(caseA.id);
 
-    const { data: infA } = await a.client
+    const { data: infA, error: infErr } = await a.client
       .from("informants")
       .insert({ case_id: caseA.id, role: "teacher" })
       .select("id")
       .single();
-    const { data: invA } = await a.client
+    if (infErr) throw new Error(`seed informants as A: ${infErr.message}`);
+    const { data: invA, error: invErr } = await a.client
       .from("invitations")
       .insert({
         case_id: caseA.id,
@@ -103,11 +104,13 @@ async function main() {
       })
       .select("id")
       .single();
-    const { data: capA } = await a.client
+    if (invErr) throw new Error(`seed invitations as A: ${invErr.message}`);
+    const { data: capA, error: capErr } = await a.client
       .from("capture_sessions")
       .insert({ case_id: caseA.id, psychologist_id: a.id, kind: "interview" })
       .select("id")
       .single();
+    if (capErr) throw new Error(`seed capture_sessions as A: ${capErr.message}`);
 
     console.log("Owner visibility (A sees A):");
     check("A sees own case", Boolean(caseA?.id));
