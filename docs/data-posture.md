@@ -113,7 +113,7 @@ job is collected, and nothing else.
 | Control | State today |
 |---|---|
 | Token hashing, expiry, revocation, one-invitation sessions | **Implemented and tested** |
-| RLS psychologist scoping; service-role isolation | **Implemented and exercised**: 19-check two-account integration suite (`npm run test:rls`, 2026-08-05) — cross-account reads/writes, respondent-only and audit tables, anon blindness. First run caught and closed a capture-policy write hole (migration 0005) |
+| RLS psychologist scoping; service-role isolation | **Implemented and exercised**: 32-check two-account integration suite (`npm run test:rls`, 2026-08-06) — cross-account reads/writes, respondent-only and audit tables, anon blindness, and the D-131 contributor tables (deny-by-default organizations, self-select-only profiles, ownership-gated assignments). First run caught and closed a capture-policy write hole (migration 0005) |
 | TLS + provider encryption at rest | Provider defaults; verified at deployment |
 | D-120 minimal identity (first name + last initial, single-char enforced) | **Contract implemented**; UI display lands with the four-step build |
 | Pseudonymization before model calls | **Implemented** for the one existing call path (Capture summarization); unit-tested |

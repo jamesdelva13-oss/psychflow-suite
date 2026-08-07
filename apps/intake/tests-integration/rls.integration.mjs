@@ -72,6 +72,8 @@ async function main() {
   const a = await makeUser("a");
   const b = await makeUser("b");
   const cleanupCaseIds = [];
+  const cleanupOrgIds = [];
+  const cleanupProfileIds = [];
 
   try {
     // ---- Seed as A (through A's RLS session, like the app does) ----------
@@ -189,9 +191,128 @@ async function main() {
       const { data } = await anon.from(table).select("id").limit(1);
       check(`anon reads ${table}: 0 rows`, (data ?? []).length === 0);
     }
+
+    // ---- D-131 contributor tables (0006: deny-by-default) ----------------
+    // organizations has RLS on and NO policies (nothing until the district
+    // tier); professional_profiles is self-select only; case_assignments is
+    // reachable only via case ownership — the DB substrate under the app's
+    // canonical mayActOnCase guard (@suite/case-model contributors.ts).
+    console.log("\nD-131 contributor tables (0006: deny-by-default):");
+    const { data: org1, error: o1Err } = await svc
+      .from("organizations")
+      .insert({ name: "RLS Test Org 1" })
+      .select("id")
+      .single();
+    if (o1Err) throw new Error(`seed org1: ${o1Err.message}`);
+    cleanupOrgIds.push(org1.id);
+    const { data: org2, error: o2Err } = await svc
+      .from("organizations")
+      .insert({ name: "RLS Test Org 2" })
+      .select("id")
+      .single();
+    if (o2Err) throw new Error(`seed org2: ${o2Err.message}`);
+    cleanupOrgIds.push(org2.id);
+    const { data: profA, error: pAErr } = await svc
+      .from("professional_profiles")
+      .insert({
+        organization_id: org1.id,
+        auth_user_id: a.id,
+        discipline: "school_psychology",
+        display_name: "RLS Test Profile A",
+      })
+      .select("id")
+      .single();
+    if (pAErr) throw new Error(`seed profile A: ${pAErr.message}`);
+    cleanupProfileIds.push(profA.id);
+    const { data: profB, error: pBErr } = await svc
+      .from("professional_profiles")
+      .insert({
+        organization_id: org2.id,
+        auth_user_id: b.id,
+        discipline: "speech_language",
+        display_name: "RLS Test Profile B",
+      })
+      .select("id")
+      .single();
+    if (pBErr) throw new Error(`seed profile B: ${pBErr.message}`);
+    cleanupProfileIds.push(profB.id);
+
+    {
+      const { data: asgA, error } = await a.client
+        .from("case_assignments")
+        .insert({ case_id: caseA.id, profile_id: profA.id, role: "lead_evaluator" })
+        .select("id")
+        .single();
+      check("A creates an assignment on own case (case-ownership path)", !error && Boolean(asgA?.id));
+      const { data: seen } = await a.client
+        .from("case_assignments")
+        .select("id")
+        .eq("case_id", caseA.id);
+      check("A sees the assignment on own case", (seen ?? []).length === 1);
+    }
+    {
+      const { data } = await b.client
+        .from("case_assignments")
+        .select("id")
+        .eq("case_id", caseA.id);
+      check("B reads assignments on A's case: 0 rows", (data ?? []).length === 0);
+    }
+    {
+      const { error } = await b.client
+        .from("case_assignments")
+        .insert({ case_id: caseA.id, profile_id: profB.id, role: "contributor" });
+      check("B cannot attach an assignment to A's case", Boolean(error));
+    }
+    {
+      const { data } = await a.client.from("organizations").select("id");
+      check("organizations closed to authenticated (no policy until district tier)", (data ?? []).length === 0);
+    }
+    {
+      const { data } = await b.client.from("organizations").select("id").eq("id", org1.id);
+      check("B reads A's organization: 0 rows (cross-org)", (data ?? []).length === 0);
+    }
+    {
+      const { data } = await a.client
+        .from("professional_profiles")
+        .select("id")
+        .eq("auth_user_id", a.id);
+      check("A sees own professional profile (self-select)", (data ?? []).length === 1);
+    }
+    {
+      const { data } = await a.client
+        .from("professional_profiles")
+        .select("id")
+        .eq("id", profB.id);
+      check("A reads B's profile: 0 rows (cross-org)", (data ?? []).length === 0);
+    }
+    {
+      const { error } = await a.client.from("professional_profiles").insert({
+        auth_user_id: a.id,
+        discipline: "school_psychology",
+        display_name: "Self-Inserted",
+      });
+      check("A cannot insert a professional profile (no write policy)", Boolean(error));
+    }
+    {
+      await a.client
+        .from("professional_profiles")
+        .update({ display_name: "Changed" })
+        .eq("id", profA.id);
+      const { data: after } = await svc
+        .from("professional_profiles")
+        .select("display_name")
+        .eq("id", profA.id)
+        .single();
+      check("A cannot update own profile (no write policy)", after.display_name === "RLS Test Profile A");
+    }
+    for (const table of ["organizations", "professional_profiles", "case_assignments"]) {
+      const { data } = await anon.from(table).select("id").limit(1);
+      check(`anon reads ${table}: 0 rows`, (data ?? []).length === 0);
+    }
   } finally {
     // ---- Cleanup: rows first (service role), then the auth users ---------
     for (const id of cleanupCaseIds) {
+      await svc.from("case_assignments").delete().eq("case_id", id);
       await svc.from("capture_sessions").delete().eq("case_id", id);
       await svc.from("invitations").delete().eq("case_id", id);
       await svc.from("informants").delete().eq("case_id", id);
@@ -199,6 +320,13 @@ async function main() {
       await svc.from("cases").delete().eq("id", id);
     }
     // B may have slipped a capture session onto A's case if the gap exists.
+    for (const id of cleanupProfileIds) {
+      await svc.from("case_assignments").delete().eq("profile_id", id);
+      await svc.from("professional_profiles").delete().eq("id", id);
+    }
+    for (const id of cleanupOrgIds) {
+      await svc.from("organizations").delete().eq("id", id);
+    }
     for (const u of [a, b]) {
       await svc.from("capture_sessions").delete().eq("psychologist_id", u.id);
       await svc.from("psychologists").delete().eq("id", u.id);
