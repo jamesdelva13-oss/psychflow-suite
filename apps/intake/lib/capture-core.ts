@@ -1,5 +1,5 @@
 import "server-only";
-import { createHash } from "node:crypto";
+import { canonicalStringify, canonicalChecksum } from "@suite/referral-engine-core";
 
 // Capture core (D-125): injectable logic for the clinician notetaking +
 // summarization flow. Mirrors submit-core: routes stay thin, everything
@@ -81,26 +81,14 @@ export function pseudonymizeNotes(
 
 // ---------------------------------------------------------------------------
 // Canonical payload + checksum: stable key order so the locked Source hashes
-// identically regardless of object construction order.
+// identically regardless of object construction order. The algorithm lives in
+// @suite/referral-engine-core (canonicalStringify/canonicalChecksum) so the
+// intake-form and capture paths can never drift; re-exported here under the
+// names this module has always had.
 // ---------------------------------------------------------------------------
 
-export function canonicalStringify(value: unknown): string {
-  if (Array.isArray(value)) {
-    return `[${value.map(canonicalStringify).join(",")}]`;
-  }
-  if (value !== null && typeof value === "object") {
-    const entries = Object.entries(value as Record<string, unknown>)
-      .filter(([, v]) => v !== undefined)
-      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-      .map(([k, v]) => `${JSON.stringify(k)}:${canonicalStringify(v)}`);
-    return `{${entries.join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-
-export function checksumOf(payload: unknown): string {
-  return createHash("sha256").update(canonicalStringify(payload)).digest("hex");
-}
+export { canonicalStringify };
+export const checksumOf = canonicalChecksum;
 
 /** capture kinds → sources.kind (0001 check constraint has no 'call'). */
 export function sourceKindFor(kind: CaptureKind): "interview" | "observation" | "other" {

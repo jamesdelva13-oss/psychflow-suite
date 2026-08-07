@@ -32,32 +32,20 @@
  * Synthetic data only. No real student data (directive §6).
  */
 
-import { createHash, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { QuestionBank } from "@suite/case-model";
-import { lockSubmission } from "@suite/referral-engine-core";
+import { lockSubmission, canonicalChecksum as checksumOf } from "@suite/referral-engine-core";
 import bank13raw from "@suite/content/banks/teacher-form.v1.3.0.json" with { type: "json" };
 import { recordAttributedActivity } from "../apps/psychreport/lib/attribution";
 
 const FIXTURE_STUDENT_REF = "avery-williams-canonical-fixture";
 const OWNER_EMAIL = process.env.SEED_OWNER_EMAIL ?? "jamesdelva13@gmail.com";
 
-/* Deep canonical stringify — same algorithm as apps/intake/lib/capture-core
- * canonicalStringify/checksumOf (the capture finalize path). Kept in lockstep
- * so seeded capture Sources hash exactly as app-finalized ones do. */
-function canonicalStringify(value: unknown): string {
-  if (Array.isArray(value)) return `[${value.map(canonicalStringify).join(",")}]`;
-  if (value !== null && typeof value === "object") {
-    const entries = Object.entries(value as Record<string, unknown>)
-      .filter(([, v]) => v !== undefined)
-      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-      .map(([k, v]) => `${JSON.stringify(k)}:${canonicalStringify(v)}`);
-    return `{${entries.join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-const checksumOf = (payload: unknown): string =>
-  createHash("sha256").update(canonicalStringify(payload)).digest("hex");
+/* Checksums use the shared deep canonical algorithm from
+ * @suite/referral-engine-core — the same code path the intake app's
+ * lockSubmission and capture finalize use, so seeded Sources hash exactly as
+ * app-produced ones do. */
 
 /* Avery's teacher-intake responses — validated against v1.3.0 at lock time.
  * Concern: reading (decoding + fluency, well below peers, Tier 2 phonics

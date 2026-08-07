@@ -382,6 +382,23 @@ const check = (name: string, ok: boolean, detail?: string) => {
   check("lock: checksum present and deterministic",
     typeof locked.source.checksum === "string" && locked.source.checksum!.length === 64);
 
+  // Regression: the checksum must cover the nested responses map. A replacer-
+  // array JSON.stringify serialized `responses` as {}, so two submissions with
+  // different answers but identical timestamps hashed identically.
+  const lockAt = new Date("2026-09-10T12:00:00Z");
+  const lockWith = (responses: ResponseMap) => lockSubmission({
+    bank: teacher, responses,
+    caseId: "case_t1", sourceId: "src_t1", informantId: "inf_t1",
+    collectedOn: "2026-09-10", payloadRef: "responses/src_t1.json", now: lockAt,
+  });
+  const lockedA = lockWith(r);
+  const lockedB = lockWith({ ...r, "TCH-CORE-007": "A different strengths narrative." });
+  check("lock: different responses yield different checksums (same timestamps)",
+    lockedA.source.checksum !== lockedB.source.checksum);
+  const reordered = Object.fromEntries(Object.entries(r).reverse()) as ResponseMap;
+  check("lock: response key order does not change the checksum",
+    lockWith(reordered).source.checksum === lockedA.source.checksum);
+
   let threw = false;
   try {
     lockSubmission({

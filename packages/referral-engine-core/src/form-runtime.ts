@@ -323,8 +323,34 @@ export function pendingFollowUps(bank: TQuestionBank, responses: ResponseMap, ct
 
 /* ---------------- submission locking → canonical Source ---------------- */
 
+/**
+ * Deep canonical stringify: arrays in element order, object keys sorted at
+ * EVERY depth, `undefined` entries dropped — a payload hashes identically
+ * regardless of construction order, and nested objects (the `responses` map
+ * above all) are fully covered by the hash. This is the single canonical
+ * algorithm for locked-Source checksums; capture-core and seed tooling
+ * delegate here rather than keeping copies in lockstep.
+ *
+ * (A sorted key array must never be passed as a JSON.stringify replacer: a
+ * replacer ARRAY filters keys at every depth, so nested objects keyed by
+ * question ids serialize as {} and the checksum stops covering the answers.)
+ */
+export function canonicalStringify(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map(canonicalStringify).join(",")}]`;
+  }
+  if (value !== null && typeof value === "object") {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .filter(([, v]) => v !== undefined)
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+      .map(([k, v]) => `${JSON.stringify(k)}:${canonicalStringify(v)}`);
+    return `{${entries.join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
 export const canonicalChecksum = (payload: unknown): string =>
-  crypto.createHash("sha256").update(JSON.stringify(payload, Object.keys(payload as object).sort())).digest("hex");
+  crypto.createHash("sha256").update(canonicalStringify(payload)).digest("hex");
 
 export interface LockedSubmission {
   source: TSource;
