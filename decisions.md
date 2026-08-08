@@ -2045,3 +2045,39 @@ availability/trigger model is decided when Meeting Brief becomes a real
 vertical slice (VS-6 in the current sequence), against these three states as
 the starting frame.
 **Status:** Accepted (interim gating) with the trigger model OPEN · 2026-08-08 · Proposed: Claude Code (VS-2 judgment call) · Ruled: JD (VS-2 review, 2026-08-08)
+
+**Amendment note (2026-08-08, D-038 form) — JD's Meeting Brief family; two
+classification questions OPEN against D-122.** JD articulated the artifact
+shape the trigger model above was holding open: Documentation Support is a
+**family of briefs keyed by meeting type, each with its own source basis**,
+not one brief with maturity levels —
+(1) **parent-friendly brief for the referral meeting**, based on RIE and other
+provided details; (2) **brief for the eligibility meeting**, based on the
+PsychReport; (3) **MDR briefs**; (4) **FBA briefs**. This confirms the D-139
+reading that a pre-report brief organizes rather than synthesizes — it serves a
+*different meeting*, not a degraded version of the eligibility brief — and it
+confirms JD's ruling that where a report exists its synthesis is the spine of
+the brief (the eligibility meeting is anchored on the report; a brief that
+re-synthesizes could diverge from the signed document in the room where that
+matters most).
+
+**OPEN — two collisions with D-122 that JD must classify before any build:**
+- **(a) Parent-friendly referral brief vs. the existing `Parent Summary` slot.**
+  D-122 already names three standalone Documentation Support tools — Parent
+  Summary, Meeting Brief, Information Request. Is the parent-friendly referral
+  brief the Parent Summary tool, or Meeting Brief carrying a parent register?
+  Naming and tool count both follow from the answer.
+- **(b) MDR brief vs. D-122's district classification.** D-122 rules MDR
+  Documentation a *district team tool* that "never appear[s] in a standalone
+  case absent a separately licensed future commercial model." A brief that
+  prepares a practitioner for an MDR meeting may be a distinct artifact from
+  the district tool that produces determination paperwork — or may not. Under
+  D-117 this is a scope boundary that cannot be narrowed or widened silently.
+
+**Binding regardless of those answers (directive §11, Stage J):** no brief in
+this family may generate a manifestation determination, eligibility
+determination or category ranking, placement, service, SDI, final goal, or
+final accommodation. The MDR and FBA members carry the sharpest form of this —
+the manifestation answer and the FBA's function hypothesis are precisely the
+questions their meetings exist to decide, so those briefs organize the record
+for the team and never answer it.
