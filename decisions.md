@@ -1641,6 +1641,61 @@ remains incident-driven and deadline-sensitive (package D12): it rises to Home
 and the global Documentation Support queue only while active.
 **Status:** Accepted · 2026-08-04 · Proposed: Claude (v6 reconciliation, per ChatGPT handoff §4.3/§7.7) · Ratified: JD (per v6 package ratification)
 
+> **Amendment note (2026-08-08, per D-038) — Documentation Support is broader
+> than reuse-of-approved-content; MDR Brief and MDR Documentation are distinct
+> concepts. Original text preserved.**
+>
+> **Ruled (JD, 2026-08-08):**
+> 1. **A file-drop integrated-summary surface is in Documentation Support's
+>    scope.** The practitioner may drop all files related to an **MDR, FBA,
+>    IEP, or reevaluation where additional assessment is not needed** and
+>    receive an **integrated summary under practitioner-selected headings.**
+>    This is a materially different capability from D-122's original framing
+>    (product-appropriate tools reusing approved suite content): its inputs are
+>    external, unreviewed documents the suite did not author.
+> 2. **MDR Brief ≠ MDR Documentation.** They remain separate concepts: the
+>    **Brief** prepares the psychologist/team for the meeting; the
+>    **Documentation** tool creates the actual manifestation-determination
+>    paperwork. D-122's district-tool restriction was written against the
+>    latter and does not, by itself, bar the former from a standalone case.
+> 3. **The brief family and its source bases** (JD's table, 2026-08-08):
+>    *Referral / Evaluation Planning* ← RIE + case information (explain why
+>    evaluation is being considered and what the team has); *Eligibility* ←
+>    approved PsychReport + meeting context (present the psychologist's
+>    synthesis clearly); *MDR* ← IEP, evaluation, BIP/FBA, discipline records,
+>    implementation evidence (organize evidence for the team's manifestation
+>    decision); *FBA / Behavior Review* ← ABC data, observations, interviews,
+>    rating/input data (explain behavioral patterns and support development of
+>    a functional hypothesis).
+>
+> **OPEN — not ruled, required before build:**
+> - **(a)** Whether D-122's standalone-vs-district prohibition itself is
+>   amended, and in what terms. JD: "given the breadth of Documentation
+>   Support, the prohibition **may** need to be amended" — hedged, so the
+>   restriction stands as written until a numbered entry replaces it.
+> - **(b)** `Parent Summary` vs. the parent-friendly referral brief: D-122
+>   names Parent Summary as its own standalone tool. Same artifact, or Meeting
+>   Brief in a parent register? Unaddressed in the 2026-08-08 ruling.
+> - **(c)** **Provenance model for dropped files** — the load-bearing
+>   engineering question. Briefs over approved Sources inherit checksum,
+>   bank pin, and supersession; briefs over dropped external documents inherit
+>   none of that unless ingestion makes them first-class Sources on the case
+>   (`@suite/document-extraction` is the existing path, per D-046). Until
+>   ruled, no brief may present dropped-file content with the same confidence
+>   affordances as approved-Source content.
+> - **(d)** Sequencing against directive Stage J, which specifies **one**
+>   Documentation Support flow for the slice rather than several shallow
+>   tools. This surface is larger than one flow; it either redefines VS-6 or
+>   follows it.
+>
+> **Unchanged and binding:** directive §11 — no brief or summary generates a
+> manifestation determination, eligibility determination or category ranking,
+> placement, service, SDI, final goal, or final accommodation. **D-135 is now
+> load-bearing rather than theoretical:** dropped IEPs, BIPs, and discipline
+> records are real student data, and D-135 blocks any deployment carrying real
+> student data until retention/auto-purge semantics are ruled in a numbered
+> entry and the purge job is built and verified.
+
 ## D-123 · [suite] · Shared case-tab framework in every profile
 *(v6 reconciliation session, 2026-08-04. ChatGPT handoff §5.3 — "the latest
 architecture correction" — governs over the Cowork package D7, which specified
@@ -2081,3 +2136,33 @@ final accommodation. The MDR and FBA members carry the sharpest form of this —
 the manifestation answer and the FBA's function hypothesis are precisely the
 questions their meetings exist to decide, so those briefs organize the record
 for the team and never answer it.
+
+
+> **Correction (2026-08-08, per D-038) to the amendment note above — the FBA
+> claim was wrong and contradicted D-012. Original text preserved.**
+>
+> The note states "the manifestation answer and the FBA's function hypothesis
+> are precisely the questions their meetings exist to decide, so those briefs
+> organize the record for the team and never answer it." **The FBA half is
+> incorrect.** Corrected by JD (2026-08-08, concurring with external review):
+> the purpose of an FBA is precisely to analyze evidence and develop a
+> hypothesis about behavioral function — that is clinical-analytic work, not a
+> final team determination.
+>
+> **D-012 already ratified this** (2026-07-14): Evidence carries "optional
+> hypothesized FBA function"; topography → construct mapping is
+> "hypothesis-grade until corroborated"; **"Software may suggest; only
+> converging evidence or the psychologist promotes a hypothesis to a
+> finding."** Directive §11 permits the system to "organize, summarize, draft,
+> compare, explain, and **propose**," and its prohibition list does not
+> contain functional hypotheses; `operational-spec-v1.md` §4.4 ("Actionable
+> hypotheses") governs how they are stated. A proposed functional hypothesis
+> is therefore permitted, hypothesis-grade, human-promoted — the same posture
+> as PsychReport's drafted interpretation under directive §9.5.
+>
+> **The manifestation half of the original sentence stands** (§11 names
+> manifestation determinations explicitly). **The real FBA-adjacent boundary**
+> is downstream of the hypothesis: the behavior plan's service, placement, and
+> SDI consequences remain forbidden (§11, §9.7), as does routing an FBA into
+> an eligibility determination. The line is *propose the hypothesis; never
+> convert it into a service, placement, or eligibility verdict.*
