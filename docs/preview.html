@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Psych Suite Design System — preview (VS-2, Avery Williams fixture)</title>
+<!-- Companion to DESIGN-SYSTEM.md v1.1. Regenerated during VS-2 against the
+     Avery Williams canonical fixture (A-8). All styles come from the live
+     @suite/ui artifacts — this file carries no style values of its own.
+     Open from the repo so the relative links resolve. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../packages/ui/tokens.css">
+<link rel="stylesheet" href="../packages/ui/ui.css">
+</head>
+<body>
+<main class="app-content"><div class="app-content__inner stack-lg">
+
+<header class="page-header">
+  <span class="eyebrow">Psych Suite Design System v1.1 · preview</span>
+  <h1 class="page-title">Component vocabulary — VS-2 subset, rendered against Avery Williams</h1>
+  <p class="page-sub">Built components only: shell, CaseStatus, SourceCard, CaseActivity,
+  primitives, spine, drawer/palette chrome. Writer-era components (EvidenceChip, AIProposal,
+  NeedsReview, DraftSection, AssistantPanel) arrive with VS-3/VS-4 and join this preview then.</p>
+</header>
+
+<section class="panel stack">
+  <h2 class="panel__title">CaseStatus — §5.1 (all four states)</h2>
+
+  <div class="stack">
+    <header>
+      <h1 class="case-status__name">Avery W.</h1>
+      <div class="case-status__eyebrow">
+        <span class="eyebrow">Initial evaluation · Grade 4 · referred 2026-04-20</span>
+      </div>
+      <div class="case-status__progress"><div class="case-status__progress-fill" style="width:17%"></div></div>
+      <p class="case-status__sentence">The referral record is complete. Assessment results have not been added yet.</p>
+      <div class="case-status__action"><a class="btn btn--primary" href="#">Review case materials</a></div>
+    </header>
+
+    <header>
+      <div class="case-status__eyebrow">
+        <span class="eyebrow">Initial evaluation</span>
+        <span class="eyebrow is-due-soon">Due 2026-08-12 · 4 days remaining</span>
+      </div>
+    </header>
+
+    <header>
+      <div class="case-status__eyebrow">
+        <span class="eyebrow">Reevaluation</span>
+        <span class="eyebrow is-overdue">Due 2026-08-01 · 7 days past due</span>
+      </div>
+    </header>
+
+    <header>
+      <h1 class="case-status__name">Avery W. <span class="case-status__complete">✓</span></h1>
+      <p class="case-status__sentence">Pre-signature review completed.</p>
+      <div class="case-status__action"><a class="btn btn--secondary" href="#">View report</a></div>
+    </header>
+  </div>
+</section>
+
+<section class="panel stack">
+  <h2 class="panel__title">SourceCard — §5.2 (all five states)</h2>
+
+  <article class="source-card" aria-busy="true">
+    <div class="source-card__body">
+      <div class="source-card__title">WIAT-4 score report</div>
+      <div class="source-card__summary">Reading…</div>
+      <div class="skeleton"></div>
+    </div>
+  </article>
+
+  <article class="source-card source-card--ready">
+    <div class="source-card__body">
+      <div class="source-card__title">Teacher input</div>
+      <div class="source-card__meta">teacher-intake v1.3.0 · collected 2026-04-28</div>
+      <p class="source-card__summary">18 responses from the classroom teacher, finalized and unchanged since submission.</p>
+    </div>
+    <div class="source-card__action"><a class="btn btn--ghost btn--sm" href="#">Details</a></div>
+  </article>
+
+  <article class="source-card source-card--partial">
+    <div class="source-card__body">
+      <div class="source-card__title">Scanned protocol pages</div>
+      <div class="source-card__meta">pdf · 6 pages · uploaded 2026-05-12</div>
+      <p class="source-card__summary">4 of 6 pages readable.</p>
+      <p class="source-card__note">Pages 5–6 are handwriting only — re-scan at higher contrast or mark as reference only.</p>
+    </div>
+  </article>
+
+  <article class="source-card source-card--unreadable">
+    <div class="source-card__body">
+      <div class="source-card__title">Rating-scale export</div>
+      <div class="source-card__meta">pdf · uploaded 2026-05-12</div>
+      <p class="source-card__note">The file is image-only and could not be read. Re-upload the original export or mark as reference only.</p>
+    </div>
+  </article>
+
+  <article class="source-card source-card--superseded">
+    <div class="source-card__body">
+      <div class="source-card__title">Interview notes and summary</div>
+      <div class="source-card__meta">interview · 2026-05-05 · Union Elementary — teacher interview</div>
+      <p class="source-card__note">Replaced by v2</p>
+    </div>
+  </article>
+</section>
+
+<section class="panel stack">
+  <h2 class="panel__title">Evidence Spine — §2 (inspection surface only)</h2>
+  <div class="spine spine--source"><span class="eyebrow">Source-linked</span>
+    <p class="inspect-text">Comprehension improves markedly when text is read aloud to Avery.</p></div>
+  <div class="spine spine--ai"><span class="eyebrow">AI-proposed · unaccepted</span>
+    <p class="inspect-text">(Frame arrives with AIProposal in VS-3 — the dashed violet spine is reserved for it.)</p></div>
+  <div class="spine spine--verified"><span class="eyebrow">Verified</span>
+    <p class="inspect-text">WIAT-4 Word Reading standard score 71, confirmed against the protocol.</p></div>
+  <div class="spine spine--review"><span class="eyebrow">Needs review</span>
+    <p class="inspect-text">Tier 2 phonics start date differs between teacher input and interview summary.</p></div>
+</section>
+
+<section class="panel stack">
+  <h2 class="panel__title">CaseActivity — §5.7</h2>
+  <ol class="activity">
+    <li class="activity__item">
+      <time class="activity__time">2026-04-20 12:00</time>
+      <div><span class="activity__actor">James Delva</span> opened the case</div>
+    </li>
+    <li class="activity__item">
+      <time class="activity__time">2026-04-28 14:30</time>
+      <div><span class="activity__actor">Teacher</span> submitted the intake form</div>
+    </li>
+    <li class="activity__item">
+      <time class="activity__time">2026-05-05 19:00</time>
+      <div><span class="activity__actor">James Delva</span> finalized the interview summary</div>
+    </li>
+    <li class="activity__item">
+      <time class="activity__time">2026-05-06 08:12</time>
+      <div><span class="activity__actor">Psych Suite<span class="activity__machine-tick" title="System entry"> ✓</span></span> organized assessment results <span class="activity__object">(system entries carry the violet tick)</span></div>
+    </li>
+  </ol>
+</section>
+
+<section class="panel stack">
+  <h2 class="panel__title">Primitives — §5.10</h2>
+  <div class="home-case__side">
+    <a class="btn btn--primary" href="#">Draft from sources</a>
+    <a class="btn btn--secondary" href="#">Open source</a>
+    <a class="btn btn--ghost" href="#">Details</a>
+    <button class="btn btn--danger">Delete case</button>
+    <button class="btn btn--secondary" disabled>Unavailable</button>
+  </div>
+  <div class="home-case__side">
+    <span class="pill pill--neutral">Collecting information</span>
+    <span class="pill pill--ok">Verified</span>
+    <span class="pill pill--warn">Needs review</span>
+    <span class="pill pill--danger">Overdue</span>
+    <span class="pill pill--accent">Selected</span>
+  </div>
+  <nav class="tabs">
+    <a class="tabs__tab" aria-current="page" href="#">Overview</a>
+    <a class="tabs__tab" href="#">Case Materials</a>
+    <a class="tabs__tab" href="#">Evaluations</a>
+    <a class="tabs__tab" href="#">Documentation Support</a>
+    <a class="tabs__tab" href="#">Timeline</a>
+  </nav>
+  <div class="table-scroll">
+    <table class="table">
+      <thead><tr><th>Subtest</th><th>Standard score</th><th>95% CI</th></tr></thead>
+      <tbody>
+        <tr><td>WIAT-4 Word Reading</td><td>71</td><td>95% CI 66–76</td></tr>
+        <tr><td>WIAT-4 Pseudoword Decoding</td><td>69</td><td>95% CI 64–74</td></tr>
+        <tr><td>WIAT-4 Reading Comprehension</td><td>76</td><td>95% CI 70–82</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <label class="field">
+    <span class="field__label">Email</span>
+    <input class="field__input" type="email" placeholder="name@district.org">
+    <span class="field__error">Enter the email your Psych Suite account uses.</span>
+  </label>
+  <div class="stack" aria-hidden="true"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+  <div class="empty">
+    <p class="empty__sentence">No cases yet. Open a referral in Referral Intake and it appears here.</p>
+    <a class="btn btn--secondary" href="#">View cases</a>
+  </div>
+</section>
+
+</div></main>
+</body>
+</html>

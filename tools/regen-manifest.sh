@@ -18,6 +18,7 @@ set -euo pipefail
   echo "decisions.md"
   # tokens.css moved into @suite/ui in VS-2; the packages/ find covers it.
   echo "docs/DESIGN-SYSTEM.md"
+  echo "docs/preview.html"
   echo "docs/Psych_Suite_Vertical_Slice_Build_Directive.md"
   echo "docs/VS0-IMPLEMENTATION-MAP.md"
   echo "docs/contamination-audit.md"
