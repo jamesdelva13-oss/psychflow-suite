@@ -6,9 +6,11 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import * as crypto from "crypto";
 import {
   visibleQuestions, activeModules, validateSubmission, pendingFollowUps,
   lockSubmission, instanceKey, computeConcernSet, observationGaps, type ResponseMap,
+  canonicalStringify,
 } from "../src/form-runtime";
 import { QuestionBank } from "../../case-model/src/question-bank.schema";
 import { resolveGradeBand, GRADE_BAND_SET_VERSION } from "../../case-model/src/grade-bands";
@@ -398,6 +400,68 @@ const check = (name: string, ok: boolean, detail?: string) => {
   const reordered = Object.fromEntries(Object.entries(r).reverse()) as ResponseMap;
   check("lock: response key order does not change the checksum",
     lockWith(reordered).source.checksum === lockedA.source.checksum);
+
+  // ---- D-138 defect-shape regression -------------------------------------
+  // The corrected checksum proven against the EXACT teacher-response
+  // structure that exposed the defect: the Avery Williams fixture submission
+  // (tools/seed-avery.ts, bank v1.3.0) — mixed open_text / single_select /
+  // multi_select answers under question-id keys, the nested map the pre-fix
+  // replacer-array stringify collapsed to {}. Frozen here as a historical
+  // artifact ON PURPOSE: if the fixture evolves (v1.6.1 re-seed), this map
+  // does not — it pins the failing shape, not the fixture.
+  const averyResponses: ResponseMap = {
+    "TCH-CORE-001": "gen_ed",
+    "TCH-CORE-002": "4th grade, all subjects",
+    "TCH-CORE-003": "6to12m",
+    "TCH-CORE-005": "Core ELA block plus a Tier 2 phonics small group three times weekly",
+    "TCH-CORE-006": "no",
+    "TCH-CORE-007": "Strong oral vocabulary; curious about science; helpful and well-liked by peers",
+    "TCH-CORE-008": ["reading"],
+    "TCH-CORE-010": "prior_year",
+    "TCH-CORE-011": "no",
+    "TCH-CORE-012": "no",
+    "TCH-RDG-001": ["decoding", "fluency"],
+    "TCH-RDG-005": ["independent", "content_area"],
+    "TCH-RDG-006": "well_below",
+    "TCH-INT-001": "Tier 2 phonics small group since October of grade 3; classroom partner reading supports",
+    "TCH-INT-004": "some_improve",
+    "TCH-IMP-001": "Avoids independent reading; needs adult support to access grade-level text in science and social studies",
+    "TCH-IMP-002": "Below expectations in ELA; work completion drops sharply on independent reading tasks",
+  };
+  const averyLockAt = new Date("2026-04-28T14:30:00Z");
+  const lockAvery = (responses: ResponseMap) => lockSubmission({
+    bank: teacher, responses,
+    caseId: "case_avery", sourceId: "src_avery", informantId: "inf_avery",
+    collectedOn: "2026-04-28", payloadRef: "src_avery", now: averyLockAt,
+  });
+  const averyA = lockAvery(averyResponses);
+  const averyB = lockAvery({
+    ...averyResponses,
+    "TCH-CORE-007": "A different strengths narrative.",
+  });
+
+  // The pre-fix algorithm, verbatim (form-runtime.ts before 35e8ed4): the
+  // sorted TOP-LEVEL key array passed as the JSON.stringify replacer filters
+  // keys at EVERY depth, so question-id keys inside `responses` are dropped.
+  const buggyChecksum = (payload: unknown): string =>
+    crypto.createHash("sha256")
+      .update(JSON.stringify(payload, Object.keys(payload as object).sort()))
+      .digest("hex");
+
+  check("defect reproduction: pre-fix stringify drops every Avery answer (responses:{})",
+    JSON.stringify(averyA.payload, Object.keys(averyA.payload as object).sort())
+      .includes('"responses":{}'));
+  check("defect reproduction: pre-fix algorithm hashes different Avery submissions identically",
+    buggyChecksum(averyA.payload) === buggyChecksum(averyB.payload));
+  check("fix: corrected checksum distinguishes those same two Avery submissions",
+    averyA.source.checksum !== averyB.source.checksum);
+  const averySerialized = canonicalStringify(averyA.payload);
+  check("fix: every Avery question id and answer participates in the hashed serialization",
+    Object.entries(averyResponses).every(([k, v]) =>
+      averySerialized.includes(`${JSON.stringify(k)}:${canonicalStringify(v)}`)));
+  check("fix: stored fixture-shape checksum recomputes from the payload alone",
+    averyA.source.checksum === crypto.createHash("sha256")
+      .update(canonicalStringify(averyA.payload)).digest("hex"));
 
   let threw = false;
   try {

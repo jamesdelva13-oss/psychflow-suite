@@ -9,6 +9,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "node:crypto";
+import { assertDevInstance } from "../../../tools/assert-dev-instance.mjs";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -17,6 +18,11 @@ if (!url || !anonKey || !serviceKey) {
   console.error("Missing Supabase env — run with --env-file=.env.local");
   process.exit(2);
 }
+// D-138 hard guard: the cleanup phase deletes accounts/cases it created —
+// never allowed to point at anything but localhost or the known dev instance.
+console.log(
+  `Target instance verified: ${assertDevInstance(url, "the RLS integration harness (creates and deletes synthetic accounts)")}`
+);
 
 const svc = createClient(url, serviceKey, { auth: { persistSession: false } });
 

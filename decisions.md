@@ -1984,3 +1984,40 @@ Comment corrections accompany this decision: `contributors.ts` and
 `attribution.ts` no longer describe `mayActOnCase` as the sole authorization
 *answer* — it is the sole canonical *definition* and the preflight.
 **Status:** Accepted · 2026-08-07 · Proposed: Claude Code + external review (ChatGPT), three-round exchange of 2026-08-07 · Ratified: JD (enforcement-boundary ruling of 2026-08-07: "Proceed, with D-131 left intact")
+
+## D-138 · [suite] · Destructive tooling hard-fails outside known dev instances; checksum fix proven against the original failing structure (D-137-session follow-ups, resolved)
+Two follow-ups relayed by JD (2026-08-08) from the review of the D-137
+session's work, both logged and resolved here. JD's instruction referenced
+"D-137"; that ID was already minted for the enforcement boundary, so the
+follow-ups are recorded as this entry.
+
+**1 · Hard dev-environment guard on destructive scripts.** The Avery re-seed
+teardown was scoped by fixture name (`student_ref`), and the integration
+harnesses scope deletes to rows they created — which protects the right rows
+on the right instance, and protects nothing if the script is pointed at the
+wrong instance. **Rule:** every script that deletes rows must call the shared
+guard (`tools/assert-dev-instance.mjs`) before opening a database client. The
+guard admits localhost and a committed allowlist of known dev project refs
+(today: the single dev instance) and otherwise refuses with exit 3. **There
+is deliberately no environment-variable override** — the only way to
+authorize a new instance is to edit the committed allowlist in its own
+commit, so every authorization is visible in history. Wired into all three
+existing destructive scripts (`tools/seed-avery.ts`, the RLS harness, the
+VS-1 harness); each now logs the verified target before any write. Binding on
+future destructive tooling, including the D-135 auto-purge job's dev tooling
+(the production purge job itself is a governed feature, not a dev script, and
+is out of this rule's scope).
+
+**2 · Corrected checksum proven against the exact structure that failed.**
+The 2026-08-07 `canonicalChecksum` fix carried regressions on a synthetic
+minimal submission; the defect-shape regression now locks the exact Avery
+Williams teacher-response structure (bank v1.3.0, mixed open_text /
+single_select / multi_select under question-id keys) — frozen in the engine
+suite as a historical artifact independent of fixture evolution — and proves
+both halves: (a) faithful reproduction — the pre-fix replacer-array
+algorithm, reproduced verbatim, serializes that payload with
+`"responses":{}` and hashes two different Avery submissions identically;
+(b) the fix — the corrected algorithm distinguishes them, every submitted
+question id and answer participates in the hashed serialization, and the
+stored checksum recomputes from the payload alone.
+**Status:** Accepted & resolved · 2026-08-08 · Proposed: external review follow-up (D-137 session) · Ratified: JD (log-and-resolve directive of 2026-08-08)

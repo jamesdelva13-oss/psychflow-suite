@@ -31,6 +31,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveCaseContext } from "../lib/case-context";
 import { recordAttributedActivity, actorForProfile } from "../lib/attribution";
+import { assertDevInstance } from "../../../tools/assert-dev-instance.mjs";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -39,6 +40,12 @@ if (!url || !anonKey || !serviceKey) {
   console.error("Missing Supabase env — run with --env-file=.env.local");
   process.exit(2);
 }
+// D-138 hard guard: the cleanup phase deletes the cases/profiles/users this
+// harness creates — never allowed to point at anything but localhost or the
+// known dev instance.
+console.log(
+  `Target instance verified: ${assertDevInstance(url, "the VS-1 integration harness (creates and deletes synthetic cases)")}`
+);
 
 const svc = createClient(url, serviceKey, { auth: { persistSession: false } });
 const FIXTURE_STUDENT_REF = "avery-williams-canonical-fixture";

@@ -34,6 +34,7 @@
 
 import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
+import { assertDevInstance } from "./assert-dev-instance.mjs";
 import { QuestionBank } from "@suite/case-model";
 import { lockSubmission, canonicalChecksum as checksumOf } from "@suite/referral-engine-core";
 import bank13raw from "@suite/content/banks/teacher-form.v1.3.0.json" with { type: "json" };
@@ -95,6 +96,10 @@ async function main() {
     console.error("Missing Supabase env — run with --env-file=apps/intake/.env.local");
     process.exit(2);
   }
+  // D-138 hard guard: the teardown below deletes rows. The student_ref scope
+  // protects Avery's rows on the right instance; this protects the instance.
+  const target = assertDevInstance(url, "seed-avery.ts (deletes the previous fixture case)");
+  console.log(`Target instance verified: ${target}`);
   const svc = createClient(url, serviceKey, { auth: { persistSession: false } });
 
   // ---- Owner ---------------------------------------------------------------
