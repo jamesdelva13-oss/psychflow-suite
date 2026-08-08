@@ -15,6 +15,7 @@ set -euo pipefail
 
 {
   # Governance spine + Design System
+  echo "CLAUDE.md"   # the onramp every session reads first — integrity-checked
   echo "decisions.md"
   # tokens.css moved into @suite/ui in VS-2; the packages/ find covers it.
   echo "docs/DESIGN-SYSTEM.md"
