@@ -81,6 +81,50 @@ const CAPTURE_NOTES = [
   "No attendance, vision, or hearing concerns reported.",
 ].join("\n");
 
+/* Evaluation-specific materials (VS-3, directive §6/§5.1 item 6). The three
+ * WIAT-4 reading scores the directive authorizes, modelled as an EXTRACTION
+ * result rather than hand-entered data: each row carries the confidence the
+ * extractor reported and the page it was read from. Reading Comprehension is
+ * seeded `parsed_low_confidence` on purpose — it is the legitimate,
+ * clinically meaningful exception Stage D calls for ("One score needs
+ * verification"), and until it is confirmed the whole set stays
+ * NOT_ESTABLISHED and may only be described, never interpreted
+ * (apps/psychreport/lib/source-policy.ts). */
+const WIAT4_SCORE_SET = {
+  instrument: "WIAT-4",
+  administeredOn: "2026-05-19",
+  form: "Age-based",
+  scores: [
+    {
+      key: "word-reading",
+      subtest: "Word Reading",
+      standardScore: 71,
+      ci95: [66, 76],
+      percentile: 3,
+      extraction: "parsed_ok",
+      location: "p. 2, Score Summary",
+    },
+    {
+      key: "pseudoword-decoding",
+      subtest: "Pseudoword Decoding",
+      standardScore: 69,
+      ci95: [64, 74],
+      percentile: 2,
+      extraction: "parsed_ok",
+      location: "p. 2, Score Summary",
+    },
+    {
+      key: "reading-comprehension",
+      subtest: "Reading Comprehension",
+      standardScore: 76,
+      ci95: [70, 82],
+      percentile: 5,
+      extraction: "parsed_low_confidence",
+      location: "p. 2, Score Summary",
+    },
+  ],
+};
+
 const CAPTURE_SUMMARY = [
   "Teacher interview corroborates the referral concern: word-level reading (decoding of",
   "multisyllabic words, oral reading fluency) well below grade expectations, with",
@@ -325,6 +369,34 @@ async function main() {
   if (capUpdErr) throw capUpdErr;
   await audit(owner.id, "capture_finalized", { captureSessionId, sourceId: captureSourceId, hasSummary: true });
 
+  // ---- Evaluation materials: WIAT-4 score set (VS-3) ----------------------
+  const scoreSourceId = randomUUID();
+  const { error: sSrcErr } = await svc.from("sources").insert({
+    id: scoreSourceId,
+    case_id: caseId,
+    informant_id: null, // examiner-administered; not an informant report
+    kind: "score_set",
+    collected_on: WIAT4_SCORE_SET.administeredOn,
+    instrument: WIAT4_SCORE_SET.instrument,
+    payload: WIAT4_SCORE_SET,
+    locked: true,
+    checksum: checksumOf(WIAT4_SCORE_SET),
+  });
+  if (sSrcErr) throw sSrcErr;
+  await audit(owner.id, "score_set_added", {
+    sourceId: scoreSourceId,
+    instrument: WIAT4_SCORE_SET.instrument,
+    scoreCount: WIAT4_SCORE_SET.scores.length,
+    needsVerification: WIAT4_SCORE_SET.scores.filter((s) => s.extraction !== "parsed_ok").length,
+  });
+
+  // The case has moved past collecting information now that results are in.
+  const { error: statusErr } = await svc
+    .from("cases")
+    .update({ status: "assessment" })
+    .eq("id", caseId);
+  if (statusErr) throw statusErr;
+
   // ---- Assignments + one attributed contributor activity (D-131) ----------
   const insertAssignment = async (profileId: string, role: string) => {
     const { data, error } = await svc
@@ -354,6 +426,7 @@ async function main() {
   console.log(`  owner               ${owner.id} (${OWNER_EMAIL})`);
   console.log(`  teacher source      ${teacherSourceId} (teacher-intake v1.3.0, checksum ${String(locked.source.checksum).slice(0, 12)}…)`);
   console.log(`  capture source      ${captureSourceId} (interview, checksum ${checksumOf(capturePayload).slice(0, 12)}…)`);
+  console.log(`  score source        ${scoreSourceId} (WIAT-4, 3 scores, 1 awaiting verification)`);
   console.log(`  psych profile       ${psychProfileId} (school_psychology, bridged)`);
   console.log(`  slp profile         ${slpProfileId} (speech_language, synthetic)`);
   console.log(`  slp assignment      ${slpAssignmentId} (contributor)`);

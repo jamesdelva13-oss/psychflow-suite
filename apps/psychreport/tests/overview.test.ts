@@ -50,7 +50,7 @@ test("complete referral record: readiness affirms, action goes to materials, reu
       bank_version: null,
     }),
   ]);
-  const o = buildOverview(ctx);
+  const o = buildOverview(ctx, { openVerifications: 0, hasScores: false });
   assert.equal(o.readiness, "The referral record is complete.");
   assert.equal(o.nextAction.href, "/cases/case-1/materials");
   assert.ok(o.reuseMessage && /already available/.test(o.reuseMessage));
@@ -58,14 +58,14 @@ test("complete referral record: readiness affirms, action goes to materials, reu
 
 test("teacher intake only: readiness names the missing interview, no reuse overclaim", () => {
   const ctx = buildCaseContext(caseRow, [sourceRow({})]);
-  const o = buildOverview(ctx);
+  const o = buildOverview(ctx, { openVerifications: 0, hasScores: false });
   assert.match(o.readiness, /missing an interview or observation/);
   assert.equal(o.reuseMessage, null);
 });
 
 test("no sources: readiness says so plainly (negative — nothing invented)", () => {
   const ctx = buildCaseContext(caseRow, []);
-  const o = buildOverview(ctx);
+  const o = buildOverview(ctx, { openVerifications: 0, hasScores: false });
   assert.match(o.readiness, /No finalized referral material/);
   assert.equal(o.reuseMessage, null);
 });
@@ -85,10 +85,37 @@ test("a superseded interview does not count toward readiness", () => {
       supersedes_source_id: oldId,
     }),
   ]);
-  const o = buildOverview(ctx);
+  const o = buildOverview(ctx, { openVerifications: 0, hasScores: false });
   // the superseding interview is current, so the record is still complete
   assert.equal(o.readiness, "The referral record is complete.");
   const current = ctx.currentSources.filter((s) => s.source.kind === "interview");
   assert.equal(current.length, 1);
   assert.equal(current[0].source.version, 2);
+});
+
+test("an open score verification becomes the one judgment item, and steers the action", () => {
+  const ctx = buildCaseContext(caseRow, [sourceRow({})]);
+  const o = buildOverview(ctx, { openVerifications: 1, hasScores: true });
+  assert.equal(o.readiness, "The record is nearly complete.");
+  assert.deepEqual(o.judgmentItems, [
+    "One score needs verification before results can be interpreted.",
+  ]);
+  assert.equal(o.nextAction.href, "/cases/case-1/evaluations");
+});
+
+test("verified scores plus a complete referral record read as ready to draft (negative: no leftover flag)", () => {
+  const ctx = buildCaseContext(caseRow, [
+    sourceRow({}),
+    sourceRow({
+      id: "66666666-6666-4666-8666-666666666666",
+      kind: "interview",
+      instrument: "capture",
+      bank_id: null,
+      bank_version: null,
+    }),
+  ]);
+  const o = buildOverview(ctx, { openVerifications: 0, hasScores: true });
+  assert.equal(o.readiness, "The record is complete.");
+  assert.deepEqual(o.judgmentItems, []);
+  assert.match(o.evaluationState, /ready to draft/);
 });

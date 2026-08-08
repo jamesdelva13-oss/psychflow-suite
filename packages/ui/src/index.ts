@@ -20,6 +20,7 @@ export {
   type PillTone,
 } from "./primitives";
 export { CaseStatus } from "./case-status";
+export { NeedsReview, NeedsReviewResolved } from "./needs-review";
 export { SourceCard, type SourceCardState } from "./source-card";
 export { CaseActivity, type ActivityEntry } from "./case-activity";
 export { Drawer } from "./drawer";

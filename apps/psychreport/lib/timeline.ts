@@ -31,6 +31,8 @@ const MILESTONES: Record<string, string> = {
   invitation_created: "requested teacher input",
   response_submitted: "submitted the intake form",
   capture_finalized: "finalized the interview summary",
+  score_set_added: "added assessment results",
+  score_verified: "verified a score against the protocol",
 };
 
 export function buildTimeline(

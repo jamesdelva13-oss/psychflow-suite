@@ -337,6 +337,20 @@ h1, h2, h3, p, ul, dl, dd { margin: 0; }
 .palette__item.is-active a, .palette__item a:hover { background: var(--accent-100); color: var(--accent-700); }
 .palette__none { padding: var(--s-5); color: var(--ink-700); }
 
+/* ---------- NeedsReview (§5.5) ---------- */
+.needs-review { padding-top: var(--s-1); padding-bottom: var(--s-1); }
+.needs-review__issue { font-weight: var(--weight-medium); }
+.needs-review__detail { color: var(--ink-700); font-size: var(--text-sm); margin-top: var(--s-2); }
+.needs-review__actions { margin-top: var(--s-3); display: flex; gap: var(--s-2); align-items: center; }
+.needs-review__resolved { color: var(--ink-500); font-size: var(--text-sm); }
+.needs-review__resolved-mark { color: var(--ok-600); }
+
+.eval-exceptions { margin-top: var(--s-5); }
+
+/* ---------- score table ---------- */
+.score-flag { color: var(--warn-600); font-weight: var(--weight-medium); }
+.score-ok { color: var(--ink-500); }
+
 /* ---------- evaluation / support rows ---------- */
 .eval-row { margin: var(--s-3) 0; }
 
