@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "psychreport",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--workspace", "@suite/psychreport"],
+      "port": 3001
+    },
+    {
       "name": "intake",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "--workspace", "@suite/intake"],
