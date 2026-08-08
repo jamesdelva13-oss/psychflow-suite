@@ -1,0 +1,23 @@
+{
+  "name": "@suite/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Psych Suite design-system implementation: tokens.css + the DESIGN-SYSTEM.md §5 component vocabulary. Ships raw TypeScript; consumers transpile (same posture as the other @suite packages).",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./tokens.css",
+    "./ui.css": "./ui.css"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.4.0"
+  }
+}

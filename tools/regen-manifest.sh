@@ -16,7 +16,7 @@ set -euo pipefail
 {
   # Governance spine + Design System
   echo "decisions.md"
-  echo "tokens.css"
+  # tokens.css moved into @suite/ui in VS-2; the packages/ find covers it.
   echo "docs/DESIGN-SYSTEM.md"
   echo "docs/Psych_Suite_Vertical_Slice_Build_Directive.md"
   echo "docs/VS0-IMPLEMENTATION-MAP.md"

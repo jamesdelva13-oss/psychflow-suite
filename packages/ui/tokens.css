@@ -4,11 +4,9 @@
    size, font, or duration. If a value isn't here, propose adding
    it — do not invent it inline.
    v1.1: navigation rail tokens added per amendment A-1.
-   LOCATION NOTE (read by D-046 / VS-2 work): this file lives at the
-   repo root only until the @suite/ui package exists. It then moves
-   into @suite/ui as that package's exported artifact. One live copy
-   always — the root copy is removed in the same commit that creates
-   the package copy.
+   LOCATION NOTE: canonical home is @suite/ui (moved from the repo
+   root in VS-2, same commit that created the package, per the
+   original location note). One live copy always.
    ============================================================ */
 
 :root {

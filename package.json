@@ -9,6 +9,7 @@
     "packages/document-extraction",
     "packages/extraction-core",
     "packages/reasoning-contracts",
-    "packages/referral-engine-core"
+    "packages/referral-engine-core",
+    "packages/ui"
   ]
 }
