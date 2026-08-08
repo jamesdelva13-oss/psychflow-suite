@@ -2021,3 +2021,27 @@ algorithm, reproduced verbatim, serializes that payload with
 question id and answer participates in the hashed serialization, and the
 stored checksum recomputes from the payload alone.
 **Status:** Accepted & resolved · 2026-08-08 · Proposed: external review follow-up (D-137 session) · Ratified: JD (log-and-resolve directive of 2026-08-08)
+
+## D-139 · [PsychReport] · Meeting Brief availability: VS-2 gating is temporary scaffolding, not product behavior — trigger states OPEN for the Meeting Brief slice
+VS-2 shipped Documentation Support with Meeting Brief gated on "report
+approved" — chosen there only to avoid a dead control before any report
+exists. JD's review (2026-08-08) accepts that as **temporary gating and
+explicitly declines to ratify it as the product rule**: a psychologist may
+want the Brief precisely to prepare for the eligibility/evaluation meeting,
+potentially while still finalizing the report.
+
+**At least three plausible availability states, recorded so the design space
+is not narrowed by the scaffold:**
+1. Report draft exists → preliminary Meeting Brief.
+2. Report approved → final Meeting Brief.
+3. The case record alone carries enough evidence, even with no completed
+   PsychReport report → case-based Meeting Brief (the interesting one as the
+   suite matures — Documentation Support consuming the canonical case
+   directly, not just the report).
+
+**Binding now:** do not change the VS-2 behavior; do not treat "approved
+report required" as a constraint in any other design work. **OPEN:** the real
+availability/trigger model is decided when Meeting Brief becomes a real
+vertical slice (VS-6 in the current sequence), against these three states as
+the starting frame.
+**Status:** Accepted (interim gating) with the trigger model OPEN · 2026-08-08 · Proposed: Claude Code (VS-2 judgment call) · Ruled: JD (VS-2 review, 2026-08-08)
