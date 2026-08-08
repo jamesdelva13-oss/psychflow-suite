@@ -98,7 +98,7 @@ Do not rely on this file for specific rules; it goes stale. Read these:
   rule — either needs a logged decision. Two kinds of suite item: *shared principles*
   (implemented per-product) and *shared artifacts* (implemented once, imported, never
   forked — e.g. `reasoning-contracts`, the parser). Do not fork a shared artifact.
-- **Product decoupling (D-012 / D-035).** QA and PsychReport are decoupled: QA must
+- **Product decoupling (D-035).** QA and PsychReport are decoupled: QA must
   review reports from *any* psychologist, not just PsychReport's output, and must
   never be tuned so PsychReport passes — its independence is the value. QA may not
   import PsychReport's case-model.
