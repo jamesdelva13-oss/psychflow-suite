@@ -35,6 +35,7 @@
 import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { assertDevInstance } from "./assert-dev-instance.mjs";
+import { WIAT4_SCORE_SET } from "./fixtures/avery-scores";
 import { QuestionBank } from "@suite/case-model";
 import { lockSubmission, canonicalChecksum as checksumOf } from "@suite/referral-engine-core";
 import bank13raw from "@suite/content/banks/teacher-form.v1.3.0.json" with { type: "json" };
@@ -82,48 +83,9 @@ const CAPTURE_NOTES = [
 ].join("\n");
 
 /* Evaluation-specific materials (VS-3, directive §6/§5.1 item 6). The three
- * WIAT-4 reading scores the directive authorizes, modelled as an EXTRACTION
- * result rather than hand-entered data: each row carries the confidence the
- * extractor reported and the page it was read from. Reading Comprehension is
- * seeded `parsed_low_confidence` on purpose — it is the legitimate,
- * clinically meaningful exception Stage D calls for ("One score needs
- * verification"), and until it is confirmed the whole set stays
- * NOT_ESTABLISHED and may only be described, never interpreted
- * (apps/psychreport/lib/source-policy.ts). */
-const WIAT4_SCORE_SET = {
-  instrument: "WIAT-4",
-  administeredOn: "2026-05-19",
-  form: "Age-based",
-  scores: [
-    {
-      key: "word-reading",
-      subtest: "Word Reading",
-      standardScore: 71,
-      ci95: [66, 76],
-      percentile: 3,
-      extraction: "parsed_ok",
-      location: "p. 2, Score Summary",
-    },
-    {
-      key: "pseudoword-decoding",
-      subtest: "Pseudoword Decoding",
-      standardScore: 69,
-      ci95: [64, 74],
-      percentile: 2,
-      extraction: "parsed_ok",
-      location: "p. 2, Score Summary",
-    },
-    {
-      key: "reading-comprehension",
-      subtest: "Reading Comprehension",
-      standardScore: 76,
-      ci95: [70, 82],
-      percentile: 5,
-      extraction: "parsed_low_confidence",
-      location: "p. 2, Score Summary",
-    },
-  ],
-};
+ * WIAT-4 reading scores the directive authorizes. The set itself lives in
+ * tools/fixtures/avery-scores.ts so that the session-fidelity live evaluation
+ * replays its cases against the SAME object this seed writes, not a copy. */
 
 const CAPTURE_SUMMARY = [
   "Teacher interview corroborates the referral concern: word-level reading (decoding of",

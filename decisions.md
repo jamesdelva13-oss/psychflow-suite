@@ -2166,3 +2166,148 @@ for the team and never answer it.
 > SDI consequences remain forbidden (§11, §9.7), as does routing an FBA into
 > an eligibility determination. The line is *propose the hypothesis; never
 > convert it into a service, placement, or eligibility verdict.*
+## D-140 · [PsychReport] · Testing-session assertions require documented session evidence, enforced by a narrow post-generation adjudicator
+**The defect this answers.** The first live VS-3 generation produced, against
+the Avery fixture: *"Across both tasks, Avery read a limited number of items
+correctly before reaching the discontinue criterion."* Nothing in the case data
+documents item counts, discontinue events, or any testing-session behavior —
+the case carries a teacher intake, a clinician interview summary, and a WIAT-4
+score set. FIDELITY ("Invent nothing") and the DESCRIPTIVE_RESULTS mode
+contract both prohibited that sentence. Both are prompt text, and the sentence
+was generated anyway. Per D-141, that means nothing prevented it from reaching
+the clinician.
+
+**The rule.** PsychReport may describe testing-session events — including
+administration procedures and mechanics, prompting, examinee behavior, effort,
+engagement, rapport, pacing, and examiner support — only when those events are
+documented in clinician-authored or clinician-verified testing-session evidence
+supplied to that section's generation. Evidence supplied for one
+testing-session dimension does not license assertions about another. Generated
+prose may summarize or naturally rephrase such evidence, but may not materially
+change documented frequency, intensity, duration, certainty, or valence; where
+those dimensions are explicitly documented, the paraphrase must preserve them.
+Hedged, conditional, or "consistent with" references to undocumented session
+events fail identically to direct assertions — qualification reduces certainty,
+it does not create an evidentiary basis.
+
+**"Clinician-verified" is deliberate.** Dictated notes, imported testing notes,
+and confirmed structured administration data all qualify. The condition is
+professional verification, not manual typing.
+
+**Enforcement — one rule, two points.**
+1. **Before generation:** the existing structural refusal stands unchanged. A
+   section whose mode is DIRECT_OBSERVATION with no observation source is
+   refused rather than drafted from adjacent material.
+2. **After generation:** a **narrow adjudicator** — a separate, closed-ended,
+   server-side model call whose only question is whether the generated prose
+   states or implies an administration event, examinee behavior, examiner
+   action, or testing-session condition not documented in the session evidence
+   supplied to that section. Structured return: `pass`,
+   `unsupportedStatements[]`, `reason`.
+
+**Mechanics ratified:**
+- **Scope constraint is normative and lives in the spec**
+  (`governance/session-fidelity-adjudicator-v1.md` §2), not only in the prompt
+  string. The adjudicator must not evaluate general report quality, clinical
+  interpretation, attribution outside this rule, or overall fidelity. Widening
+  its question is a spec change requiring the same review as a change to the
+  rule. The reason is operational: an adjudicator that drifts into general
+  fidelity judging produces findings the clinician cannot act on, and a
+  clinician who learns to dismiss the gate has no gate.
+- **Runs on every generated section from launch. No lexical prefilter.** A
+  filter that decides whether the safeguard runs is itself a safeguard, and a
+  missed phrase is indistinguishable from having no check. The implementation
+  runs on all five modes — a superset of the mode-derived eligibility, chosen
+  because "this mode doesn't contain session content" is precisely the kind of
+  prompt-level belief D-141 refuses to trust. A prefilter may be reconsidered
+  post-launch, and only against measured recall on real usage.
+- **Fails closed.** Call error, model refusal, missing or unparseable
+  structured return, an internally contradictory verdict, or a quoted statement
+  that does not appear in the section text — any of these means the section
+  does not pass. A gate failure goes straight to needs-review with no retry:
+  there is no named statement to instruct against, and re-rolling the draft
+  does not repair the adjudicator.
+- **Exactly one regeneration**, carrying a targeted instruction that names the
+  unsupported statement verbatim and forecloses hedging as a fix. The
+  regenerated section clears the **identical** gate — same adjudicator, same
+  prompt version, same evidence set. The retry is not the remedy; the gate is.
+  The bound is a loop constant in the orchestration and a CHECK constraint in
+  the schema, not a convention.
+- **Second failure surfaces to the clinician as needing review.** Never loop,
+  never silently delete language: the prose is shown with the unsupported
+  statements named, and the clinician decides.
+- **Two kinds of test, deliberately separate.** Deterministic orchestration
+  with a mocked adjudicator runs every commit and asserts the properties the
+  judge cannot provide (reject, one retry, same gate, surface, fail closed). A
+  six-case live evaluation runs periodically, not in CI, and measures the judge
+  itself — including the exact Avery sentence against the exact Avery score
+  set. A false alarm on innocent prose is treated as severe as a miss.
+- **Persistence** (migration 0009, amended): generated text, generation model /
+  prompt version / spec version, the supplied evidence set as a **snapshot**
+  (supersession and section scoping make later reconstruction unreliable),
+  adjudicator model and prompt version, the structured verdict and rejection
+  reason, the retry record with the rejected draft preserved as its own frozen
+  row, clinician edits, and append-only approval history. A CHECK constraint
+  makes it impossible to store a machine-generated section that no gate judged.
+
+**Explicitly rejected, not deferred:** claim-level Evidence binding,
+character-span coverage validation, claim-type taxonomies, and sentence-level
+source attribution in any form. That architecture degrades prose quality and
+exceeds this defect. This decision adds one narrow fidelity gate for
+testing-session fabrication and nothing else.
+**Status:** Accepted · 2026-08-09 · Proposed: Claude Code (VS-3 continuation, from the first live-generation defect) · Ratified: JD (VS-3 fidelity-gate directive of 2026-08-09)
+
+## D-141 · [suite] · A safeguard is code that can reject output; no prompt-level instruction may be represented as one
+**The rule.** No prompt-level instruction may be represented — in a
+specification, a decision record, a status report, marketing copy, or a claim
+made to a customer — as a safeguard. A safeguard is code that can reject
+output. Prompt instructions steer a model; they are a quality input, and they
+are worth writing well, but they cannot be relied on, tested for enforcement,
+or counted as protection. Anything that cannot refuse is not a control.
+
+**Scope: `[suite]`.** This binds the QA Engine as well as PsychReport (D-117:
+a suite rule states a shared principle each product implements in its own
+context). For PsychReport it means every generation-time protection must have a
+rejecting counterpart in code. For the QA Engine it means the same standard the
+engine already applies to its own Layer B — the Finding constructor caps status
+rather than the prompt asking it to; the evidence-grounding guard drops
+unmatched quotes in code — applies to every protection the engine claims,
+including any it claims about how reports are produced.
+
+**What this generalizes.** Rule 3.7 of `operational-spec-v1.md` said: *"Do not
+represent the validity resolver as an active safeguard until its payload,
+invocation, and tests are wired in production. During quarantine, disclose the
+implementation gap internally and prevent dependent features from claiming
+protection they do not yet have."* It was written as an implementation
+condition about one resolver (D-099's finding: the live `callMode` invocation
+passed only `{data}`, so the entire ceiling architecture was specified and
+switched off). The principle it instantiated is not specific to that resolver,
+and the VS-3 discontinue-criterion sentence (D-140) is the same failure in a
+different place: a prohibition that existed only as prompt text, described as
+though it protected something.
+
+**Rule 3.7 is retired as fulfilled.** Its condition is met — the payload is
+wired (`GenerationInputs` cannot be constructed without every source's
+interpretation policy), the canonical resolver is invoked (`effectiveCeiling`
+in `@suite/reasoning-contracts`, and `apps/psychreport/lib/source-policy.ts`
+defines no resolver of its own — D-118's divergent duplicate lived in the
+legacy vanilla-JS app that VS-3 replaced), and the tests exist
+(`apps/psychreport/tests/prompts.test.ts`,
+`apps/psychreport/tests/source-policy.test.ts`). The historical rule text and its rationale are
+preserved above and in the spec's own retirement note; retirement is not
+deletion.
+
+**Practical consequences, binding now:**
+- A specification may not describe a prompt block as a control. It may describe
+  it as guidance, and must name the code that enforces the same rule — or state
+  plainly that none exists yet.
+- "Gate," "guard," "enforced," "prevented," and "cannot" are reserved for code
+  paths that can return a rejection. Where only a prompt instruction exists, the
+  honest words are "instructed," "asked," or "steered."
+- A build item is not complete because its prompt text was written. The
+  completion condition is a rejecting code path plus a test that proves it
+  rejects.
+- Nothing here reduces the value of good prompt authoring. D-110 and D-111
+  (minimum-necessary prompt, preserve escape hatches) are unaffected. The
+  claim being regulated is what a prompt *guarantees*, not whether it helps.
+**Status:** Accepted · 2026-08-09 · Proposed: Claude Code (VS-3 continuation, generalizing Rule 3.7 / D-099 at JD's instruction) · Ratified: JD (VS-3 fidelity-gate directive of 2026-08-09)

@@ -40,6 +40,13 @@ below links back to its governing decision(s).
 > integration (wire payload + replace the duplicate with canonical) is foundational.
 > Remaining OPEN build gates: **G3, G4, G6, G7, G8**. See the closed gate list in
 > the decision log (after D-118).
+>
+> **Superseded in part (2026-08-09, VS-3).** The Session B findings above are
+> preserved as the record of what was true in July 2026. Rule 3.7 / D-099 and
+> gate **G4 are now closed** — the VS-3 rebuild wires the payload and invokes
+> the canonical resolver (§3.7 below carries the retirement note). The rule is
+> generalized by **D-141** into §8 rule 5.7. Remaining OPEN gates: **G3, G6,
+> G7, G8**.
 
 ---
 
@@ -264,13 +271,37 @@ the affected composite for examiner review. Do not automatically invalidate,
 suppress, or qualify the composite without an examiner-confirmed determination. —
 *Governs:* **D-096**; **D-104**. *(Build item — gate G3.)*
 
-**3.7 · Validity architecture switched off in production.** ⚠ **OPEN — implementation
-condition, not a permanent rule.** Do not represent the validity resolver as an
-active safeguard until its payload, invocation, and tests are wired in production.
-During quarantine, disclose the implementation gap internally and prevent dependent
-features from claiming protection they do not yet have. *(Remove from the
-operational rule set when corrected.)* — *Governs:* **D-099**; APP TODO; gate
-**G4**.
+**3.7 · Validity architecture switched off in production.** ✅ **RETIRED AS
+FULFILLED — 2026-08-09, per D-141.** Gate G4 is closed.
+
+> **Historical rule text, preserved (D-038: amend, never rewrite).** "⚠ OPEN —
+> implementation condition, not a permanent rule. Do not represent the validity
+> resolver as an active safeguard until its payload, invocation, and tests are
+> wired in production. During quarantine, disclose the implementation gap
+> internally and prevent dependent features from claiming protection they do not
+> yet have. *(Remove from the operational rule set when corrected.)*" —
+> *Governed:* **D-099**; APP TODO; gate **G4**.
+>
+> **Rationale, preserved.** D-099 found that the live `callMode` invocation
+> passed only `{data}`, bypassing the sources/validity/scope/ceiling blocks
+> `buildPrompt` was built to apply. The entire ceiling architecture was
+> specified and switched off; dependent features were describing a protection
+> that was not running.
+
+**Condition met.** The payload is wired — `GenerationInputs`
+(`apps/psychreport/lib/source-policy.ts`) cannot be constructed without every
+source's interpretation policy, and `userPrompt` always emits the SOURCE LIMITS
+block when sources exist. The canonical resolver is invoked: `effectiveCeiling`
+from `@suite/reasoning-contracts`, with no resolver defined in the app (D-118's
+divergent duplicate lived in the legacy vanilla-JS app that VS-3 replaced). The
+tests exist: `apps/psychreport/tests/prompts.test.ts` and
+`tests/source-policy.test.ts`, including the D-099 defect shape directly ("no
+source can reach generation without a policy").
+
+**Generalized, not merely closed.** The principle this rule instantiated is now
+a standing suite rule — **D-141: a safeguard is code that can reject output; no
+prompt-level instruction may be represented as one.** See §8 rule 5.7. —
+*Governs:* **D-099** (fulfilled); **D-141** (generalization).
 
 **3.8 · Evidence-tier ladder.** Use evidence tiers **only for intake, coverage, and
 collection logic.** A direct "no concern" response means that this source did not
@@ -374,6 +405,42 @@ resolution.")* — *Governs:* **D-078**; **D-105**.
 authority, effective date, amendments, and supersession relationship. Do not inject
 this governance metadata into drafting prompts unless a resolved instruction
 depends on it. — *Governs:* **D-028** and decision-log governance.
+
+**5.6 · Testing-session assertions require documented session evidence.**
+Describe testing-session events — administration procedures and mechanics,
+prompting, examinee behavior, effort, engagement, rapport, pacing, examiner
+support — only when documented in clinician-authored or clinician-verified
+session evidence supplied to that section's generation. Evidence for one
+session dimension does not license assertions about another. Paraphrase is
+permitted; materially changing documented frequency, intensity, duration,
+certainty, or valence is not. Hedged, conditional, and "consistent with"
+references to undocumented session events fail identically to direct
+assertions. *Clinician-verified* covers dictated notes, imported testing notes,
+and confirmed structured administration data — the condition is professional
+verification, not manual typing.
+
+**This rule is ENFORCED, not instructed** (D-141). The enforcement is a narrow
+post-generation adjudicator that can reject the section, specified in
+`governance/session-fidelity-adjudicator-v1.md`; it runs on every generated
+section with no prefilter, fails closed, permits exactly one targeted
+regeneration through the identical gate, and surfaces a second failure to the
+clinician. The pre-generation structural refusal for DIRECT_OBSERVATION without
+an observation source is unchanged and is the rule's other enforcement point. —
+*Governs:* **D-140**.
+
+**5.7 · A safeguard is code that can reject output.** No prompt-level
+instruction may be represented — here, in the decision log, in a status report,
+or to a customer — as a safeguard. "Gate," "guard," "enforced," "prevented,"
+and "cannot" are reserved for code paths that can return a rejection; where only
+a prompt instruction exists, the honest words are "instructed," "asked," or
+"steered." A specification describing a prompt block as a control must name the
+code that enforces the same rule, or state plainly that none exists yet. A build
+item is not complete because its prompt text was written — the completion
+condition is a rejecting code path plus a test that proves it rejects. This does
+not reduce the value of prompt authoring; D-110 and D-111 are unaffected. What
+is regulated is what a prompt is claimed to *guarantee*. *(Generalizes retired
+rule 3.7; binds the QA Engine as well as PsychReport.)* — *Governs:* **D-141**;
+supersedes **3.7** in operative form.
 
 ## 9. Length and proportionality
 
@@ -661,7 +728,8 @@ reasoning contracts, app prompt, and schema (incl. RC §6, PB §2/§12).
 
 **Engineering verification — OPEN GATES (Session B):** see the gate list in the
 decision log after D-116 — G1 (D-097 resolver test), G2 (duplicate-resolver check),
-G3 (component-level validity), G4 (payload wiring, D-099), G5 (shared-package
+G3 (component-level validity), ~~G4 (payload wiring, D-099)~~ **closed 2026-08-09,
+D-141**, G5 (shared-package
 placement, D-046), G6 (distillation-loss regression), G7 (reversed-pattern
 regression), G8 (transformations sequencing, C4).
 
@@ -680,5 +748,7 @@ Runtime prompt instructions must additionally earn their token and attention cos
 *End of operational specification v1. Current-effective-rules document; governed by
 the decision log (`suite/decisions.md`) per P-05 (D-114). Session B (2026-07-27)
 resolved D-097 (retired) and Rule 3.3 (verified — dormant divergent duplicate,
-D-118); Rule 3.7 / D-099 (payload wiring) remains OPEN. Remaining build gates: G3,
-G4, G6, G7, G8.*
+D-118). **VS-3 (2026-08-09) retired Rule 3.7 / D-099 as fulfilled and closed gate
+G4** (payload wired, canonical resolver invoked, tests present), generalizing it
+into rule 5.7 / D-141; rule 5.6 / D-140 was added with its enforcing adjudicator.
+Remaining build gates: G3, G6, G7, G8.*

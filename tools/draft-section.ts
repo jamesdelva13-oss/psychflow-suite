@@ -68,7 +68,7 @@ async function main() {
 
   const result = await generateSection({ inputs, plan, verifications });
 
-  if (!result.ok) {
+  if (result.status === "refused") {
     console.log(`REFUSED — ${result.reason}`);
     return;
   }
@@ -76,6 +76,24 @@ async function main() {
   console.log("─".repeat(72));
   console.log(result.section.content);
   console.log("─".repeat(72));
+
+  // The session-fidelity gate (D-140). `needs_review` means prose exists but
+  // did not clear the gate after its one permitted regeneration — it is shown,
+  // never silently deleted, with the unsupported statements named.
+  const f = result.section.fidelity;
+  if (result.status === "needs_review") {
+    console.log(`NEEDS REVIEW — session-fidelity gate (${f.gate})`);
+    console.log(`  ${result.reason}`);
+    for (const s of result.unsupportedStatements) console.log(`  · "${s}"`);
+  } else {
+    console.log(
+      `session-fidelity gate: ${f.outcome} (${f.attempts.length} attempt${f.attempts.length === 1 ? "" : "s"})`
+    );
+  }
+  for (const a of f.attempts) {
+    console.log(`  attempt ${a.attempt}: ${a.adjudication.verdict} — ${a.adjudication.reason}`);
+  }
+
   const g = result.section.generatedBy;
   console.log(
     `served by ${g.servingModel} (requested ${g.requestedModel}) · effort ${g.effort} · ` +

@@ -30,6 +30,16 @@ import type { GenerationInputs, PolicedSource } from "./source-policy";
  * half is the user turn. Content and order are unchanged.
  */
 
+/**
+ * Versions recorded with every generated section (migration 0009). The prompt
+ * version changes whenever any block below changes; the spec version names the
+ * effective rule set the blocks were assembled under. Both are persisted so a
+ * section can be read against the rules that were in force when it was written
+ * rather than the rules in force when it is read.
+ */
+export const DRAFTING_PROMPT_VERSION = "psychreport-drafting-prompts-v2.1";
+export const GENERATION_SPEC_VERSION = "operational-spec-v1";
+
 /* ---------------------------------------------------------------- *
  * 1. VOICE — leads every prompt (verbatim)
  * ---------------------------------------------------------------- */
