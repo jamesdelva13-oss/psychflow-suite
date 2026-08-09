@@ -8,9 +8,11 @@
     "build": "next build",
     "start": "next start --port 3001",
     "test": "NODE_OPTIONS=--conditions=react-server SUPABASE_SERVICE_ROLE_KEY=test-key NEXT_PUBLIC_SUPABASE_URL=http://test tsx --test tests/*.test.ts",
-    "test:vs1": "node --env-file=.env.local --conditions=react-server --import tsx tests-integration/vs1.integration.ts"
+    "test:vs1": "node --env-file=.env.local --conditions=react-server --import tsx tests-integration/vs1.integration.ts",
+    "draft": "node --env-file=.env.local --conditions=react-server --import tsx ../../tools/draft-section.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
     "@suite/case-model": "*",
     "@suite/content": "*",
     "@suite/reasoning-contracts": "*",
