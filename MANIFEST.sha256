@@ -52,6 +52,7 @@
 3b7dfeaf9a6007049617fb43441185724d7a77338aad88f19b241a7702b0126c  packages/extraction-core/fixtures/teacher-attention-02/source.json
 3c0bbc49b1c5b5ff7de2a10d0b224c992dc694c6cbda87f54dac783d1f44b2f5  packages/case-model/src/taxonomy.v0-4.json
 3f05e5c8509e453d4a32e01a4ca95b90e09a8659d217ab11e817b39f86d655f1  packages/ui/src/ai-proposal.tsx
+3fde5d6f03a9b576e6e38d23243f46b0a05a8b506724714ef93f90c406ceed71  apps/psychreport/tests-eval/full-report.eval.ts
 3febc7d54cb0c6a5585b8bc0849c8bf82ee6dbfc5d5308a99a6cd7fa46cc243a  packages/document-extraction/src/extraction/instruments.ts
 448cc574d5b96bfe2a7a04583466045c64acc86d54715880010ed470109ab0f3  apps/intake/tests/audit-labels.test.ts
 47a3d22a73c86514f040d0a81cf0c47090b466149ef380f4e12c7ae5732110a6  apps/intake/middleware.ts
