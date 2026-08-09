@@ -2290,6 +2290,41 @@ usage; a shadow pilot is what answers that, reading the `would_enforce`
 counterfactual column.
 **Amendment status:** Accepted · 2026-08-09 · Proposed: Claude Code · Ratified: JD (VS-3 measure-before-enforcing directive of 2026-08-09)
 
+**Amendment note (2026-08-09, D-038 form) — two scope tests promoted from model
+judgment to specification.** The rule in D-140 is unchanged; what changes is
+where the adjudicator's boundary is *written*. Both tests NARROW the gate.
+
+- **The locating test (spec §2.1).** A claim is in scope only if it locates the
+  event inside an encounter the evaluator conducted for this evaluation.
+  Assertions about the classroom, the home, or any other setting are outside
+  this gate regardless of phrasing and regardless of who reports them. The
+  encounter decides, not the setting name — an evaluator's own classroom
+  observation is an encounter, while a general claim about classroom
+  functioning is not. Rationale: the adjudicator receives only session
+  evidence and never the rest of the case, so it cannot distinguish a
+  fabricated session event from a fact documented elsewhere in the case file;
+  anything it cannot locate in an evaluator-conducted encounter must be left
+  alone rather than guessed at. Widening its inputs to resolve this was
+  considered and rejected — that would make it a general fidelity checker,
+  which §2 forbids. Origin: a false positive in the 5-report run of
+  2026-08-09 on "comprehension improves markedly when text is read aloud to
+  him," which is documented in the teacher interview.
+- **Task demand versus asserted behavior (spec §2.2).** Naming what a task
+  requires is not asserting anyone watched the examinee do it; the line is
+  whether the examinee is the actor. Origin: one report produced both forms of
+  the same activity and the gate split them correctly — but the distinction was
+  emergent from model judgment, which is exactly what §2 being normative
+  exists to prevent. The specification wording is the adjudicator's own
+  articulation, promoted.
+
+Versions move because the boundary moved: spec `session-fidelity-adjudicator-v1.1`,
+prompt `session-fidelity-adjudicator-prompt-v2`, both persisted per generation.
+Six regression cases pin the two tests (spec §8.2 cases 10–15), including the
+two phrases from the live run; cases 10/11 must split and 13/15 must diverge.
+Re-measured at 15 cases × 10: catch 100% (60/60), false alarm 0% (0/90),
+unusable 0% (0/150).
+**Amendment status:** Accepted · 2026-08-09 · Proposed: Claude Code · Ratified: JD (scope-narrowing instruction of 2026-08-09)
+
 ## D-141 · [suite] · A safeguard is code that can reject output; no prompt-level instruction may be represented as one
 **The rule.** No prompt-level instruction may be represented — in a
 specification, a decision record, a status report, marketing copy, or a claim

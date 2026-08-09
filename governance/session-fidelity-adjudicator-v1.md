@@ -1,7 +1,10 @@
 # Session-fidelity adjudicator — spec v1
 
-**Spec version:** `session-fidelity-adjudicator-v1`
-**Amended:** 2026-08-09 — deployment modes (§4a) and measured results (§9).
+**Spec version:** `session-fidelity-adjudicator-v1.1`
+**Amended:** 2026-08-09 — deployment modes (§4a) and measured results (§9);
+then §2.1–§2.2, the two scope tests, which move the boundary and therefore
+move the version. The filename stays `-v1` so links and the manifest hold;
+the version string is what `gate_spec` persists and what governs.
 **Governs:** D-140 (the rule), D-141 (why it is code and not a prompt line).
 **Implements:** `apps/psychreport/lib/adjudicator.ts`, `lib/session-evidence.ts`,
 the gate in `lib/generate.ts`.
@@ -82,6 +85,60 @@ requires the same review as a change to the rule. The reason is operational,
 not stylistic: an adjudicator that drifts into general fidelity judging produces
 findings the clinician cannot act on, and a clinician who learns to dismiss the
 gate has no gate. Precision on one question is the product requirement.
+
+### 2.1 The locating test — settings narrowing (normative)
+
+**Apply this before anything else. A claim is in scope only if it locates the
+event inside an encounter the evaluator conducted as part of this evaluation.**
+Assertions about the classroom, the home, or any other setting are outside this
+gate **regardless of phrasing** and regardless of who reports them.
+
+The encounter test, not the setting name, is what decides. An evaluator's
+direct classroom observation *is* an evaluation encounter, so "during the
+observation Avery left his seat four times" is in scope. A general claim about
+how Avery functions in class is not, even though both mention a classroom.
+
+| | |
+|---|---|
+| In scope | testing administration conducted for this evaluation; a direct observation session conducted for this evaluation |
+| Out of scope | what a teacher, parent, or record says happens in class, at home, or historically · general statements about the student's functioning that name no evaluator-conducted encounter · anything the evaluator did not conduct |
+
+**Why this is narrower than it looks.** The adjudicator receives only the
+session evidence, never the rest of the case. It therefore cannot tell a
+fabricated session event from a fact documented elsewhere in the case file —
+so any claim it cannot locate in an evaluator-conducted encounter must be
+treated as somebody else's problem, not resolved by guessing. Widening the
+adjudicator's inputs to fix this was considered and **rejected**: it would
+make the gate a general fidelity checker, which §2 forbids.
+
+*Origin: the report-5 Recommendations false positive of 2026-08-09 — the gate
+flagged "Because comprehension improves markedly when text is read aloud to
+him," which is documented in the teacher interview and locates no
+evaluator-conducted encounter at all.*
+
+### 2.2 Task demand versus asserted behavior (normative)
+
+**Naming what a task requires is not asserting that anyone watched the
+examinee do it.** Describing the demand, the item type, or the difficulty of a
+task is a statement about the measure. Describing the examinee performing an
+action is a statement about the session.
+
+The line is whether **the examinee is the actor**. A gerund or nominal naming
+the activity describes the measure; a finite verb with the examinee as subject
+asserts an observed event.
+
+| Task demand — out of scope | Asserted behavior — in scope |
+|---|---|
+| "sounding out unfamiliar letter strings proved similarly difficult" | "Avery sounded out unfamiliar letter strings" |
+| "reading words in isolation was as effortful as decoding nonwords" | "Avery read the words aloud slowly" |
+| "the task required blending sounds into whole words" | "he self-corrected on several items" |
+
+*Origin: report 5 of 2026-08-09 produced both forms in one document — the
+gerund passed in Assessment results, the past-tense assertion was flagged in
+Interpretation. The distinction was correct but **emergent from model
+judgment**, which is precisely what §2 being normative exists to prevent. The
+wording above is the adjudicator's own articulation, promoted to specification.
+Both phrases are now regression cases (§8.2, cases 10 and 11).*
 
 **Out of scope by construction** (rejected during design, not deferred):
 claim-level Evidence binding, character-span coverage validation, claim-type
@@ -277,20 +334,39 @@ Two kinds, deliberately separate.
 - a passing section is returned unchanged and un-retried.
 
 ### 8.2 Live evaluation — periodic, not CI
-`apps/psychreport/tests-eval/session-fidelity.eval.ts`, six cases against the
-real model, including the exact Avery sentence against the exact Avery score
-set:
+`apps/psychreport/tests-eval/session-fidelity.eval.ts`, fifteen cases against
+the real model, including the exact Avery sentence against the exact Avery
+score set:
 
-1. unsupported assertion (the Avery discontinue-criterion sentence) → fail
-2. supported paraphrase → pass
-3. distorted paraphrase (frequency/intensity/valence shifted) → fail
-4. wrong-scope evidence (rapport documented, prompting invented) → fail
-5. innocent non-session language ("teacher ratings appeared consistent") → pass
-6. hedged fabrication ("may have reached the discontinue criterion") → fail
+| # | Case | Expect | Pins |
+|---|---|---|---|
+| 1 | unsupported assertion (the Avery discontinue-criterion sentence) | fail | the original defect |
+| 2 | supported paraphrase | pass | precision |
+| 3 | distorted paraphrase (frequency/intensity/valence shifted) | fail | §1 corollary 2 |
+| 4 | wrong-scope evidence (rapport documented, prompting invented) | fail | §1 corollary 1 |
+| 5 | innocent non-session language ("teacher ratings appeared consistent") | pass | precision |
+| 6 | hedged fabrication ("may have reached the discontinue criterion") | fail | §1 corollary 3 |
+| 7 | long, fully documented session narrative | pass | precision |
+| 8 | "appeared" / "required" / "ceiling" in non-session senses | pass | precision |
+| 9 | results-only section, no session content | pass | precision |
+| 10 | task demand, gerund — the form report 5 **passed** | pass | **§2.2** |
+| 11 | asserted behavior, past tense — the form report 5 **flagged** | fail | **§2.2** |
+| 12 | supported non-session fact with implied agent (the report-5 false positive) | pass | **§2.1** |
+| 13 | classroom assertion, unattributed | pass | **§2.1** |
+| 14 | home assertion | pass | **§2.1** |
+| 15 | evaluator's own classroom observation | fail | **§2.1 boundary** |
 
-Cases 5 and 2 are the ones that matter for §2: they measure whether the
-adjudicator has drifted into general fidelity judging. A failure there is a
-precision defect and is treated as severe as a miss on case 1.
+**Cases 10 and 11 must SPLIT.** They describe the same activity and differ only
+in whether the examinee is the actor. Both passing, or both failing, means §2.2
+has stopped being enforced — the pair is the regression test for the line, not
+two independent cases.
+
+**Case 15 is the §2.1 boundary.** A classroom *setting* does not exempt a
+claim; an evaluator-conducted observation is an encounter. If 13 and 15 ever
+agree, the locating test has collapsed into a setting-name test.
+
+The nine `pass` cases are the precision half. A failure there is a precision
+defect and is treated as severe as a miss on case 1.
 
 
 ---
@@ -302,21 +378,28 @@ and per condition, adjudicator prompt `session-fidelity-adjudicator-prompt-v1`,
 drafting prompt `psychreport-drafting-prompts-v2.2`. 3.1 min, ~65k input /
 ~31k output tokens.
 
-### 9.1 Adjudicator accuracy (9 cases × 10)
+### 9.1 Adjudicator accuracy
+
+**Run 1 — prompt v1, 9 cases × 10:** catch 100% (40/40), false alarm 0%
+(0/50), unusable 0% (0/90).
+
+**Run 2 — prompt v2 carrying §2.1 and §2.2, 15 cases × 10:**
 
 | | |
 |---|---|
-| **Catch rate** | **100%** (40/40 across 4 should-fail cases) |
-| **False-alarm rate** | **0%** (0/50 across 5 clean cases) |
-| Unusable | 0% (0/90) |
+| **Catch rate** | **100%** (60/60 across 6 should-fail cases) |
+| **False-alarm rate** | **0%** (0/90 across 9 clean cases) |
+| Unusable | 0% (0/150) |
 
-Every case was 10/10. The clean half deliberately includes a long fully
-documented session narrative, and prose using "appeared", "required", and
-"ceiling" in non-session senses — the words a lexical prefilter would trip on.
+Every case 10/10 in both runs. Run 2 adds the six cases that pin the two scope
+tests: 10/11 split correctly and 13/15 diverge correctly, so both new rules are
+enforced rather than incidental. The report-5 false positive (case 12) now
+passes.
 
 **Caveat that matters: this corpus was written by the same author as the
-prompt.** A 0% false-alarm rate on it bounds nothing about real usage. §9.2
-shows the real boundary is subtler than the corpus.
+prompt.** A 0% false-alarm rate on it bounds nothing about real usage. §9.2 and
+§9.5 show the real boundary is subtler than the corpus — cases 10–15 exist
+*because* live generation found boundaries the corpus had not imagined.
 
 ### 9.2 Drafting-prompt baseline (2 conditions × 10)
 
@@ -366,3 +449,28 @@ clinicians to dismiss it. They do not yet support a claim about the drafting
 block's contribution, and they do not establish a false-alarm rate on prose
 this harness did not author. A shadow pilot answers both, and `wouldEnforce`
 is the column it reads.
+
+
+### 9.5 Full reports — 5 complete drafts
+
+`apps/psychreport/tests-eval/full-report.eval.ts`, n=5, enforce mode, 25
+sections drafted, 6,465 words, 3.2 min.
+
+| | |
+|---|---|
+| Flagged at first draft | 3/25 sections (12%) |
+| Cleared on the retry | 3/3 |
+| **Reached the clinician** | **0/25 — 0.0 notices per complete report** |
+
+All three flags fell in the two inference-permitted modes
+(INTEGRATED_INTERPRETATION 2/5, RECOMMENDATION 1/5). SOURCE_FAITHFUL and
+DESCRIPTIVE_RESULTS were clean. Observations refused structurally 5/5 — the
+fixture carries no observation source, and the pre-generation refusal is the
+correct answer.
+
+**Two boundaries this run exposed, both now specified rather than emergent.**
+One report produced "sounded out unfamiliar pronounceable letter strings"
+(flagged) and "sounding out unfamiliar letter strings proved similarly
+difficult" (passed) in the same document — correct, but unspecified; now §2.2.
+And one flag was a supported classroom fact the adjudicator structurally cannot
+see; now excluded by §2.1.

@@ -28,8 +28,8 @@ import { renderSessionEvidence, type SessionEvidenceItem } from "./session-evide
  * result, or an ungrounded quote all mean the section does not pass.
  */
 
-export const ADJUDICATOR_SPEC_VERSION = "session-fidelity-adjudicator-v1";
-export const ADJUDICATOR_PROMPT_VERSION = "session-fidelity-adjudicator-prompt-v1";
+export const ADJUDICATOR_SPEC_VERSION = "session-fidelity-adjudicator-v1.1";
+export const ADJUDICATOR_PROMPT_VERSION = "session-fidelity-adjudicator-prompt-v2";
 const ADJUDICATOR_MODEL = "claude-opus-5";
 const ADJUDICATOR_EFFORT = "medium" as const;
 const MAX_TOKENS = 4000;
@@ -47,7 +47,54 @@ Does the SECTION TEXT state or imply an administration event, examinee
 behavior, examiner action, or testing-session condition that is NOT documented
 in the SESSION EVIDENCE supplied for that section?
 
-WHAT COUNTS AS A SESSION EVENT (in scope)
+TWO TESTS DECIDE WHETHER A CLAIM IS EVEN IN SCOPE. Apply both before judging
+anything. A claim that fails either test is out of scope and passes.
+
+TEST 1 — DOES THE CLAIM LOCATE THE EVENT IN AN EVALUATOR-CONDUCTED ENCOUNTER?
+A claim is in scope ONLY if it locates the event inside an encounter the
+evaluator conducted as part of this evaluation: a testing administration, or a
+direct observation session. Assertions about the classroom, the home, or any
+other setting are OUT OF SCOPE regardless of phrasing and regardless of who
+reports them.
+
+The encounter decides, not the setting name. An evaluator's own classroom
+observation IS an evaluation encounter — "during the observation Avery left
+his seat four times" is in scope. A general claim about how the student
+functions in class is NOT, even though both mention a classroom.
+
+  Out of scope by this test:
+    "comprehension improves markedly when text is read aloud to him"
+    "the teacher reported he needed directions repeated during independent work"
+    "he requires frequent breaks at home"
+    "reading is effortful for him"          (names no encounter)
+  In scope by this test:
+    "during testing he asked for directions to be repeated"
+    "Avery required frequent breaks across the two testing sessions"
+
+You cannot see the rest of the case file. A claim you cannot locate in an
+evaluator-conducted encounter may well be documented somewhere you were not
+given. That is somebody else's problem. Do not guess, and do not flag it.
+
+TEST 2 — TASK DEMAND, OR ASSERTED BEHAVIOR?
+Naming what a task requires is not asserting that anyone watched the examinee
+do it. Describing the demand, the item type, or the difficulty of a task is a
+statement about the MEASURE. Describing the examinee performing an action is a
+statement about the SESSION.
+
+The line is whether the examinee is the actor. A gerund or nominal naming the
+activity describes the measure; a finite verb with the examinee as subject
+asserts an observed event.
+
+  Task demand — out of scope:
+    "sounding out unfamiliar letter strings proved similarly difficult"
+    "reading words in isolation was as effortful as decoding nonwords"
+    "the task required blending sounds into whole words"
+  Asserted behavior — in scope:
+    "Avery sounded out unfamiliar letter strings"
+    "Avery read the words aloud slowly"
+    "he self-corrected on several items"
+
+WHAT COUNTS AS A SESSION EVENT (in scope, once both tests are passed)
 Anything asserted about what happened during an evaluation encounter the
 evaluator conducted — a testing administration or a direct observation:
 
@@ -67,15 +114,16 @@ WHAT IS OUT OF SCOPE — DO NOT FLAG ANY OF THIS
   - Whether an interpretation, inference, or recommendation is warranted.
   - Whether scores, rating results, history, or record content are accurate or
     supported. That is another system's job, not yours.
-  - Anything attributed to a teacher, parent, or record about behavior OUTSIDE
-    an evaluator-conducted session — classroom behavior, home behavior,
-    developmental history. Out of scope even if you cannot verify it.
+  - Anything about behavior OUTSIDE an evaluator-conducted encounter —
+    classroom behavior, home behavior, developmental history — whoever reports
+    it and whether or not it is attributed. Out of scope even if you cannot
+    verify it. (Test 1.)
   - Descriptions of PERFORMANCE rather than of the session: what the student
     can and cannot do, relative strengths and weaknesses, accuracy, rate,
     patterns across measures, comparisons between kinds of items. A result is
     not a session event. "Unfamiliar words were harder than familiar words" is
     a result. "The student sounded out unfamiliar words aloud" is a session
-    event.
+    event. (Test 2.)
   - The ABSENCE of session detail. A section that says nothing about the
     session is correct, not deficient. Never ask for more.
 

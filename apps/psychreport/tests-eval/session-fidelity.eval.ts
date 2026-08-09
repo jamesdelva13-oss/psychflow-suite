@@ -147,6 +147,12 @@ interface EvalCase {
   evidence: SessionEvidenceItem[];
   content: string;
   expect: "pass" | "fail";
+  /**
+   * A wrong answer here is a PRECISION defect, not a miss (spec §2). Marked
+   * separately in the output because an adjudicator that flags good writing
+   * trains the clinician to dismiss it, which costs more than a rare miss.
+   */
+  precision?: boolean;
 }
 
 /** The exact sentence the first live VS-3 generation produced. */
@@ -255,6 +261,89 @@ const CASES: EvalCase[] = [
       "rather than by understanding of the material itself.",
     expect: "pass",
   },
+
+  /* ---- §2.2 task demand vs asserted behavior — the two forms report 5
+          produced in ONE document on 2026-08-09. The distinction was correct
+          but emergent; these pin it. ---- */
+
+  {
+    n: 10,
+    name: "task demand, gerund — the form report 5 PASSED in Assessment results",
+    probes:
+      "§2.2: naming what a task requires is not asserting anyone watched the examinee do it",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "Avery's performance on the WIAT-4 word-level reading tasks was low and consistent across both. " +
+      "Reading words in isolation and sounding out unfamiliar letter strings proved similarly difficult, " +
+      "with no meaningful separation between the two; applying sound-symbol knowledge to unpracticed items " +
+      "was as effortful as recognizing words on sight.",
+    expect: "pass",
+    precision: true,
+  },
+  {
+    n: 11,
+    name: "asserted behavior, past tense — the form report 5 FLAGGED in Interpretation",
+    probes:
+      "§2.2: the same activity with the examinee as actor IS a session assertion; the pair must split",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "On individually administered reading measures, Avery identified printed real words and " +
+      "sounded out unfamiliar pronounceable letter strings well below the level typical for his age, " +
+      "with no meaningful separation between the two.",
+    expect: "fail",
+  },
+
+  /* ---- §2.1 the locating test. Case 12 is the report-5 Recommendations
+          FALSE POSITIVE this narrowing exists to fix. ---- */
+
+  {
+    n: 12,
+    name: "supported non-session fact with an implied agent (the report-5 false positive)",
+    probes:
+      "§2.1: locates no evaluator-conducted encounter, so it is out of scope — was wrongly flagged before the narrowing",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "Because comprehension improves markedly when text is read aloud to him, content-area material in " +
+      "science and social studies should be available in an audio or read-aloud format while word-level " +
+      "reading continues to develop.",
+    expect: "pass",
+    precision: true,
+  },
+  {
+    n: 13,
+    name: "classroom assertion, unattributed",
+    probes:
+      "§2.1: a classroom claim is out of scope regardless of phrasing and whether or not it carries an attribution",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "Avery loses track of multistep directions during independent work and needs an additional prompt " +
+      "before beginning written assignments. Sustained attention is markedly better during small-group " +
+      "instruction than during whole-class lessons.",
+    expect: "pass",
+    precision: true,
+  },
+  {
+    n: 14,
+    name: "home assertion",
+    probes: "§2.1: another setting the evaluator did not conduct",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "At home, reading aloud is effortful and Avery avoids it, though he willingly listens to chapter " +
+      "books well above his independent reading level.",
+    expect: "pass",
+    precision: true,
+  },
+  {
+    n: 15,
+    name: "evaluator's own classroom observation — the encounter test, not the setting name",
+    probes:
+      "§2.1 boundary: an evaluator-conducted observation IS an encounter, so a classroom SETTING does not exempt it",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "During the classroom observation Avery left his seat four times in twenty minutes and required two " +
+      "redirections from the examiner before resuming written work.",
+    expect: "fail",
+  },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -303,6 +392,7 @@ interface CaseResult {
   n: number;
   name: string;
   expect: "pass" | "fail";
+  precision: boolean;
   runs: number;
   correct: number;
   wrong: number;
@@ -340,6 +430,7 @@ async function experimentA(n: number, width: number): Promise<CaseResult[]> {
       n: c.n,
       name: c.name,
       expect: c.expect,
+      precision: Boolean(c.precision),
       runs: mine.length,
       correct,
       wrong,
@@ -455,7 +546,7 @@ async function main() {
     console.log("  " + "─".repeat(74));
     for (const r of aRows) {
       const rate = pct(r.correct, r.runs);
-      const flag = r.correct === r.runs ? " " : "!";
+      const flag = r.correct === r.runs ? " " : r.precision ? "P" : "!";
       console.log(
         `${flag} ${String(r.n).padStart(2)}  ${r.expect.padEnd(6)}  ${rate} ${String(`(${r.correct}/${r.runs})`).padEnd(9)} ${r.name}`
       );
