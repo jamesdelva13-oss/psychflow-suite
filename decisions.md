@@ -2257,6 +2257,39 @@ exceeds this defect. This decision adds one narrow fidelity gate for
 testing-session fabrication and nothing else.
 **Status:** Accepted · 2026-08-09 · Proposed: Claude Code (VS-3 continuation, from the first live-generation defect) · Ratified: JD (VS-3 fidelity-gate directive of 2026-08-09)
 
+**Amendment note (2026-08-09, D-038 form) — deployment modes; measure before
+enforcing.** JD's VS-3 continuation directive adds a `shadow` | `enforce`
+deployment mode to the gate before it blocks anything in front of a clinician.
+Nothing about the rule, the adjudicator's scope, or D-141 changes.
+
+- **Configuration, not a code path fork.** The adjudicator runs identically in
+  both modes — same model, prompt version, evidence set, and fail-closed
+  validation. In `shadow` the verdict is recorded and the section proceeds; in
+  `enforce`, the behavior ratified above. Default `enforce`; resolution fails
+  safe, so any unrecognized configuration is stricter, never quieter.
+- **Shadow does not regenerate.** Regeneration changes the output, which is
+  enforcement, and it would destroy the number shadow exists to produce.
+- **The mode is persisted on the generation record**, with distinct outcome
+  values only shadow may write. Migration 0009 cross-constrains mode and
+  outcome, so a shadow rejection cannot be stored as an enforced one or read
+  as one later.
+- **Rejected and unusable are distinct clinician-facing states.** Rejected
+  names the statement and is about the draft; unusable says the check could
+  not run and is not about the draft. A sustained adjudicator outage must not
+  read to a clinician as the model suddenly writing badly. In shadow the
+  clinician sees neither.
+
+**Measured, 2026-08-09** (n=10 per case/condition, `governance/session-fidelity-adjudicator-v1.md` §9):
+adjudicator catch rate **100%** (40/40), false-alarm rate **0%** (0/50),
+unusable 0% (0/90). Drafting baseline with the D-140 block present 90% clean
+first drafts vs. 80% without it — **a one-draft difference that does not
+distinguish the two arms at this n, and is recorded as inconclusive rather
+than as support for the block.** Retry resolution 3/3. The corpus was authored
+alongside the prompt, so the false-alarm figure bounds nothing about real
+usage; a shadow pilot is what answers that, reading the `would_enforce`
+counterfactual column.
+**Amendment status:** Accepted · 2026-08-09 · Proposed: Claude Code · Ratified: JD (VS-3 measure-before-enforcing directive of 2026-08-09)
+
 ## D-141 · [suite] · A safeguard is code that can reject output; no prompt-level instruction may be represented as one
 **The rule.** No prompt-level instruction may be represented — in a
 specification, a decision record, a status report, marketing copy, or a claim

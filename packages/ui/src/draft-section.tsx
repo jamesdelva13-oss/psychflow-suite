@@ -1,0 +1,117 @@
+import type { ReactNode } from "react";
+
+/**
+ * DraftSection (DESIGN-SYSTEM.md §5.6) — one section of the report inside
+ * the editor.
+ *
+ * Anatomy: title row (title · spine-status rollup dot · word count) · serif
+ * document body at --editor-col · footer (sources drawn on).
+ *
+ * THE EDITOR COLUMN CONTAINS ONLY THE DOCUMENT. Chips, notices, and actions
+ * live in the frame around it, never inside the prose, so what the clinician
+ * reads is what the export carries (§8 item 7).
+ */
+
+export type DraftStatus =
+  /** No text yet. An empty section is an action, not a void. */
+  | "empty"
+  | "drafting"
+  /** Machine-written, nobody has accepted it. */
+  | "unreviewed"
+  /** Accepted by the clinician. */
+  | "reviewed"
+  /** Surfaced with a gate finding outstanding. */
+  | "flagged";
+
+const DOT_LABEL: Record<DraftStatus, string> = {
+  empty: "Not started",
+  drafting: "Drafting",
+  unreviewed: "Proposed, not accepted",
+  reviewed: "Accepted",
+  flagged: "Needs your review",
+};
+
+export const wordCount = (text: string): number =>
+  text.trim() ? text.trim().split(/\s+/).length : 0;
+
+export function DraftSection({
+  title,
+  status,
+  text,
+  children,
+  sources,
+  emptyAction,
+}: {
+  title: string;
+  status: DraftStatus;
+  /** The document text. Rendered as paragraphs; word count derives from it. */
+  text?: string;
+  /** Frame content — the AIProposal, an empty invitation, a gate notice. */
+  children?: ReactNode;
+  sources?: ReactNode;
+  emptyAction?: ReactNode;
+}) {
+  const words = text ? wordCount(text) : 0;
+  return (
+    <section className="draft-section" aria-label={title}>
+      <header className="draft-section__head">
+        <span
+          className={`draft-section__dot draft-section__dot--${status}`}
+          title={DOT_LABEL[status]}
+          aria-hidden="true"
+        />
+        <h2 className="draft-section__title">{title}</h2>
+        <span className="draft-section__state">{DOT_LABEL[status]}</span>
+        {words > 0 ? (
+          <span className="draft-section__words">{words} words</span>
+        ) : null}
+      </header>
+
+      {children}
+
+      {status === "empty" && emptyAction ? (
+        <div className="draft-section__empty">{emptyAction}</div>
+      ) : null}
+
+      {sources ? <footer className="draft-section__foot">{sources}</footer> : null}
+    </section>
+  );
+}
+
+/** The document column itself — serif, --editor-col, nothing but prose. */
+export function DocumentBody({ text }: { text: string }) {
+  const paragraphs = text.split(/\n{2,}/).filter((p) => p.trim());
+  return (
+    <div className="doc-body">
+      {paragraphs.map((p, i) => (
+        <p key={i}>{p.trim()}</p>
+      ))}
+    </div>
+  );
+}
+
+/** Compact outline for the left rail (Stage E). */
+export function SectionOutline({
+  items,
+}: {
+  items: { key: string; title: string; status: DraftStatus; href: string }[];
+}) {
+  return (
+    <nav className="outline" aria-label="Report sections">
+      <ol className="outline__list">
+        {items.map((s) => (
+          <li key={s.key} className="outline__item">
+            <a className="outline__link" href={s.href}>
+              <span
+                className={`draft-section__dot draft-section__dot--${s.status}`}
+                aria-hidden="true"
+              />
+              <span className="outline__label">{s.title}</span>
+            </a>
+            <span className="outline__state">{DOT_LABEL[s.status]}</span>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}

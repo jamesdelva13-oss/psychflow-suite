@@ -1,9 +1,9 @@
 /**
  * @suite/ui — the DESIGN-SYSTEM.md §5 component vocabulary plus tokens.css
- * and ui.css. VS-2 ships the shell-and-workspace subset; writer-era
- * components (EvidenceChip, AIProposal, NeedsReview, DraftSection,
- * AssistantPanel) arrive with the stages that use them (VS-3/VS-4) so no
- * component exists before its states can be real.
+ * and ui.css. Writer-era components arrive with the stages that use them, so
+ * no component exists before its states can be real: VS-2 shipped the
+ * shell-and-workspace subset, VS-3 adds AIProposal (Proposal variant) and
+ * DraftSection, and EvidenceChip plus AssistantPanel remain VS-4.
  */
 
 export { AppFrame, type NavItem } from "./app-frame";
@@ -24,6 +24,14 @@ export { NeedsReview, NeedsReviewResolved } from "./needs-review";
 export { SourceCard, type SourceCardState } from "./source-card";
 export { CaseActivity, type ActivityEntry } from "./case-activity";
 export { Drawer } from "./drawer";
+export { AIProposal, GateNoticeBlock, type GateNotice } from "./ai-proposal";
+export {
+  DraftSection,
+  DocumentBody,
+  SectionOutline,
+  wordCount,
+  type DraftStatus,
+} from "./draft-section";
 export { CommandPalette, type PaletteItem } from "./command-palette";
 export {
   IconHome,

@@ -37,8 +37,31 @@ import type { GenerationInputs, PolicedSource } from "./source-policy";
  * section can be read against the rules that were in force when it was written
  * rather than the rules in force when it is read.
  */
-export const DRAFTING_PROMPT_VERSION = "psychreport-drafting-prompts-v2.1";
+export const DRAFTING_PROMPT_VERSION = "psychreport-drafting-prompts-v2.2";
 export const GENERATION_SPEC_VERSION = "operational-spec-v1";
+
+/**
+ * The prompt version when the D-140 session-evidence block is omitted. This
+ * exists ONLY for the baseline arm of the measurement harness — it is never
+ * a deployment configuration. It carries its own version string so a record
+ * written during a baseline run can never be mistaken for a normal one.
+ */
+export const DRAFTING_PROMPT_VERSION_BASELINE =
+  "psychreport-drafting-prompts-v2.2-baseline-no-session-rule";
+
+export interface PromptOptions {
+  /**
+   * Include the D-140 testing-session block (§8 rule 5.6). Default true.
+   * False is the measurement baseline: general FIDELITY only, which is what
+   * shipped before this block existed.
+   */
+  sessionEvidenceRule?: boolean;
+}
+
+export const draftingPromptVersion = (opts: PromptOptions = {}): string =>
+  opts.sessionEvidenceRule === false
+    ? DRAFTING_PROMPT_VERSION_BASELINE
+    : DRAFTING_PROMPT_VERSION;
 
 /* ---------------------------------------------------------------- *
  * 1. VOICE — leads every prompt (verbatim)
@@ -148,6 +171,43 @@ these:
   test-session behavior → a generalized trait without corroboration
   absence of evidence → evidence of absence
   a recommendation → a demonstrated need
+`.trim();
+
+/* ---------------------------------------------------------------- *
+ * 3a. TESTING-SESSION EVENTS — D-140 / operational-spec 5.6.
+ *
+ *     GUIDANCE, NOT A SAFEGUARD (D-141). The safeguard is the adjudicator
+ *     in lib/adjudicator.ts, which can reject the section; this block only
+ *     steers. It exists because steering is cheaper than rejecting when it
+ *     works — how often it works is what the measurement harness answers.
+ *
+ *     Written to D-110 (minimum necessary) and D-111 (carry the escape
+ *     hatch): the closing line tells the model what it MAY do, so the rule
+ *     does not read as "say less about everything."
+ * ---------------------------------------------------------------- */
+
+const SESSION_EVENTS = `
+TESTING-SESSION EVENTS
+Write about what happened during a testing session or observation — how the
+session was administered, which items or tasks were given, whether a
+discontinue, basal, or ceiling rule was reached, prompting, repeated
+directions, encouragement, the student's effort, engagement, cooperation,
+fatigue, or rapport — only where the case data supplies a clinician's record
+of that session.
+
+An administration record — an instrument, a date, a form, a set of scores —
+documents THAT a measure was given. It documents nothing about how the
+session went. Scores are results, not observations.
+
+Where a session record is supplied, summarize and rephrase it naturally, but
+keep what it documents. One request for a direction to be repeated does not
+become "frequently." A brief pause does not become a struggle.
+
+Hedging is not a substitute. "May have reached the discontinue criterion" is
+not available where "reached the discontinue criterion" would not be.
+
+If the session was not documented, write about the results and say nothing
+about the session. That is a complete answer, not an omission.
 `.trim();
 
 /* ---------------------------------------------------------------- *
@@ -398,8 +458,12 @@ export function sourcePolicyBlock(sources: PolicedSource[]): string {
  * transformations, and (where inference is permitted) confidence stems.
  * Identical for every case drafted in this mode, so it caches.
  */
-export function systemPrompt(mode: SectionMode): string {
+export function systemPrompt(mode: SectionMode, opts: PromptOptions = {}): string {
   const parts = [VOICE, MODE_PROMPTS[mode], FIDELITY, PROHIBITED_TRANSFORMATIONS];
+  // Omitted only by the measurement baseline. FIDELITY and the nine
+  // transformations stay in both arms, so the comparison isolates the
+  // targeted block rather than "some fidelity language vs. none."
+  if (opts.sessionEvidenceRule !== false) parts.push(SESSION_EVENTS);
   if (INFERENCE_MODES.includes(mode)) parts.push(CONFIDENCE_BLOCK);
   return parts.join("\n\n---\n\n");
 }

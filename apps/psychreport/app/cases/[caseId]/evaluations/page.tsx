@@ -66,7 +66,12 @@ export default async function EvaluationsPage({
           writer without re-entering them.
         </p>
         <div className="case-status__action">
-          <LinkButton variant="primary" href={`/cases/${caseId}/materials`}>
+          {/* Stage D's primary action. The writer is a sub-route of the case
+              rather than a sixth tab — the five-tab shell is fixed (D-123). */}
+          <LinkButton variant="primary" href={`/cases/${caseId}/report`}>
+            Start the report
+          </LinkButton>
+          <LinkButton variant="ghost" href={`/cases/${caseId}/materials`}>
             Review materials
           </LinkButton>
         </div>

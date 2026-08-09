@@ -11,5 +11,11 @@
     "packages/reasoning-contracts",
     "packages/referral-engine-core",
     "packages/ui"
-  ]
+  ],
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.4"
+  },
+  "scripts": {
+    "verify:migration": "node tools/verify-migration-0009.mjs"
+  }
 }

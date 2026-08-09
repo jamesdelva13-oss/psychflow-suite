@@ -21,8 +21,9 @@
   <span class="eyebrow">Psych Suite Design System v1.1 · preview</span>
   <h1 class="page-title">Component vocabulary — VS-2 subset, rendered against Avery Williams</h1>
   <p class="page-sub">Built components only: shell, CaseStatus, SourceCard, CaseActivity,
-  primitives, spine, drawer/palette chrome. Writer-era components (EvidenceChip, AIProposal,
-  NeedsReview, DraftSection, AssistantPanel) arrive with VS-3/VS-4 and join this preview then.</p>
+  primitives, spine, drawer/palette chrome. VS-3 adds AIProposal (Proposal variant),
+  DraftSection, the document column, and the two session-fidelity gate notices. EvidenceChip and
+  AssistantPanel arrive with VS-4 and join this preview then.</p>
 </header>
 
 <section class="panel stack">
@@ -183,6 +184,182 @@
   <div class="empty">
     <p class="empty__sentence">No cases yet. Open a referral in Referral Intake and it appears here.</p>
     <a class="btn btn--secondary" href="#">View cases</a>
+  </div>
+</section>
+
+
+<section class="panel stack">
+  <h2 class="panel__title">DraftSection — §5.6 (status rollup, all five states)</h2>
+
+  <section class="draft-section" aria-label="Reason for referral">
+    <header class="draft-section__head">
+      <span class="draft-section__dot draft-section__dot--empty" title="Not started"></span>
+      <h2 class="draft-section__title">Reason for referral</h2>
+      <span class="draft-section__state">Not started</span>
+    </header>
+    <div class="draft-section__empty">
+      <button class="btn btn--primary" type="button">Draft from 2 sources</button>
+    </div>
+  </section>
+
+  <section class="draft-section" aria-label="Observations">
+    <header class="draft-section__head">
+      <span class="draft-section__dot draft-section__dot--empty" title="Not started"></span>
+      <h2 class="draft-section__title">Observations</h2>
+      <span class="draft-section__state">Not started</span>
+    </header>
+    <div class="draft-section__empty">
+      <p class="page-sub">No observation has been added to this case. Observations are written from a
+      recorded classroom or testing-session observation, not inferred from other sources.</p>
+    </div>
+  </section>
+
+  <section class="draft-section" aria-label="Assessment results">
+    <header class="draft-section__head">
+      <span class="draft-section__dot draft-section__dot--reviewed" title="Accepted"></span>
+      <h2 class="draft-section__title">Assessment results</h2>
+      <span class="draft-section__state">Accepted</span>
+      <span class="draft-section__words">44 words</span>
+    </header>
+    <div class="doc-body">
+      <p>Word-level reading was the consistent area of difficulty. Decoding of unfamiliar words was
+      weaker than reading of familiar words, and both fell well below age expectations.</p>
+      <p>The gap between word-level skill and comprehension suggests that comprehension is currently
+      constrained by the effort word identification demands rather than by understanding of the
+      material itself.</p>
+    </div>
+    <footer class="draft-section__foot">Drew on 1 source on this case.</footer>
+  </section>
+</section>
+
+<section class="panel stack">
+  <h2 class="panel__title">AIProposal — §5.4 Proposal variant (dashed violet spine)</h2>
+  <p class="page-sub">Machine-written content appears only inside this frame, and the frame never
+  appears on human-written content. Accepted clinician text above renders as plain document body with
+  no spine at all.</p>
+
+  <article class="ai-proposal spine spine--ai">
+    <header class="ai-proposal__head">
+      <span class="ai-proposal__mark">Proposed · not yet accepted</span>
+    </header>
+    <div class="ai-proposal__body">
+      <div class="doc-body">
+        <p>Word reading and decoding were consistent areas of difficulty, with unfamiliar words
+        proving harder than familiar ones. Reading rate was correspondingly slow, and accuracy
+        declined as passages lengthened.</p>
+      </div>
+    </div>
+    <footer class="ai-proposal__foot">
+      <div class="ai-proposal__sources">1 source · <span class="mono">psychreport-drafting-prompts-v2.2</span></div>
+      <div class="ai-proposal__actions">
+        <button class="btn btn--primary" type="button">Accept</button>
+        <button class="btn btn--ghost" type="button">Edit</button>
+        <button class="btn btn--ghost" type="button">Regenerate</button>
+        <button class="btn btn--ghost" type="button">Dismiss</button>
+      </div>
+    </footer>
+  </article>
+</section>
+
+<section class="panel stack">
+  <h2 class="panel__title">Session-fidelity gate notices — D-140 (two distinct states)</h2>
+  <p class="page-sub">These are different events and must never look alike. <strong>Rejected</strong>
+  is about the draft and names the statement. <strong>Unusable</strong> is about the check and names
+  none — a sustained adjudicator outage must not read as the model suddenly writing badly. In shadow
+  mode neither renders.</p>
+
+  <article class="ai-proposal spine spine--ai ai-proposal--noticed">
+    <header class="ai-proposal__head">
+      <span class="ai-proposal__mark">Proposed · not yet accepted</span>
+    </header>
+    <div class="ai-proposal__body">
+      <div class="doc-body">
+        <p>Word reading and decoding were consistent areas of difficulty. Across both tasks, Avery
+        read a limited number of items correctly before reaching the discontinue criterion.</p>
+      </div>
+    </div>
+    <div class="gate-notice gate-notice--rejected" role="status">
+      <p class="gate-notice__lead">This statement describes the testing session, and the case does not document it:</p>
+      <ul class="gate-notice__statements">
+        <li>Across both tasks, Avery read a limited number of items correctly before reaching the discontinue criterion.</li>
+      </ul>
+      <p class="gate-notice__detail">The section asserts administration mechanics (number of items answered
+      correctly and reaching the discontinue rule), but the supplied evidence is an administration record
+      only and documents nothing about item counts or discontinue criteria.</p>
+      <p class="gate-notice__detail">The draft was rewritten once and the statement remained. Edit or remove
+      it before accepting, or accept the section as it stands if you have a session record the case does not.</p>
+    </div>
+    <footer class="ai-proposal__foot">
+      <div class="ai-proposal__sources">1 source · <span class="mono">psychreport-drafting-prompts-v2.2</span></div>
+      <div class="ai-proposal__actions">
+        <button class="btn btn--primary" type="button">Accept</button>
+        <button class="btn btn--ghost" type="button">Edit</button>
+        <button class="btn btn--ghost" type="button">Regenerate</button>
+        <button class="btn btn--ghost" type="button">Dismiss</button>
+      </div>
+    </footer>
+  </article>
+
+  <article class="ai-proposal spine spine--ai ai-proposal--noticed">
+    <header class="ai-proposal__head">
+      <span class="ai-proposal__mark">Proposed · not yet accepted</span>
+    </header>
+    <div class="ai-proposal__body">
+      <div class="doc-body">
+        <p>During multistep independent work, provide Avery with a brief written task sequence and ask
+        Avery to identify the first step before beginning.</p>
+      </div>
+    </div>
+    <div class="gate-notice gate-notice--unusable" role="status">
+      <p class="gate-notice__lead">The testing-session check could not run on this draft.</p>
+      <p class="gate-notice__detail">The session-fidelity check could not be completed (503 Service Unavailable).</p>
+      <p class="gate-notice__detail">This is not a finding about the writing. Nothing has been checked, so read
+      the section yourself before accepting it — or try again.</p>
+    </div>
+    <footer class="ai-proposal__foot">
+      <div class="ai-proposal__sources">3 sources · <span class="mono">psychreport-drafting-prompts-v2.2</span></div>
+      <div class="ai-proposal__actions">
+        <button class="btn btn--primary" type="button">Accept</button>
+        <button class="btn btn--ghost" type="button">Edit</button>
+        <button class="btn btn--ghost" type="button">Regenerate</button>
+        <button class="btn btn--ghost" type="button">Dismiss</button>
+      </div>
+    </footer>
+  </article>
+</section>
+
+<section class="panel stack">
+  <h2 class="panel__title">Writer layout — Stage E (outline + document canvas)</h2>
+  <div class="writer">
+    <aside class="writer__outline">
+      <nav class="outline" aria-label="Report sections">
+        <ol class="outline__list">
+          <li class="outline__item"><a class="outline__link" href="#"><span class="draft-section__dot draft-section__dot--reviewed"></span><span class="outline__label">Reason for referral</span></a><span class="outline__state">Accepted</span></li>
+          <li class="outline__item"><a class="outline__link" href="#"><span class="draft-section__dot draft-section__dot--reviewed"></span><span class="outline__label">Background and educational history</span></a><span class="outline__state">Accepted</span></li>
+          <li class="outline__item"><a class="outline__link" href="#"><span class="draft-section__dot draft-section__dot--empty"></span><span class="outline__label">Observations</span></a><span class="outline__state">Not started</span></li>
+          <li class="outline__item"><a class="outline__link" href="#"><span class="draft-section__dot draft-section__dot--unreviewed"></span><span class="outline__label">Assessment results</span></a><span class="outline__state">Proposed, not accepted</span></li>
+          <li class="outline__item"><a class="outline__link" href="#"><span class="draft-section__dot draft-section__dot--flagged"></span><span class="outline__label">Interpretation and summary</span></a><span class="outline__state">Needs your review</span></li>
+          <li class="outline__item"><a class="outline__link" href="#"><span class="draft-section__dot draft-section__dot--empty"></span><span class="outline__label">Recommendations</span></a><span class="outline__state">Not started</span></li>
+        </ol>
+      </nav>
+    </aside>
+    <div class="writer__canvas">
+      <section class="draft-section" aria-label="Interpretation and summary">
+        <header class="draft-section__head">
+          <span class="draft-section__dot draft-section__dot--flagged" title="Needs your review"></span>
+          <h2 class="draft-section__title">Interpretation and summary</h2>
+          <span class="draft-section__state">Needs your review</span>
+          <span class="draft-section__words">38 words</span>
+        </header>
+        <div class="doc-body">
+          <p>Avery demonstrated difficulty identifying unfamiliar words efficiently, and the teacher
+          reported that grade-level text was inaccessible without support. Comprehension was stronger
+          when text was read aloud, which points to word identification rather than understanding as
+          the constraint.</p>
+        </div>
+        <footer class="draft-section__foot">Drew on 3 sources on this case.</footer>
+      </section>
+    </div>
   </div>
 </section>
 

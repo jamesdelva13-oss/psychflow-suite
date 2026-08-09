@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import { buildCaseContext, type CaseRow, type SourceRow } from "../lib/case-context";
 import { buildGenerationInputs } from "../lib/source-policy";
 import { planFor, eligibleSources } from "../lib/report-plan";
-import { generateSection, correctionTurn } from "../lib/generate";
+import { generateSection, correctionTurn, clinicianGateNotice } from "../lib/generate";
+import { resolveGateMode, configuredGateMode, DEFAULT_GATE_MODE, type GateMode } from "../lib/gate-mode";
+import { systemPrompt, draftingPromptVersion, DRAFTING_PROMPT_VERSION } from "../lib/prompts";
 import {
   validateAdjudication,
   type Adjudicate,
@@ -212,7 +214,12 @@ function scriptedAdjudicator(verdicts: Adjudication[]) {
 const BAD = "Across both tasks, Avery read a limited number of items correctly before reaching the discontinue criterion.";
 const GOOD = "Word reading was a consistent area of difficulty, with unfamiliar words proving harder than familiar ones.";
 
-const run = (texts: string[], verdicts: Adjudication[], rows: SourceRow[] = [scoreRow]) => {
+const run = (
+  texts: string[],
+  verdicts: Adjudication[],
+  rows: SourceRow[] = [scoreRow],
+  gateMode: GateMode = "enforce"
+) => {
   const rec: Recorder = { drafts: 0, turns: [] };
   const adj = scriptedAdjudicator(verdicts);
   const promise = generateSection({
@@ -221,6 +228,7 @@ const run = (texts: string[], verdicts: Adjudication[], rows: SourceRow[] = [sco
     verifications: [],
     anthropic: draftingClient(texts, rec),
     adjudicate: adj.fn,
+    gateMode,
   });
   return { promise, rec, adj };
 };
@@ -581,4 +589,182 @@ test("Observations still refuses before generation when no observation exists", 
   assert.equal(adj.calls, 0, "the pre-generation refusal is not replaced by the gate");
   if (result.status !== "refused") return;
   assert.match(result.reason, /No observation has been added/);
+});
+
+/* ------------------------------------------------------------------ *
+ * 10. Deployment mode — shadow | enforce (configuration, not a fork)
+ * ------------------------------------------------------------------ */
+
+test("mode resolution fails safe: anything not 'shadow' enforces", () => {
+  assert.equal(resolveGateMode("shadow"), "shadow");
+  assert.equal(resolveGateMode("SHADOW"), "shadow");
+  assert.equal(resolveGateMode("  shadow "), "shadow");
+  assert.equal(resolveGateMode("enforce"), "enforce");
+  // A typo, an empty string, or an absent variable can only ever be
+  // stricter than intended — never quieter.
+  for (const raw of ["shadw", "", "  ", "off", "none", "true", null, undefined]) {
+    assert.equal(resolveGateMode(raw), "enforce", `resolveGateMode(${JSON.stringify(raw)})`);
+  }
+  assert.equal(DEFAULT_GATE_MODE, "enforce");
+});
+
+test("the configured default is enforce when nothing is set", () => {
+  const prior = process.env.PSYCHREPORT_FIDELITY_GATE_MODE;
+  delete process.env.PSYCHREPORT_FIDELITY_GATE_MODE;
+  try {
+    assert.equal(configuredGateMode(), "enforce");
+    process.env.PSYCHREPORT_FIDELITY_GATE_MODE = "shadow";
+    assert.equal(configuredGateMode(), "shadow");
+  } finally {
+    if (prior === undefined) delete process.env.PSYCHREPORT_FIDELITY_GATE_MODE;
+    else process.env.PSYCHREPORT_FIDELITY_GATE_MODE = prior;
+  }
+});
+
+test("shadow: a failing verdict is recorded and the section proceeds", async () => {
+  const { promise, rec, adj } = run([BAD, GOOD], [failed([BAD]), passed()], [scoreRow], "shadow");
+  const result = await promise;
+
+  assert.equal(result.status, "ok", "shadow never blocks");
+  assert.equal(rec.drafts, 1, "shadow does not regenerate — regeneration is enforcement");
+  assert.equal(adj.calls, 1);
+  if (result.status !== "ok") return;
+
+  const f = result.section.fidelity;
+  assert.equal(result.section.content, BAD, "the section proceeds with the text it drafted");
+  assert.equal(f.mode, "shadow");
+  assert.equal(f.outcome, "shadow_would_reject");
+  assert.equal(f.wouldEnforce, "needs_review", "the counterfactual is recorded");
+  assert.deepEqual(f.unsupportedStatements, [BAD], "the verdict is kept in the record");
+  assert.match(f.reason ?? "", /does not document/);
+});
+
+test("shadow: an unusable gate is recorded distinctly from a rejection", async () => {
+  const { promise, rec } = run([GOOD], [unusable("network")], [scoreRow], "shadow");
+  const result = await promise;
+  assert.equal(result.status, "ok");
+  assert.equal(rec.drafts, 1);
+  if (result.status !== "ok") return;
+  assert.equal(result.section.fidelity.outcome, "shadow_would_flag");
+  assert.notEqual(result.section.fidelity.outcome, "shadow_would_reject");
+});
+
+test("shadow: a passing verdict is indistinguishable from enforce", async () => {
+  const { promise } = run([GOOD], [passed()], [scoreRow], "shadow");
+  const result = await promise;
+  assert.equal(result.status, "ok");
+  if (result.status !== "ok") return;
+  assert.equal(result.section.fidelity.outcome, "passed");
+  assert.equal(result.section.fidelity.wouldEnforce, "passed");
+  assert.equal(result.section.fidelity.mode, "shadow");
+});
+
+test("a shadow rejection and an enforced rejection are never the same record", async () => {
+  const s = await run([BAD, BAD], [failed([BAD])], [scoreRow], "shadow").promise;
+  const e = await run([BAD, BAD], [failed([BAD]), failed([BAD])], [scoreRow], "enforce").promise;
+  assert.equal(s.status, "ok");
+  assert.equal(e.status, "needs_review");
+  if (s.status !== "ok" || e.status !== "needs_review") return;
+  assert.notEqual(s.section.fidelity.outcome, e.section.fidelity.outcome);
+  assert.notEqual(s.section.fidelity.mode, e.section.fidelity.mode);
+});
+
+test("the adjudicator runs identically in both modes", async () => {
+  const shadow = run([BAD], [failed([BAD])], [scoreRow], "shadow");
+  await shadow.promise;
+  const enforce = run([BAD, BAD], [failed([BAD]), failed([BAD])], [scoreRow], "enforce");
+  await enforce.promise;
+
+  // Same question, same evidence, same section — the mode changes what is
+  // done with the verdict, never how it is obtained.
+  assert.deepEqual(shadow.adj.seen[0].evidence, enforce.adj.seen[0].evidence);
+  assert.equal(shadow.adj.seen[0].content, enforce.adj.seen[0].content);
+  assert.equal(shadow.adj.seen[0].sectionKey, enforce.adj.seen[0].sectionKey);
+});
+
+/* ------------------------------------------------------------------ *
+ * 11. What the clinician may be shown
+ * ------------------------------------------------------------------ */
+
+test("shadow shows the clinician nothing from the gate", async () => {
+  for (const verdicts of [[failed([BAD])], [unusable("down")], [passed()]]) {
+    const { promise } = run([BAD], verdicts, [scoreRow], "shadow");
+    const result = await promise;
+    assert.equal(result.status, "ok");
+    if (result.status !== "ok") continue;
+    assert.equal(clinicianGateNotice(result.section), null);
+  }
+});
+
+test("enforce distinguishes a rejected draft from an unusable check", async () => {
+  const rejected = await run([BAD, BAD], [failed([BAD]), failed([BAD])]).promise;
+  assert.equal(rejected.status, "needs_review");
+  if (rejected.status !== "needs_review") return;
+  const n1 = clinicianGateNotice(rejected.section);
+  assert.equal(n1?.kind, "rejected");
+  assert.deepEqual(n1?.kind === "rejected" ? n1.statements : null, [BAD]);
+
+  const broken = await run([GOOD], [unusable("The session-fidelity check could not be completed (503).")]).promise;
+  assert.equal(broken.status, "needs_review");
+  if (broken.status !== "needs_review") return;
+  const n2 = clinicianGateNotice(broken.section);
+  assert.equal(n2?.kind, "unusable", "an outage is about the check, not the draft");
+  assert.equal(n2?.kind === "unusable" ? n2.reason.includes("503") : false, true);
+});
+
+test("a passing section carries no notice in either mode", async () => {
+  for (const mode of ["shadow", "enforce"] as const) {
+    const { promise } = run([GOOD], [passed()], [scoreRow], mode);
+    const r = await promise;
+    assert.equal(r.status, "ok");
+    if (r.status !== "ok") continue;
+    assert.equal(clinicianGateNotice(r.section), null);
+  }
+});
+
+/* ------------------------------------------------------------------ *
+ * 12. The drafting-prompt block and its measurement baseline
+ * ------------------------------------------------------------------ */
+
+test("the D-140 block ships in the drafting prompt by default", () => {
+  const p = systemPrompt("DESCRIPTIVE_RESULTS");
+  assert.match(p, /TESTING-SESSION EVENTS/);
+  assert.match(p, /discontinue, basal, or ceiling rule/);
+  assert.match(p, /Hedging is not a substitute/);
+  // D-111: the escape hatch travels with the rule.
+  assert.match(p, /That is a complete answer, not an omission/);
+});
+
+test("the baseline arm omits ONLY the targeted block", () => {
+  const base = systemPrompt("DESCRIPTIVE_RESULTS", { sessionEvidenceRule: false });
+  assert.doesNotMatch(base, /TESTING-SESSION EVENTS/);
+  // The comparison must isolate the targeted block, not "fidelity vs none".
+  assert.match(base, /FIDELITY/);
+  assert.match(base, /Use only the data supplied/);
+  assert.match(base, /PROHIBITED TRANSFORMATIONS/);
+  assert.match(base, /test-session behavior → a generalized trait/);
+});
+
+test("the baseline records its own prompt version so it can never pass as normal", () => {
+  assert.equal(draftingPromptVersion(), DRAFTING_PROMPT_VERSION);
+  assert.equal(draftingPromptVersion({ sessionEvidenceRule: true }), DRAFTING_PROMPT_VERSION);
+  const baseline = draftingPromptVersion({ sessionEvidenceRule: false });
+  assert.notEqual(baseline, DRAFTING_PROMPT_VERSION);
+  assert.match(baseline, /baseline/);
+});
+
+test("the prompt version on the record follows the prompt that actually ran", async () => {
+  const rec: Recorder = { drafts: 0, turns: [] };
+  const adj = scriptedAdjudicator([passed()]);
+  const r = await generateSection({
+    inputs: inputsFrom([scoreRow]),
+    plan: PLAN,
+    verifications: [],
+    anthropic: draftingClient([GOOD], rec),
+    adjudicate: adj.fn,
+    promptOptions: { sessionEvidenceRule: false },
+  });
+  assert.equal(r.status, "ok");
+  if (r.status !== "ok") return;
+  assert.match(r.section.promptVersion, /baseline/);
 });

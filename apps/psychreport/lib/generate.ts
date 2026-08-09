@@ -8,9 +8,11 @@ import {
   systemPrompt,
   userPrompt,
   sourcePolicyBlock,
-  DRAFTING_PROMPT_VERSION,
+  draftingPromptVersion,
   GENERATION_SPEC_VERSION,
+  type PromptOptions,
 } from "./prompts";
+import { configuredGateMode, type GateMode } from "./gate-mode";
 import { sessionEvidenceFor } from "./session-evidence";
 import { buildEvidenceSnapshot, type EvidenceSnapshot } from "./evidence-snapshot";
 import {
@@ -71,18 +73,78 @@ export interface GenerationAttempt {
   adjudication: Adjudication;
 }
 
-export type FidelityOutcome = "passed" | "passed_after_retry" | "needs_review";
+/**
+ * What happened, not what the verdict was. The two shadow outcomes are
+ * distinct values rather than a flag on `needs_review` so that a shadow
+ * rejection can never be read later as an enforced one — the mode column and
+ * the outcome value are cross-constrained in migration 0009.
+ */
+export type FidelityOutcome =
+  /** Cleared the gate on the first draft. Both modes. */
+  | "passed"
+  /** Cleared the gate on the single permitted regeneration. Enforce only. */
+  | "passed_after_retry"
+  /** Did not clear after the retry, or the gate was unusable. Enforce only. */
+  | "needs_review"
+  /** Shadow: the gate named unsupported statements; the section proceeded. */
+  | "shadow_would_reject"
+  /** Shadow: the gate was unusable; the section proceeded. */
+  | "shadow_would_flag";
 
 export interface SectionFidelity {
   /** The gate that ran, by spec version. */
   gate: string;
+  /** The deployment mode in force for THIS generation. Persisted. */
+  mode: GateMode;
   outcome: FidelityOutcome;
+  /**
+   * What `enforce` would have produced for this same verdict. In enforce mode
+   * this equals `outcome`. In shadow it is the counterfactual, and it is the
+   * column the measurement reads — recorded so a shadow pilot answers "how
+   * often would this have blocked" without re-running anything.
+   *
+   * Shadow does not regenerate, so the counterfactual can only be
+   * `needs_review`, never `passed_after_retry`: the retry might have cleared,
+   * and the record must not claim to know that it would have.
+   */
+  wouldEnforce: FidelityOutcome;
   /** Every attempt, rejected drafts included — nothing is discarded. */
   attempts: GenerationAttempt[];
-  /** Named statements from the final failing verdict. Empty unless needs_review. */
+  /** Named statements from the final failing verdict. Recorded in both modes. */
   unsupportedStatements: string[];
   /** The final failing verdict's reason. Null when the section passed. */
   reason: string | null;
+}
+
+/**
+ * What the clinician may be shown about the gate — the ONLY accessor the UI
+ * uses. Returns null in shadow mode, so "the clinician sees nothing from the
+ * gate in shadow" is a property of the code rather than a rule the writer
+ * screen has to remember.
+ *
+ * `rejected` and `unusable` are deliberately separate kinds. Rejected is
+ * about the draft: a statement is named and the clinician can act on it.
+ * Unusable is about the check: the draft may be perfectly good and the gate
+ * simply could not run. A sustained adjudicator outage must never read to a
+ * clinician as the model suddenly writing badly.
+ */
+export type ClinicianGateNotice =
+  | { kind: "rejected"; statements: string[]; reason: string }
+  | { kind: "unusable"; reason: string };
+
+export function clinicianGateNotice(section: GeneratedSection): ClinicianGateNotice | null {
+  const f = section.fidelity;
+  if (f.mode === "shadow") return null;
+  if (f.outcome !== "needs_review") return null;
+  const last = f.attempts[f.attempts.length - 1]?.adjudication;
+  if (last?.verdict === "unusable") {
+    return { kind: "unusable", reason: last.reason };
+  }
+  return {
+    kind: "rejected",
+    statements: f.unsupportedStatements,
+    reason: f.reason ?? last?.reason ?? "",
+  };
 }
 
 export interface GeneratedSection {
@@ -229,14 +291,20 @@ export async function generateSection(args: {
   anthropic?: Anthropic;
   /** Seam for the deterministic orchestration tests. */
   adjudicate?: Adjudicate;
+  /** Deployment mode. Defaults to the configured one (enforce unless set). */
+  gateMode?: GateMode;
+  /** Drafting-prompt composition. The baseline arm of the harness only. */
+  promptOptions?: PromptOptions;
 }): Promise<GenerationResult> {
   const { inputs, plan, verifications } = args;
+  const gateMode = args.gateMode ?? configuredGateMode();
+  const promptOptions = args.promptOptions ?? {};
 
   const gate = gateSection(inputs, plan);
   if (!gate.ok) return { status: "refused", reason: gate.reason };
 
   const caseData = renderCaseData(inputs, gate.sources, verifications);
-  const system = systemPrompt(plan.mode);
+  const system = systemPrompt(plan.mode, promptOptions);
   const scopedInputs = { ...inputs, sources: gate.sources };
   const user = userPrompt(scopedInputs, caseData);
 
@@ -305,30 +373,52 @@ export async function generateSection(args: {
 
     attempts.push({ attempt, content: drafted.content, generatedBy: drafted.generatedBy, adjudication });
 
-    const section = (outcome: FidelityOutcome): GeneratedSection => ({
+    const failing = adjudication.verdict !== "passed";
+
+    const section = (outcome: FidelityOutcome, wouldEnforce: FidelityOutcome): GeneratedSection => ({
       sectionKey: plan.key,
       title: plan.title,
       mode: plan.mode,
       content: drafted.content,
       sourceIds: gate.sources.map((s) => s.source.sourceId),
       generatedBy: drafted.generatedBy,
-      promptVersion: DRAFTING_PROMPT_VERSION,
+      promptVersion: draftingPromptVersion(promptOptions),
       specVersion: GENERATION_SPEC_VERSION,
       evidenceSnapshot: snapshot,
       fidelity: {
         gate: ADJUDICATOR_SPEC_VERSION,
+        mode: gateMode,
         outcome,
+        wouldEnforce,
         attempts,
-        unsupportedStatements: outcome === "needs_review" ? adjudication.unsupportedStatements : [],
-        reason: outcome === "needs_review" ? adjudication.reason : null,
+        // Recorded in BOTH modes. Shadow's whole purpose is the record; what
+        // differs is only whether the clinician is shown it
+        // (`clinicianGateNotice` returns null in shadow).
+        unsupportedStatements: failing ? adjudication.unsupportedStatements : [],
+        reason: failing ? adjudication.reason : null,
       },
     });
 
     if (adjudication.verdict === "passed") {
-      return { status: "ok", section: attempt === 1 ? section("passed") : section("passed_after_retry") };
+      const outcome: FidelityOutcome = attempt === 1 ? "passed" : "passed_after_retry";
+      return { status: "ok", section: section(outcome, outcome) };
     }
 
-    // FAIL CLOSED, two ways.
+    // SHADOW — record and proceed. No regeneration: regenerating changes the
+    // output, which is enforcement, and it would also destroy the number
+    // shadow exists to produce (the unaided rate at which the drafting prompt
+    // alone satisfies D-140).
+    //
+    // The counterfactual is `needs_review`, never `passed_after_retry`: the
+    // retry that was not run might have cleared, and the record must not claim
+    // to know that it would have.
+    if (gateMode === "shadow") {
+      const outcome: FidelityOutcome =
+        adjudication.verdict === "unusable" ? "shadow_would_flag" : "shadow_would_reject";
+      return { status: "ok", section: section(outcome, "needs_review") };
+    }
+
+    // ENFORCE — FAIL CLOSED, two ways.
     //
     // `unusable` — the gate itself errored, refused, or returned something
     // that could not be trusted. The section does not pass. It does NOT earn a
@@ -339,7 +429,7 @@ export async function generateSection(args: {
     // regeneration, then the identical gate again.
     const lastAttempt = attempt === MAX_ATTEMPTS;
     if (adjudication.verdict === "unusable" || lastAttempt) {
-      const s = section("needs_review");
+      const s = section("needs_review", "needs_review");
       return {
         status: "needs_review",
         section: s,

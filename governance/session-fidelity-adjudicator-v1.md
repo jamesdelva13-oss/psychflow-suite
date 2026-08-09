@@ -1,6 +1,7 @@
 # Session-fidelity adjudicator — spec v1
 
 **Spec version:** `session-fidelity-adjudicator-v1`
+**Amended:** 2026-08-09 — deployment modes (§4a) and measured results (§9).
 **Governs:** D-140 (the rule), D-141 (why it is code and not a prompt line).
 **Implements:** `apps/psychreport/lib/adjudicator.ts`, `lib/session-evidence.ts`,
 the gate in `lib/generate.ts`.
@@ -129,6 +130,38 @@ rule that decides whether the safeguard runs is itself a safeguard, and
 belief of exactly the kind D-141 refuses to trust. A section whose mode forbids
 session content and which contains none costs one cheap passing call.
 
+### 4a. Deployment mode — `shadow` | `enforce`
+
+Configuration, not a code path fork. The adjudicator runs identically in both:
+same model, same prompt version, same evidence set, same fail-closed
+validation. Only what the orchestration does with the verdict differs.
+
+| | `enforce` (default) | `shadow` |
+|---|---|---|
+| Failing verdict | rejects the draft; one targeted regeneration through the identical gate; then needs-review | recorded; the section proceeds |
+| Regeneration | yes, exactly one | **no** — regenerating changes the output, which is enforcement |
+| Clinician sees | the notice (§6) | **nothing** |
+| Recorded | outcome + verdict | outcome + verdict + the enforce counterfactual |
+
+Resolution fails safe: `PSYCHREPORT_FIDELITY_GATE_MODE` is read once, and
+anything that is not exactly `shadow` — a typo, an empty string, an absent
+variable — resolves to `enforce`. A misconfiguration can only ever be
+stricter than intended, never quieter.
+
+**The mode is persisted on every generation**, alongside distinct outcome
+values (`shadow_would_reject`, `shadow_would_flag`) that only shadow may
+write and that enforce may never write. A shadow rejection and an enforced
+rejection are therefore not merely labelled differently — the schema refuses
+to store either one as the other, so a past verdict stays interpretable after
+the mode changes.
+
+Shadow exists to measure, not to soften. Enforcement destroys the number a
+deployment decision needs, because an enforced run never shows what would
+have shipped. `wouldEnforce` is the counterfactual column a pilot reads; it
+can only ever be `passed` or `needs_review` under shadow, never
+`passed_after_retry` — the retry that was not run might have cleared, and the
+record must not claim to know that it would have.
+
 **No lexical prefilter.** A keyword or regex filter deciding whether to invoke
 the adjudicator would be a safeguard with a recall figure nobody has measured,
 and a missed phrase is indistinguishable from having no check. A prefilter may
@@ -187,6 +220,22 @@ On a substantive failure (`pass: false`, well-formed, grounded):
    Never silently delete language. The prose is shown with the unsupported
    statements named, and the clinician decides.
 
+**Rejected and unusable are distinct clinician-facing states**, because they
+ask different things of the reader:
+
+- **Rejected** — the draft asserts something the case does not document. The
+  statement is named verbatim. This is about the text, and the clinician can
+  act on it.
+- **Unusable** — the check could not run (error, refusal, unparseable,
+  ungrounded quote). No statement is named because none exists. The draft may
+  be perfectly good and *nobody has looked at it*. The notice says so.
+
+A sustained adjudicator outage must never read to a clinician as the model
+suddenly writing badly. `clinicianGateNotice()` in `lib/generate.ts` and
+`gateNoticeFor()` on the writer page are the only two places this is decided,
+and both return `null` in shadow mode — "the clinician sees nothing from the
+gate in shadow" is a property of the code, not a rule the screen remembers.
+
 The rejected draft is preserved, not discarded (§7).
 
 ---
@@ -242,3 +291,78 @@ set:
 Cases 5 and 2 are the ones that matter for §2: they measure whether the
 adjudicator has drifted into general fidelity judging. A failure there is a
 precision defect and is treated as severe as a miss on case 1.
+
+
+---
+
+## 9. Measured results — 2026-08-09
+
+Harness: `apps/psychreport/tests-eval/session-fidelity.eval.ts`, n=10 per case
+and per condition, adjudicator prompt `session-fidelity-adjudicator-prompt-v1`,
+drafting prompt `psychreport-drafting-prompts-v2.2`. 3.1 min, ~65k input /
+~31k output tokens.
+
+### 9.1 Adjudicator accuracy (9 cases × 10)
+
+| | |
+|---|---|
+| **Catch rate** | **100%** (40/40 across 4 should-fail cases) |
+| **False-alarm rate** | **0%** (0/50 across 5 clean cases) |
+| Unusable | 0% (0/90) |
+
+Every case was 10/10. The clean half deliberately includes a long fully
+documented session narrative, and prose using "appeared", "required", and
+"ceiling" in non-session senses — the words a lexical prefilter would trip on.
+
+**Caveat that matters: this corpus was written by the same author as the
+prompt.** A 0% false-alarm rate on it bounds nothing about real usage. §9.2
+shows the real boundary is subtler than the corpus.
+
+### 9.2 Drafting-prompt baseline (2 conditions × 10)
+
+Section: Assessment results (DESCRIPTIVE_RESULTS) on the Avery score set — the
+exact configuration that produced the discontinue-criterion sentence.
+
+| Condition | Clean first draft | Gate failed |
+|---|---|---|
+| rule-present (`v2.2`) | 90% (9/10) | 1 |
+| rule-absent (baseline) | 80% (8/10) | 2 |
+
+**Delta: 10 percentage points — one draft. This is not a real measurement.**
+At n=10 the difference between 1 and 2 failures is indistinguishable from
+noise. The honest reading is that the targeted block was not observed to hurt
+and was not shown to help; separating them needs n in the hundreds, which is a
+pre-pilot question, not this session's.
+
+What the gate actually caught is more informative than the counts. In neither
+arm did the model reproduce anything like the original fabrication. What it
+produced instead:
+
+- baseline: *"Word-level reading, whether the word was a real one or an
+  invented one, was consistently effortful."* · *"both required deliberate
+  effort"*
+- rule-present: *"sounded out unfamiliar letter strings"*
+
+**These are the real boundary, and one of them is arguable.** "Sounded out
+unfamiliar letter strings" is plainly an observed session behavior asserted
+from a score set. "Consistently effortful" is closer to a conventional
+results-descriptive phrase, and a clinician might reasonably call it a
+description of performance rather than a claim about the session. That
+judgment — where results description ends and session assertion begins — is a
+clinical call, not an engineering one, and it is the thing to watch in a
+shadow pilot.
+
+### 9.3 Retry resolution
+
+**100% (3/3)** gate-failed drafts cleared on the single permitted
+regeneration — 1/1 rule-present, 2/2 rule-absent. n=3 is too small to quote as
+a rate, but the direction matters: every failure so far was fixed by the retry,
+so on this evidence a clinician would rarely see a gate finding at all.
+
+### 9.4 What these numbers do and do not support
+
+They support the adjudicator being precise enough to deploy without training
+clinicians to dismiss it. They do not yet support a claim about the drafting
+block's contribution, and they do not establish a false-alarm rate on prose
+this harness did not author. A shadow pilot answers both, and `wouldEnforce`
+is the column it reads.
