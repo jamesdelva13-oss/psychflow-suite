@@ -1,6 +1,6 @@
 # Session-fidelity adjudicator — spec v1
 
-**Spec version:** `session-fidelity-adjudicator-v1.1`
+**Spec version:** `session-fidelity-adjudicator-v1.2`
 **Amended:** 2026-08-09 — deployment modes (§4a) and measured results (§9);
 then §2.1–§2.2, the two scope tests, which move the boundary and therefore
 move the version. The filename stays `-v1` so links and the manifest hold;
@@ -116,29 +116,53 @@ flagged "Because comprehension improves markedly when text is read aloud to
 him," which is documented in the teacher interview and locates no
 evaluator-conducted encounter at all.*
 
-### 2.2 Task demand versus asserted behavior (normative)
+### 2.2 Manner versus performance (normative)
 
-**Naming what a task requires is not asserting that anyone watched the
-examinee do it.** Describing the demand, the item type, or the difficulty of a
-task is a statement about the measure. Describing the examinee performing an
-action is a statement about the session.
+**Not every statement with the examinee as its subject is a session
+assertion.** Describing *what* the examinee achieved is a result. Describing
+*how* they went about it is an observation of the session.
 
-The line is whether **the examinee is the actor**. A gerund or nominal naming
-the activity describes the measure; a finite verb with the examinee as subject
-asserts an observed event.
-
-| Task demand — out of scope | Asserted behavior — in scope |
+| Performance — OUT of scope | Manner — IN scope |
 |---|---|
-| "sounding out unfamiliar letter strings proved similarly difficult" | "Avery sounded out unfamiliar letter strings" |
-| "reading words in isolation was as effortful as decoding nonwords" | "Avery read the words aloud slowly" |
-| "the task required blending sounds into whole words" | "he self-corrected on several items" |
+| accuracy, level, standing relative to age or peers | strategy, approach |
+| comparison between tasks or item types | effort, pace, persistence |
+| which skills are stronger or weaker | hesitation, affect, frustration |
+| whether a pattern held across tasks | self-correction, asking for help, giving up |
+| *"Avery read familiar printed words more accurately than nonwords"* | *"Avery sounded the words out letter by letter"* |
+| *"decoding fell well below age expectations"* | *"Avery worked slowly and hesitated before responding"* |
+| *"real words offered no advantage over invented ones"* | *"the same effortful approach carried across both tasks"* |
 
-*Origin: report 5 of 2026-08-09 produced both forms in one document — the
-gerund passed in Assessment results, the past-tense assertion was flagged in
-Interpretation. The distinction was correct but **emergent from model
-judgment**, which is precisely what §2 being normative exists to prevent. The
-wording above is the adjudicator's own articulation, promoted to specification.
-Both phrases are now regression cases (§8.2, cases 10 and 11).*
+**Naming the task an instrument administers is naming the measure**, not
+describing manner. Sounding out nonwords *is* Pseudoword Decoding; saying the
+examinee did it adds nothing observed. Saying they did it *letter by letter*
+does.
+
+**Tiebreak.** If the dimension is one the administered measures report —
+accuracy, level, and rate where a fluency measure was given — it is
+performance. If no supplied measure reports it, describing it is an
+observation of the session.
+
+**A gerund or nominal naming the activity is always the measure:** *"sounding
+out unfamiliar letter strings proved difficult"* is performance.
+
+**This test applies only to statements about the examinee's own doing.**
+Administration mechanics (items given, item counts, discontinue/basal/ceiling
+rules, timing, breaks), examiner actions, and session conditions are in scope
+by their own definitions and are **not** subject to the manner/performance
+distinction. "Avery answered twelve items correctly" is an item count, not a
+performance description.
+
+*Origin and correction. The first version of this rule was syntactic — "the
+line is whether the examinee is the actor," with gerunds out and finite verbs
+in. It was promoted from the adjudicator's own articulation and it was wrong in
+a way the corpus could not show: the drafting prompt's VOICE block requires the
+examinee as subject ("The student is the subject of nearly every sentence. The
+verbs are things a person can be seen doing — read, retained, lost track of,
+performed"), so the gate and the voice specification disagreed about the same
+sentence shape. Across two 5-report runs it produced the only
+clinician-visible findings, and the retry could not escape a rule the voice
+spec required. Recorded as §9.7 OPEN; narrowed here at JD's ruling of
+2026-08-10.*
 
 **Out of scope by construction** (rejected during design, not deferred):
 claim-level Evidence binding, character-span coverage validation, claim-type
@@ -349,17 +373,26 @@ score set:
 | 7 | long, fully documented session narrative | pass | precision |
 | 8 | "appeared" / "required" / "ceiling" in non-session senses | pass | precision |
 | 9 | results-only section, no session content | pass | precision |
-| 10 | task demand, gerund — the form report 5 **passed** | pass | **§2.2** |
-| 11 | asserted behavior, past tense — the form report 5 **flagged** | fail | **§2.2** |
+| 10 | task demand, gerund | pass | **§2.2** |
+| 11 | performance with the examinee as actor — the sentence that reached the clinician | pass | **§2.2** |
+| 16 | manner with the examinee as actor | fail | **§2.2** |
+| 17 | observed strategy across tasks (the report-3 correct catch) | fail | **§2.2** |
+| 18 | performance that names the session but describes only results | pass | **§2.1 + §2.2 ordering** |
+| 19 | item count — administration mechanics, exempt from §2.2 | fail | **§2.2 exemption** |
 | 12 | supported non-session fact with implied agent (the report-5 false positive) | pass | **§2.1** |
 | 13 | classroom assertion, unattributed | pass | **§2.1** |
 | 14 | home assertion | pass | **§2.1** |
 | 15 | evaluator's own classroom observation | fail | **§2.1 boundary** |
 
-**Cases 10 and 11 must SPLIT.** They describe the same activity and differ only
-in whether the examinee is the actor. Both passing, or both failing, means §2.2
-has stopped being enforced — the pair is the regression test for the line, not
-two independent cases.
+**Cases 11 and 16 must SPLIT.** Both have the examinee as grammatical subject
+and both describe the word-reading tasks; they differ only in whether the verb
+reports what was achieved or how it was gone about. Both passing, or both
+failing, means §2.2 has stopped being enforced — the pair is the regression
+test for the line, not two independent cases.
+
+**Case 19 guards the exemption.** If it ever passes, the manner/performance
+test has swallowed administration mechanics, and the original
+discontinue-criterion defect is unguarded again.
 
 **Case 15 is the §2.1 boundary.** A classroom *setting* does not exempt a
 claim; an evaluator-conducted observation is an encounter. If 13 and 15 ever
@@ -497,9 +530,11 @@ Observations refused 5/5.
 **The earlier claim that a clinician would never see the gate was wrong.** On
 the real case they see it on roughly two sections in every five reports.
 
-### 9.7 OPEN — §2.2's actor test contradicts the VOICE block
+### 9.7 RESOLVED — §2.2's actor test contradicted the VOICE block
 
-**No change made. Ruling required.**
+**Narrowed at JD's ruling of 2026-08-10 (option 1). §2.2 is now
+manner-versus-performance; spec v1.2, adjudicator prompt v3.** The record of
+the defect follows unchanged.
 
 Four of the five flags in §9.6 are the same construction:
 
@@ -530,14 +565,25 @@ actor test.
 strategy). The other four are arguable, and the two that reached the clinician
 are the cost of that ambiguity.
 
-Options, none taken:
-1. Narrow §2.2 so that examinee-as-actor is a session assertion only where the
-   verb describes *how* the task was approached (strategy, effort, manner)
-   rather than *what was performed* (accuracy, level, comparison).
+Options:
+1. **Narrow §2.2** so that examinee-as-actor is a session assertion only where
+   the verb describes *how* the task was approached (strategy, effort, manner)
+   rather than *what was performed* (accuracy, level, comparison). **← RULED,
+   2026-08-10.**
 2. Exempt DESCRIPTIVE_RESULTS from the actor test, since scores are the
    subject there by construction.
 3. Amend VOICE instead, and accept less natural prose.
 4. Accept 0.4 notices per report as the cost of the current line.
+
+**Why option 1 and not option 2.** Exempting a mode would have made the gate's
+scope depend on which section it was judging, which is the prefilter shape §4
+refuses: a rule that decides how hard the safeguard looks is itself a
+safeguard. The narrowing applies everywhere and rests on what the sentence
+says, not on where it appears.
+
+**Why not option 3.** VOICE is right. "The student is the subject of nearly
+every sentence" is the register a psychologist actually writes in, and it was
+the gate that had drifted, not the voice specification.
 
 
 ### 9.8 Re-measured after prompt v2.3 (the table block)
@@ -584,3 +630,61 @@ one is the §9.7 construction. The one that reached the clinician:
 That is §9.7 unchanged: examinee as actor, ordinary achievement prose, flagged.
 The table block does not touch it and was never going to — §9.7 remains open
 and is now the only recurring source of clinician-visible findings.
+
+
+### 9.9 Corpus re-measured under the narrowed rule — spec v1.2, prompt v3
+
+19 cases × 10 = 190 adjudications.
+
+| | prompt v2 (§9.1 run 2) | prompt v3 |
+|---|---|---|
+| **Catch rate** | 100% (60/60, 6 cases) | **100%** (80/80, 8 cases) |
+| **False-alarm rate** | 0% (0/90, 9 cases) | **0%** (0/110, 11 cases) |
+| Unusable | 0% | 0% (0/190) |
+
+Every case 10/10. The four cases that matter for the narrowing:
+
+- **11 and 16 split.** Case 11 — *"Avery read familiar printed words more
+  accurately than pronounceable nonwords"*, the exact sentence that reached a
+  clinician under v2 — now passes 10/10. Case 16, the same subject and the
+  same tasks but describing *how* (*"sounded the words out letter by letter
+  and paused noticeably"*), fails 10/10.
+- **17 still fails.** The one unambiguously correct catch from the 5-report run
+  — an observed strategy carrying across tasks — survives the narrowing.
+- **18 passes.** Performance that names the session (*"During testing, Avery
+  read… with comparable accuracy"*) is located by §2.1 and then found to be
+  performance by §2.2. The ordering works.
+- **19 fails.** *"Avery answered twelve items correctly… before the task was
+  discontinued"* is an item count and a discontinue event, exempt from §2.2 and
+  still in scope. The original defect stays guarded — which is the thing a
+  narrowing most risks breaking.
+
+
+### 9.10 Full reports under the narrowed gate
+
+Same fixture, same n=5, same enforce mode, same drafting prompt v2.3. Only the
+adjudicator changed: spec v1.2 / prompt v3.
+
+| | §9.6 (v2.2 · gate v2) | §9.8 (v2.3 · gate v2) | §9.10 (v2.3 · gate v3) |
+|---|---|---|---|
+| Flagged at first draft | 5/25 — 20% | 3/25 — 12% | **1/25 — 4%** |
+| Cleared on the retry | 3/5 | 2/3 | **1/1** |
+| Reached the clinician | 2/25 — 0.4/report | 1/25 — 0.2/report | **0/25 — 0.0/report** |
+| Words per report | ~1,658 | ~1,609 | ~1,650 |
+
+**The n=5 caveat still applies to the aggregates**, as it did in §9.2 and §9.8.
+What is not a small-sample artifact is *which* sentences moved: the four
+performance constructions that produced every clinician-visible finding across
+two runs are gone, and the corpus proves at n=10 that the manner cases they
+were confused with are still caught.
+
+**The one remaining flag is a real one.** Report 3's Interpretation asserted
+
+> "word-level reading was **labored** in both"
+
+Labored is effort — manner, undocumented, correctly caught, and cleared on the
+regeneration. That is the gate doing exactly the job §2.2 now describes.
+
+**Every section other than Interpretation was clean across five reports**, and
+Interpretation is the only section that has ever carried a flag at any point in
+this measurement series.

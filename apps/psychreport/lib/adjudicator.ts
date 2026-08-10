@@ -28,8 +28,8 @@ import { renderSessionEvidence, type SessionEvidenceItem } from "./session-evide
  * result, or an ungrounded quote all mean the section does not pass.
  */
 
-export const ADJUDICATOR_SPEC_VERSION = "session-fidelity-adjudicator-v1.1";
-export const ADJUDICATOR_PROMPT_VERSION = "session-fidelity-adjudicator-prompt-v2";
+export const ADJUDICATOR_SPEC_VERSION = "session-fidelity-adjudicator-v1.2";
+export const ADJUDICATOR_PROMPT_VERSION = "session-fidelity-adjudicator-prompt-v3";
 const ADJUDICATOR_MODEL = "claude-opus-5";
 const ADJUDICATOR_EFFORT = "medium" as const;
 const MAX_TOKENS = 4000;
@@ -75,24 +75,49 @@ You cannot see the rest of the case file. A claim you cannot locate in an
 evaluator-conducted encounter may well be documented somewhere you were not
 given. That is somebody else's problem. Do not guess, and do not flag it.
 
-TEST 2 — TASK DEMAND, OR ASSERTED BEHAVIOR?
-Naming what a task requires is not asserting that anyone watched the examinee
-do it. Describing the demand, the item type, or the difficulty of a task is a
-statement about the MEASURE. Describing the examinee performing an action is a
-statement about the SESSION.
+TEST 2 — MANNER, OR PERFORMANCE?
+Not every statement with the examinee as its subject is a session assertion.
+Describing WHAT the examinee achieved is a result. Describing HOW they went
+about it is an observation of the session.
 
-The line is whether the examinee is the actor. A gerund or nominal naming the
-activity describes the measure; a finite verb with the examinee as subject
-asserts an observed event.
+  PERFORMANCE — OUT of scope. What was achieved: accuracy, level, standing
+  relative to age or peers, comparison between tasks or item types, which
+  skills are stronger or weaker, whether a pattern held across tasks.
 
-  Task demand — out of scope:
-    "sounding out unfamiliar letter strings proved similarly difficult"
-    "reading words in isolation was as effortful as decoding nonwords"
-    "the task required blending sounds into whole words"
-  Asserted behavior — in scope:
-    "Avery sounded out unfamiliar letter strings"
-    "Avery read the words aloud slowly"
-    "he self-corrected on several items"
+    "Avery read familiar printed words more accurately than nonwords"
+    "decoding fell well below age expectations"
+    "real words offered no advantage over invented ones"
+    "Avery read single words and decoded unfamiliar letter strings well below
+     the level typical for age"
+
+  MANNER — IN scope. How the examinee went about it, beyond what taking the
+  task entails: strategy, approach, effort, pace, persistence, hesitation,
+  affect, self-correction, asking for help, giving up, response style.
+
+    "Avery sounded the words out letter by letter"
+    "Avery worked slowly and hesitated before responding"
+    "Avery self-corrected on several items"
+    "the same effortful approach carried across both tasks"
+
+  NAMING THE TASK AN INSTRUMENT ADMINISTERS IS NAMING THE MEASURE, not
+  describing manner. Sounding out nonwords IS Pseudoword Decoding; saying the
+  examinee did it adds nothing observed. Saying they did it LETTER BY LETTER
+  does.
+
+  TIEBREAK. If the dimension is one the administered measures report —
+  accuracy, level, and rate where a fluency measure was given — it is
+  performance. If no supplied measure reports it, describing it is an
+  observation of the session.
+
+  A gerund or nominal naming the activity is always the measure: "sounding out
+  unfamiliar letter strings proved difficult" is performance.
+
+  THIS TEST APPLIES ONLY TO STATEMENTS ABOUT THE EXAMINEE'S OWN DOING.
+  Administration mechanics (which items were given, how many were attempted or
+  answered, discontinue/basal/ceiling rules, timing, breaks), examiner actions,
+  and session conditions are in scope by their own definitions and are NOT
+  subject to the manner/performance distinction. "Avery answered twelve items
+  correctly" is an item count, not a performance description.
 
 WHAT COUNTS AS A SESSION EVENT (in scope, once both tests are passed)
 Anything asserted about what happened during an evaluation encounter the
@@ -119,11 +144,11 @@ WHAT IS OUT OF SCOPE — DO NOT FLAG ANY OF THIS
     it and whether or not it is attributed. Out of scope even if you cannot
     verify it. (Test 1.)
   - Descriptions of PERFORMANCE rather than of the session: what the student
-    can and cannot do, relative strengths and weaknesses, accuracy, rate,
-    patterns across measures, comparisons between kinds of items. A result is
-    not a session event. "Unfamiliar words were harder than familiar words" is
-    a result. "The student sounded out unfamiliar words aloud" is a session
-    event. (Test 2.)
+    can and cannot do, relative strengths and weaknesses, accuracy, level,
+    rate, patterns across measures, comparisons between kinds of items —
+    whoever the grammatical subject is. A result is not a session event.
+    "Avery read familiar words more accurately than nonwords" is a result.
+    "Avery sounded them out letter by letter" is a session event. (Test 2.)
   - The ABSENCE of session detail. A section that says nothing about the
     session is correct, not deficient. Never ask for more.
 

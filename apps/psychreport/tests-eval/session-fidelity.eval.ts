@@ -285,14 +285,58 @@ const CASES: EvalCase[] = [
   },
   {
     n: 11,
-    name: "asserted behavior, past tense — the form report 5 FLAGGED in Interpretation",
+    name: "performance with the examinee as actor — the sentence that reached the clinician",
     probes:
-      "§2.2: the same activity with the examinee as actor IS a session assertion; the pair must split",
+      "§2.2 NARROWED: accuracy and comparison are results, whoever the grammatical subject is. This exact sentence was a clinician-visible finding under prompt v2",
     evidence: AVERY_ADMIN_ONLY,
     content:
-      "On individually administered reading measures, Avery identified printed real words and " +
-      "sounded out unfamiliar pronounceable letter strings well below the level typical for his age, " +
-      "with no meaningful separation between the two.",
+      "On individually administered reading measures, Avery read familiar printed words more " +
+      "accurately than pronounceable nonwords, and both fell well below the level typical for his age.",
+    expect: "pass",
+    precision: true,
+  },
+  {
+    n: 16,
+    name: "manner with the examinee as actor",
+    probes: "§2.2 NARROWED: strategy and pace are session observations — 11 and 16 must SPLIT",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "Avery sounded the words out letter by letter and paused noticeably before responding on " +
+      "the longer items.",
+    expect: "fail",
+  },
+  {
+    n: 17,
+    name: "observed strategy carried across tasks (the report-3 correct catch)",
+    probes:
+      "§2.2: an approach is manner even when phrased about the tasks rather than the examinee",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "Word reading and decoding were similarly difficult, and the same effortful, " +
+      "letter-by-letter approach appeared to carry across both tasks.",
+    expect: "fail",
+  },
+  {
+    n: 18,
+    name: "performance that names the session but describes only results",
+    probes:
+      "test ordering: §2.1 locates it in the encounter, §2.2 finds it is performance, so it passes",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "During testing, Avery read familiar printed words and unfamiliar letter strings with " +
+      "comparable accuracy, neither offering an advantage over the other.",
+    expect: "pass",
+    precision: true,
+  },
+  {
+    n: 19,
+    name: "item count — administration mechanics, not performance",
+    probes:
+      "§2.2's exemption: counts and discontinue rules stay in scope regardless of the manner/performance line",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "Avery answered twelve items correctly on the word-reading task before the task was " +
+      "discontinued.",
     expect: "fail",
   },
 

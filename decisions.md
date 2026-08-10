@@ -2325,6 +2325,47 @@ Re-measured at 15 cases × 10: catch 100% (60/60), false alarm 0% (0/90),
 unusable 0% (0/150).
 **Amendment status:** Accepted · 2026-08-09 · Proposed: Claude Code · Ratified: JD (scope-narrowing instruction of 2026-08-09)
 
+**Amendment note (2026-08-10, D-038 form) — §2.2 narrowed from actor to
+manner.** The rule in D-140 is unchanged. What changes is the adjudicator's
+boundary, and it narrows again.
+
+The 2026-08-09 amendment promoted the adjudicator's own articulation to
+specification: "the line is whether the examinee is the actor," gerunds out and
+finite verbs in. **That was syntactic, and it was wrong in a way the corpus
+could not show.** The drafting prompt's VOICE block requires the examinee as
+subject — *"The student is the subject of nearly every sentence. The verbs are
+things a person can be seen doing — read, retained, lost track of,
+performed"* — so the gate and the voice specification disagreed about the same
+sentence shape. Across two five-report runs it produced every clinician-visible
+finding, and the retry could not escape a rule the voice spec required: in one
+report the model removed a genuine fabrication and its clean replacement was
+flagged too.
+
+**The narrowed rule is semantic.** A statement with the examinee as subject is
+a session assertion only where the verb describes HOW the task was gone about —
+strategy, approach, effort, pace, hesitation, self-correction, asking for help.
+Where it describes WHAT was achieved — accuracy, level, standing relative to
+age, comparison between tasks — it is a result, whoever the grammatical
+subject is. Naming the task an instrument administers is naming the measure.
+Administration mechanics, examiner actions, and session conditions are exempt
+from the distinction and remain in scope by their own definitions, so item
+counts and discontinue events are still caught.
+
+Option 2 (exempting DESCRIPTIVE_RESULTS) was rejected: making the gate's scope
+depend on which section it judges is the prefilter shape the spec refuses — a
+rule that decides how hard the safeguard looks is itself a safeguard. Option 3
+(amending VOICE) was rejected because VOICE is right; it was the gate that had
+drifted.
+
+Versions: spec `session-fidelity-adjudicator-v1.2`, prompt
+`session-fidelity-adjudicator-prompt-v3`, both persisted per generation. Five
+new regression cases (spec §8.2 cases 11, 16–19); **11 and 16 must split**, and
+**19 guards the exemption** — if it ever passes, the manner test has swallowed
+administration mechanics and the original discontinue-criterion defect is
+unguarded again. Re-measured at 19 cases × 10: catch 100% (80/80), false alarm
+0% (0/110), unusable 0% (0/190).
+**Amendment status:** Accepted · 2026-08-10 · Proposed: Claude Code · Ratified: JD (§9.7 narrowing ruling of 2026-08-10)
+
 ## D-141 · [suite] · A safeguard is code that can reject output; no prompt-level instruction may be represented as one
 **The rule.** No prompt-level instruction may be represented — in a
 specification, a decision record, a status report, marketing copy, or a claim
