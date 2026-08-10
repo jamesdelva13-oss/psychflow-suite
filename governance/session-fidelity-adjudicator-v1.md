@@ -474,3 +474,67 @@ One report produced "sounded out unfamiliar pronounceable letter strings"
 difficult" (passed) in the same document — correct, but unspecified; now §2.2.
 And one flag was a supported classroom fact the adjudicator structurally cannot
 see; now excluded by §2.1.
+
+
+### 9.6 Full reports re-measured against the CANONICAL fixture
+
+§9.5's numbers were measured against a hand-built fixture carrying roughly a
+fifth of the real material (see `tools/fixtures/avery.ts` for the defect and
+the process rule that now prevents it). Re-run, n=5, enforce mode, prompt v2,
+25 sections, 8,291 words:
+
+| | §9.5 (invalid fixture) | §9.6 (canonical) |
+|---|---|---|
+| Flagged at first draft | 3/25 — 12% | **5/25 — 20%** |
+| Cleared on the retry | 3/3 — 100% | **3/5 — 60%** |
+| Reached the clinician | 0/25 — 0.0 per report | **2/25 — 0.4 per report** |
+| Words per report | ~1,293 | ~1,658 |
+
+Per section: Assessment results 1/5 (was 0/5) · Interpretation **4/5** (was
+2/5) · Recommendations 0/5 (was 1/5) · both SOURCE_FAITHFUL sections 0/5 ·
+Observations refused 5/5.
+
+**The earlier claim that a clinician would never see the gate was wrong.** On
+the real case they see it on roughly two sections in every five reports.
+
+### 9.7 OPEN — §2.2's actor test contradicts the VOICE block
+
+**No change made. Ruling required.**
+
+Four of the five flags in §9.6 are the same construction:
+
+> "Avery read printed words in isolation and decoded pronounceable nonwords
+> with substantial difficulty"
+> "Avery read single printed words and decoded unfamiliar letter strings at
+> closely comparable levels"
+
+Under §2.2 these are asserted behavior — Avery is the actor, the verb is
+finite. Under any ordinary reading they are how achievement results are
+described.
+
+**The drafting prompt requires the construction the gate rejects.** VOICE, the
+first block of every prompt:
+
+> "The student is the subject of nearly every sentence. The verbs are things a
+> person can be seen doing — **read**, retained, lost track of, performed."
+
+That is not a coincidence of phrasing. The gate and the voice specification
+disagree about the same sentence shape, and the retry cannot escape: in report
+3 the model removed a genuine fabrication ("the same effortful,
+letter-by-letter approach" — a correct catch) and replaced it with clean
+results prose, which was flagged too. In report 2 the retry drifted *toward* a
+real problem ("reads aloud slowly and effortfully") while trying to escape the
+actor test.
+
+**One of the five flags is unambiguously correct** (report 3's letter-by-letter
+strategy). The other four are arguable, and the two that reached the clinician
+are the cost of that ambiguity.
+
+Options, none taken:
+1. Narrow §2.2 so that examinee-as-actor is a session assertion only where the
+   verb describes *how* the task was approached (strategy, effort, manner)
+   rather than *what was performed* (accuracy, level, comparison).
+2. Exempt DESCRIPTIVE_RESULTS from the actor test, since scores are the
+   subject there by construction.
+3. Amend VOICE instead, and accept less natural prose.
+4. Accept 0.4 notices per report as the cost of the current line.
