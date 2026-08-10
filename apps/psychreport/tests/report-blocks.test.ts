@@ -5,7 +5,7 @@ import {
   replaceProse,
   sectionProse,
   type SectionBlock,
-} from "../lib/report-sections";
+} from "../lib/blocks";
 
 /**
  * The block representation (migration 0009). A section is an ordered array of

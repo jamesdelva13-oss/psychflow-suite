@@ -9,7 +9,6 @@ import { listScoreVerifications } from "@/lib/verifications";
 import { buildGenerationInputs } from "@/lib/source-policy";
 import { planFor } from "@/lib/report-plan";
 import { generateSection } from "@/lib/generate";
-import { tablesForSection } from "@/lib/score-table";
 import {
   loadReportSections,
   persistGeneration,
@@ -78,24 +77,16 @@ export async function draftSection(formData: FormData): Promise<void> {
   const prior = await latestFor(rls, caseId, sectionKey);
   const svc = createServiceClient();
 
-  // Rendered blocks are composed from the SAME sources the section was gated
-  // to and the SAME verification state the generation ran under, so the table
-  // and the prose describe one moment rather than two.
-  const tables = tablesForSection({
-    tables: plan.tables,
-    sources: inputs.sources.filter((s) =>
-      result.section.sourceIds.includes(s.source.sourceId)
-    ),
-    verifications,
-  });
-
+  // The rendered blocks come from the generation itself — the same
+  // computation that described them to the model — so the document the model
+  // was told about and the document the clinician sees are one object.
   const written = await persistGeneration(svc, {
     caseId,
     section: result.section,
     actor: user.id,
     supersedesSectionId: prior?.id ?? null,
     nextVersion: (prior?.version ?? 0) + 1,
-    tables,
+    tables: result.section.renderedBlocks,
   });
 
   if (written.ok) {

@@ -2,6 +2,27 @@ import "server-only";
 import type { SupabaseLike } from "./case-context";
 import type { GeneratedSection } from "./generate";
 import type { DraftStatus } from "@suite/ui";
+import { proseOnly, sectionProse, replaceProse, type SectionBlock } from "./blocks";
+
+export { proseOnly, sectionProse, replaceProse, type SectionBlock } from "./blocks";
+
+export interface StoredSection {
+  id: string;
+  sectionKey: string;
+  mode: string;
+  blocks: SectionBlock[];
+  /**
+   * The prose this version presents, in order — the text the gate judged.
+   * Mirrors the `report_section_prose()` SQL function so both sides agree on
+   * what "the prose of a section" means.
+   */
+  prose: string;
+  status: "proposed" | "accepted" | "dismissed";
+  version: number;
+  /** Null → the clinician wrote this version. */
+  generation: StoredGeneration | null;
+}
+
 
 /**
  * report-sections.ts — persistence for drafted report content (migration
@@ -49,72 +70,6 @@ export interface StoredGeneration {
   promptVersion: string;
   specVersion: string;
   sourceIds: string[];
-}
-
-/**
- * One block of a section. A section is an ordered array of these, not a
- * string (migration 0009). `prose` is written — by the model or the
- * clinician; `table` is RENDERED — deterministic, no generation, and
- * therefore nothing the fidelity gate has to police.
- */
-export type SectionBlock =
-  | { kind: "prose"; text: string }
-  | {
-      kind: "table";
-      /** Which table this is, e.g. "score_summary". */
-      table: string;
-      caption?: string;
-      columns: string[];
-      /**
-       * `flag` travels WITH the row rather than being re-derived at render
-       * time, so an export carries the same distinction the screen showed.
-       */
-      rows: { cells: string[]; flag?: "unverified"; scoreKey?: string }[];
-      /** The Source it was rendered from, where there is one. */
-      sourceId?: string;
-      /** Which house convention rendered it (parameter block §11). */
-      convention?: { id: string; version: string };
-    };
-
-export interface StoredSection {
-  id: string;
-  sectionKey: string;
-  mode: string;
-  blocks: SectionBlock[];
-  /**
-   * The prose this version presents, in order — the text the gate judged.
-   * Mirrors the `report_section_prose()` SQL function so both sides agree on
-   * what "the prose of a section" means.
-   */
-  prose: string;
-  status: "proposed" | "accepted" | "dismissed";
-  version: number;
-  /** Null → the clinician wrote this version. */
-  generation: StoredGeneration | null;
-}
-
-/** TypeScript twin of the SQL `report_section_prose(blocks)`. */
-export const sectionProse = (blocks: SectionBlock[]): string =>
-  blocks
-    .filter((b): b is Extract<SectionBlock, { kind: "prose" }> => b.kind === "prose")
-    .map((b) => b.text)
-    .join("\n\n");
-
-/** A section that is one prose block — what every generation produces today. */
-export const proseOnly = (text: string): SectionBlock[] => [{ kind: "prose", text }];
-
-/**
- * Replace the prose of a block array while keeping rendered blocks in place.
- * The clinician edits prose; tables are re-rendered, never hand-edited, so an
- * edit must not silently drop one.
- */
-export function replaceProse(blocks: SectionBlock[], text: string): SectionBlock[] {
-  const firstProse = blocks.findIndex((b) => b.kind === "prose");
-  const kept = blocks.filter((b) => b.kind !== "prose");
-  if (firstProse === -1) return [...kept, { kind: "prose", text }];
-  const before = blocks.slice(0, firstProse).filter((b) => b.kind !== "prose");
-  const after = blocks.slice(firstProse + 1).filter((b) => b.kind !== "prose");
-  return [...before, { kind: "prose", text }, ...after];
 }
 
 export type Loaded =

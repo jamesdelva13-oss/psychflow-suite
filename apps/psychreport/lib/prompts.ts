@@ -37,7 +37,7 @@ import type { GenerationInputs, PolicedSource } from "./source-policy";
  * section can be read against the rules that were in force when it was written
  * rather than the rules in force when it is read.
  */
-export const DRAFTING_PROMPT_VERSION = "psychreport-drafting-prompts-v2.2";
+export const DRAFTING_PROMPT_VERSION = "psychreport-drafting-prompts-v2.3";
 export const GENERATION_SPEC_VERSION = "operational-spec-v1";
 
 /**
@@ -47,7 +47,7 @@ export const GENERATION_SPEC_VERSION = "operational-spec-v1";
  * written during a baseline run can never be mistaken for a normal one.
  */
 export const DRAFTING_PROMPT_VERSION_BASELINE =
-  "psychreport-drafting-prompts-v2.2-baseline-no-session-rule";
+  "psychreport-drafting-prompts-v2.3-baseline-no-session-rule";
 
 export interface PromptOptions {
   /**
@@ -469,14 +469,71 @@ export function systemPrompt(mode: SectionMode, opts: PromptOptions = {}): strin
 }
 
 /**
- * The case-specific half: source limits, then case data. Takes
- * GenerationInputs — which cannot be constructed without policies — so a
- * prompt physically cannot be assembled without its source limits.
+ * What is RENDERED alongside this section, stated to the model.
+ *
+ * DESCRIPTIVE_RESULTS has always instructed "write one level coarser than the
+ * table" and "the table already carries the numbers" — while no table existed.
+ * The instruction was true of a document the product did not produce. Now that
+ * the table layer renders one, the model is told which section actually has
+ * one and what it contains, so the rule applies to a real object rather than
+ * an assumed one.
+ *
+ * It goes in the USER turn, not the system prompt: whether a table accompanies
+ * a section depends on the case and the section, so putting it in the
+ * mode-stable half would be both wrong and uncacheable.
+ *
+ * Two things it must prevent, and neither is hypothetical:
+ *   - restating the numbers the table already carries (parameter block §6 P1);
+ *   - claiming a withheld score is ABSENT FROM THE REPORT. It is absent from
+ *     the prompt and present in the table, marked. Prose that says "not
+ *     reported here" would now be false to the reader looking at the page.
+ *
+ * The escape hatch travels with the rule (D-111): naming a specific score is
+ * still permitted where it explains a discrepancy, affects validity, or
+ * answers the referral question.
  */
-export function userPrompt(inputs: GenerationInputs, caseData: string): string {
+export function renderedTablesBlock(
+  tables: { caption?: string; columns: string[]; rows: { flag?: string }[] }[]
+): string {
+  if (tables.length === 0) return "";
+  const lines = tables.map((t) => {
+    const pending = t.rows.filter((r) => r.flag === "unverified").length;
+    return (
+      `- ${t.caption ?? "Score table"}` +
+      `\n    columns: ${t.columns.join(" · ")}` +
+      `\n    rows: ${t.rows.length}` +
+      (pending > 0
+        ? `\n    ${pending} of those rows ${pending === 1 ? "is" : "are"} shown to the reader marked as awaiting confirmation`
+        : "")
+    );
+  });
+  return [
+    "PRINTED ALONGSIDE THIS SECTION",
+    "The reader sees these tables next to your prose. They already carry every value listed in them.",
+    lines.join("\n"),
+    "Do not restate those numbers. Write one level coarser, as the block above instructs. " +
+      "Name a specific score only where it explains a discrepancy, affects validity, or " +
+      "answers the referral question.",
+    "Any score withheld from you above is still PRINTED in the table and marked for the " +
+      "reader. It is unavailable to you; it is not missing from the report. Do not write " +
+      "that it is absent, omitted, or not reported.",
+  ].join("\n\n");
+}
+
+/**
+ * The case-specific half: source limits, what is rendered alongside, then case
+ * data. Takes GenerationInputs — which cannot be constructed without policies
+ * — so a prompt physically cannot be assembled without its source limits.
+ */
+export function userPrompt(
+  inputs: GenerationInputs,
+  caseData: string,
+  renderedTables = ""
+): string {
   const parts: string[] = [];
   const policy = sourcePolicyBlock(inputs.sources);
   if (policy) parts.push(policy);
+  if (renderedTables) parts.push(renderedTables);
   parts.push("CASE DATA\n" + caseData);
   return parts.join("\n\n---\n\n");
 }

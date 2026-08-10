@@ -9,9 +9,12 @@ import {
   userPrompt,
   sourcePolicyBlock,
   draftingPromptVersion,
+  renderedTablesBlock,
   GENERATION_SPEC_VERSION,
   type PromptOptions,
 } from "./prompts";
+import { tablesForSection } from "./score-table";
+import type { SectionBlock } from "./blocks";
 import { configuredGateMode, type GateMode } from "./gate-mode";
 import { sessionEvidenceFor } from "./session-evidence";
 import { buildEvidenceSnapshot, type EvidenceSnapshot } from "./evidence-snapshot";
@@ -161,6 +164,12 @@ export interface GeneratedSection {
   specVersion: string;
   /** What was supplied to this generation, verbatim. See evidence-snapshot.ts. */
   evidenceSnapshot: EvidenceSnapshot;
+  /**
+   * Deterministic blocks printed alongside the prose, and described to the
+   * model in the prompt. Persisted as-is, so what the model was told
+   * accompanies its prose is exactly what does.
+   */
+  renderedBlocks: SectionBlock[];
   fidelity: SectionFidelity;
 }
 
@@ -306,7 +315,22 @@ export async function generateSection(args: {
   const caseData = renderCaseData(inputs, gate.sources, verifications);
   const system = systemPrompt(plan.mode, promptOptions);
   const scopedInputs = { ...inputs, sources: gate.sources };
-  const user = userPrompt(scopedInputs, caseData);
+
+  // Generation computes the blocks that will be RENDERED beside its prose and
+  // then describes them in the prompt. One computation, so the document the
+  // model is told about and the document the clinician sees cannot drift.
+  const renderedBlocks = tablesForSection({
+    tables: plan.tables,
+    sources: gate.sources,
+    verifications,
+  });
+  const user = userPrompt(
+    scopedInputs,
+    caseData,
+    renderedTablesBlock(
+      renderedBlocks as unknown as { caption?: string; columns: string[]; rows: { flag?: string }[] }[]
+    )
+  );
 
   // The session evidence is derived from the SECTION's gated sources, not from
   // the whole case: a section is judged against what it was actually given.
@@ -385,6 +409,7 @@ export async function generateSection(args: {
       promptVersion: draftingPromptVersion(promptOptions),
       specVersion: GENERATION_SPEC_VERSION,
       evidenceSnapshot: snapshot,
+      renderedBlocks,
       fidelity: {
         gate: ADJUDICATOR_SPEC_VERSION,
         mode: gateMode,

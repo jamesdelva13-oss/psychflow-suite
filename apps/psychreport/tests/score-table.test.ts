@@ -173,3 +173,35 @@ test("the block carries what it was rendered from, so a stored table stays inter
   assert.equal(block.convention.version, DEFAULT_SCORE_TABLE.version);
   assert.match(block.caption ?? "", /WIAT-4/);
 });
+
+/* ---- what the model is told is printed beside its prose ---- */
+
+test("the rendered-tables block states the columns, the row count, and the marked rows", async () => {
+  const { renderedTablesBlock } = await import("../lib/prompts");
+  const block = renderedTablesBlock([build() as never]);
+
+  assert.match(block, /PRINTED ALONGSIDE THIS SECTION/);
+  assert.match(block, /WIAT-4 — score summary/);
+  assert.match(block, /Standard score · 95% CI/);
+  assert.match(block, /rows: 3/);
+  assert.match(block, /1 of those rows is shown to the reader marked as awaiting confirmation/);
+});
+
+test("…and forecloses the two failures the table introduces", async () => {
+  const { renderedTablesBlock } = await import("../lib/prompts");
+  const block = renderedTablesBlock([build() as never]);
+
+  // P1: do not restate what the table carries.
+  assert.match(block, /Do not restate those numbers/);
+  // D-111: the escape hatch travels with the rule.
+  assert.match(block, /explains a discrepancy, affects validity, or answers the referral question/);
+  // The new failure: a withheld score is now VISIBLE to the reader, so prose
+  // must not call it absent from the report.
+  assert.match(block, /it is not missing from the report/);
+  assert.match(block, /Do not write that it is absent, omitted, or not reported/);
+});
+
+test("a section with no table gets no block at all (D-110)", async () => {
+  const { renderedTablesBlock } = await import("../lib/prompts");
+  assert.equal(renderedTablesBlock([]), "");
+});

@@ -5,7 +5,7 @@ import {
 } from "@suite/case-model";
 import defaultConventionRaw from "@suite/content/conventions/score-table.default.v1.json" with { type: "json" };
 import { buildScoreRows, type ScoreRow, type ScoreSetPayload, type ScoreVerification } from "./scores";
-import type { SectionBlock } from "./report-sections";
+import type { SectionBlock } from "./blocks";
 
 /**
  * score-table.ts — the table layer (report-architecture proposal §2).
