@@ -538,3 +538,49 @@ Options, none taken:
    subject there by construction.
 3. Amend VOICE instead, and accept less natural prose.
 4. Accept 0.4 notices per report as the cost of the current line.
+
+
+### 9.8 Re-measured after prompt v2.3 (the table block)
+
+Same fixture, same n, same enforce mode, same adjudicator prompt v2. Only the
+drafting prompt changed: the user turn now states what is printed alongside
+the section.
+
+| | v2.2 (§9.6) | v2.3 |
+|---|---|---|
+| Flagged at first draft | 5/25 — 20% | 3/25 — 12% |
+| Cleared on the retry | 3/5 — 60% | 2/3 — 67% |
+| Reached the clinician | 2/25 — 0.4/report | 1/25 — 0.2/report |
+| Words per report | ~1,658 | ~1,609 |
+
+**Treat none of those aggregates as a result.** At n=5 they are two-draft
+differences, exactly the trap §9.2 recorded for the D-140 block. What follows
+is the part that means something.
+
+**The false-absence sentence is gone.** The block was written to foreclose one
+specific, predicted failure: a withheld score is absent from the *prompt* and
+present in the *table*, marked, so prose calling it unreported would be false
+to a reader looking at the page. v2.2 produced exactly that —
+
+> "…one score from this administration is still being verified and **is not
+> reported here**."
+
+v2.3 produced no such sentence in any of the five drafts. One instance to zero
+is not a rate; it is the predicted defect appearing and then not appearing once
+the model was told the table exists.
+
+**Assessment results got shorter and stayed accurate.** Mean 109 → 85 words,
+with zero score numbers restated in either arm — P1 was already satisfied on
+numbers, so the shortening is the "one level coarser" effect (P2) arriving now
+that there is a real table to be coarser *than*. The section that gained the
+table also went 1/5 → 0/5 flagged.
+
+**Every remaining flag is in Interpretation, which has no table**, and every
+one is the §9.7 construction. The one that reached the clinician:
+
+> "Avery read familiar printed words more accurately than pronounceable
+> nonwords"
+
+That is §9.7 unchanged: examinee as actor, ordinary achievement prose, flagged.
+The table block does not touch it and was never going to — §9.7 remains open
+and is now the only recurring source of clinician-visible findings.
