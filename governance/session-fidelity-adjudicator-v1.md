@@ -756,3 +756,54 @@ corpus rather than added to the rule.
   correctly continues to fail (case 42, 10/10). Only *"Avery read single
   printed words and decoded unfamiliar letter strings at closely comparable
   levels"* is clean, and it now clears (case 41, 10/10).
+
+
+### 9.12 Full reports under the ruled §2.2 — spec v1.3.1, prompt v5
+
+Same fixture, same n=5, same enforce mode, same drafting prompt v2.3. Only the
+adjudicator changed.
+
+| | §9.6 (gate v2) | §9.8 (gate v2) | §9.10 (gate v3) | **§9.12 (gate v5)** |
+|---|---|---|---|---|
+| Flagged at first draft | 5/25 — 20% | 3/25 — 12% | 1/25 — 4% | **5/25 — 20%** |
+| Cleared on the retry | 3/5 | 2/3 | 1/1 | **5/5** |
+| Reached the clinician | 2/25 — 0.4/rpt | 1/25 — 0.2/rpt | 0/25 | **0/25 — 0.0/rpt** |
+| Words per report | ~1,658 | ~1,609 | ~1,650 | ~1,598 |
+
+**Flags went up and the clinician still sees nothing.** The ruling puts
+response-process verbs firmly on the must-fail side, and the drafting model
+reaches for them constantly — "sounded out" appears in three of the five
+flagged drafts. Every one cleared on the single regeneration.
+
+**Three of the five are unambiguously correct** under the ruling:
+
+> "Avery read printed words and **sounded out** unfamiliar nonwords with
+> comparable accuracy…"
+> "Avery identified familiar printed words and **sounded out** unfamiliar
+> letter combinations…"
+> "Avery read printed words **aloud** and **applied sound-symbol
+> relationships** to unfamiliar printed forms…"
+
+The third is the ruling's own must-fail entry — *"relied inconsistently on
+sound-symbol correspondences"* — in a different suit.
+
+**Two are arguable**, and worth a ruling if the retry cost ever matters:
+
+> "…no meaningful separation between reading words that could be recognized
+> and **words that had to be sounded out**."
+> "Avery read **words that could be recognized on sight** somewhat more
+> successfully than **words that required sounding out**."
+
+Both use the process verb inside a *relative clause describing a category of
+word* rather than asserting what Avery did. Under §2.2 as written they are
+process characterizations and fail; read plainly they are describing item
+types, which is task description. The gate is not wrong to be strict here —
+but this is the boundary that produced two of the five retries.
+
+**The actionable observation is about the DRAFTING prompt, not the gate.** The
+D-140 block in `prompts.ts` says nothing about response-process verbs. The
+model writes "sounded out" because nothing tells it not to, the gate catches
+it, and the retry routes around it — 20% of sections paying one extra
+generation for a rule the writer was never told. Adding process verbs to the
+drafting block would likely collapse the retry rate. That is a prompt change
+with its own measurement, not something to fold in here.
