@@ -48,7 +48,16 @@ import { sessionEvidenceFor, type SessionEvidenceItem } from "../lib/session-evi
 import { adjudicateSessionFidelity, ADJUDICATOR_PROMPT_VERSION } from "../lib/adjudicator";
 import { generateSection } from "../lib/generate";
 import { draftingPromptVersion } from "../lib/prompts";
-import { WIAT4_SCORE_SET } from "../../../tools/fixtures/avery-scores";
+import { WIAT4_SCORE_SET, averyFixtureRows } from "../../../tools/fixtures/avery";
+
+/**
+ * Experiments B and C measure the PRODUCT, so they read the canonical fixture
+ * (process rule, JD 2026-08-09). Experiment A's observation-based evidence
+ * sets below are deliberately synthetic — they are TEST VECTORS for the
+ * judge, not claims about Avery's case, which carries no session narrative at
+ * all. The score-derived evidence set is canonical either way.
+ */
+const CANONICAL = averyFixtureRows();
 import { writeFileSync } from "node:fs";
 
 /* ------------------------------------------------------------------ *
@@ -91,13 +100,7 @@ const rowBase: SourceRow = {
 };
 
 /** The exact Avery score set, imported rather than retyped. */
-const scoreRow: SourceRow = {
-  ...rowBase,
-  id: "11111111-1111-4111-8111-111111111111",
-  instrument: WIAT4_SCORE_SET.instrument,
-  collected_on: WIAT4_SCORE_SET.administeredOn,
-  payload: WIAT4_SCORE_SET,
-};
+const scoreRow = CANONICAL.sourceRows.find((r) => r.kind === "score_set")!;
 
 const evidenceFrom = (row: SourceRow, planKey: string): SessionEvidenceItem[] => {
   const inputs = buildGenerationInputs(buildCaseContext(caseRow, [row]), []);
@@ -460,7 +463,12 @@ interface GenRun {
 }
 
 async function experimentBC(n: number, width: number): Promise<GenRun[]> {
-  const inputs = buildGenerationInputs(buildCaseContext(caseRow, [scoreRow]), []);
+  // The canonical case, whole — not the score set alone. Section eligibility
+  // narrows it; the harness must not.
+  const inputs = buildGenerationInputs(
+    buildCaseContext(CANONICAL.caseRow as CaseRow, CANONICAL.sourceRows as SourceRow[]),
+    []
+  );
   const plan = planFor("assessment-results")!;
 
   const jobs: Condition[] = [

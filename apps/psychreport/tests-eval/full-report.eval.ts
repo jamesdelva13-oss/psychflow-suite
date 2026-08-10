@@ -31,96 +31,22 @@ import { REPORT_PLAN } from "../lib/report-plan";
 import { generateSection, type GenerationResult } from "../lib/generate";
 import { draftingPromptVersion } from "../lib/prompts";
 import { ADJUDICATOR_PROMPT_VERSION } from "../lib/adjudicator";
-import { WIAT4_SCORE_SET } from "../../../tools/fixtures/avery-scores";
 
 /* ------------------------------------------------------------------ *
- * The Avery fixture, in memory — the same material tools/seed-avery.ts
- * writes to the dev instance.
+ * The canonical fixture. NOT constructed here.
+ *
+ * PROCESS RULE (JD, 2026-08-09): eval harnesses read the canonical fixture
+ * and never construct their own payloads. This harness is why the rule
+ * exists — its first version hand-rolled a three-response teacher payload
+ * containing `TCH-GEN-001`, which is not a question in bank v1.3.0, so every
+ * number it produced described a case with about a fifth of the real
+ * material. `tools/fixtures/avery.ts` is now the single definition that both
+ * tools/seed-avery.ts and this file read.
  * ------------------------------------------------------------------ */
 
-const caseRow: CaseRow = {
-  id: "avery-eval",
-  psychologist_id: "eval-owner",
-  state: "SC",
-  eval_type: "initial",
-  referral_date: "2026-04-20",
-  status: "assessment",
-  first_name: "Avery",
-  last_initial: "W",
-  display_initials: "A.W.",
-  grade: "4",
-  student_ref: "avery-williams-canonical-fixture",
-  priority_flag: false,
-  created_at: "2026-04-20T12:00:00Z",
-  deleted_at: null,
-};
+import { averyFixtureRows } from "../../../tools/fixtures/avery";
 
-const base: SourceRow = {
-  id: "",
-  case_id: "avery-eval",
-  informant_id: null,
-  kind: "referral_form",
-  collected_on: "2026-04-28",
-  instrument: null,
-  bank_id: null,
-  bank_version: null,
-  payload: null,
-  locked: true,
-  checksum: "fixture",
-  version: 1,
-  supersedes_source_id: null,
-  created_at: "2026-04-28T14:30:00Z",
-  deleted_at: null,
-};
-
-/** Teacher intake on the pinned v1.3.0 bank — the reading-concern responses. */
-const teacherRow: SourceRow = {
-  ...base,
-  id: "11111111-1111-4111-8111-111111111111",
-  kind: "referral_form",
-  bank_id: "teacher-intake",
-  bank_version: "1.3.0",
-  payload: {
-    responses: {
-      "TCH-RDG-006": "well_below",
-      "TCH-RDG-007": "well_below",
-      "TCH-GEN-001": "yes",
-    },
-  },
-};
-
-/** RIE Capture: clinician-authored teacher-interview summary. */
-const captureRow: SourceRow = {
-  ...base,
-  id: "22222222-2222-4222-8222-222222222222",
-  kind: "interview",
-  instrument: "capture",
-  collected_on: "2026-05-05",
-  payload: {
-    setting: "Union Elementary — teacher interview",
-    occurredOn: "2026-05-05",
-    summaryFinal: [
-      "Teacher interview corroborates the referral concern: word-level reading (decoding of",
-      "multisyllabic words, oral reading fluency) well below grade expectations, with",
-      "comprehension improving markedly when text is read aloud. Tier 2 phonics group since",
-      "October of third grade; teacher reports slow but real gains on explicitly taught",
-      "patterns that do not yet generalize to unfamiliar text. Strengths: strong oral",
-      "vocabulary, leads small-group science discussions, sought out by peers. No attendance,",
-      "vision, or hearing concerns reported.",
-    ].join(" "),
-  },
-};
-
-const scoreRow: SourceRow = {
-  ...base,
-  id: "33333333-3333-4333-8333-333333333333",
-  kind: "score_set",
-  instrument: WIAT4_SCORE_SET.instrument,
-  collected_on: WIAT4_SCORE_SET.administeredOn,
-  payload: WIAT4_SCORE_SET,
-};
-
-const SOURCES = [teacherRow, captureRow, scoreRow];
+const { caseRow, sourceRows } = averyFixtureRows();
 
 /* ------------------------------------------------------------------ */
 
@@ -173,7 +99,10 @@ const words = (s: string) => (s.trim() ? s.trim().split(/\s+/).length : 0);
 
 async function runSection(report: number, planIndex: number): Promise<SectionRun> {
   const plan = REPORT_PLAN[planIndex];
-  const inputs = buildGenerationInputs(buildCaseContext(caseRow, SOURCES), []);
+  const inputs = buildGenerationInputs(
+    buildCaseContext(caseRow, sourceRows),
+    []
+  );
   let result: GenerationResult;
   try {
     result = await generateSection({ inputs, plan, verifications: [], gateMode: "enforce" });

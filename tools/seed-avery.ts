@@ -35,13 +35,22 @@
 import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { assertDevInstance } from "./assert-dev-instance.mjs";
-import { WIAT4_SCORE_SET } from "./fixtures/avery-scores";
+import {
+  AVERY_CASE,
+  AVERY_INFORMANT,
+  CAPTURE_NOTES,
+  CAPTURE_PAYLOAD,
+  CAPTURE_SUMMARY,
+  COLLECTED_ON,
+  FIXTURE_STUDENT_REF,
+  TEACHER_RESPONSES,
+  WIAT4_SCORE_SET,
+} from "./fixtures/avery";
 import { QuestionBank } from "@suite/case-model";
 import { lockSubmission, canonicalChecksum as checksumOf } from "@suite/referral-engine-core";
 import bank13raw from "@suite/content/banks/teacher-form.v1.3.0.json" with { type: "json" };
 import { recordAttributedActivity } from "../apps/psychreport/lib/attribution";
 
-const FIXTURE_STUDENT_REF = "avery-williams-canonical-fixture";
 const OWNER_EMAIL = process.env.SEED_OWNER_EMAIL ?? "jamesdelva13@gmail.com";
 
 /* Checksums use the shared deep canonical algorithm from
@@ -49,51 +58,11 @@ const OWNER_EMAIL = process.env.SEED_OWNER_EMAIL ?? "jamesdelva13@gmail.com";
  * lockSubmission and capture finalize use, so seeded Sources hash exactly as
  * app-produced ones do. */
 
-/* Avery's teacher-intake responses — validated against v1.3.0 at lock time.
- * Concern: reading (decoding + fluency, well below peers, Tier 2 phonics
- * with some improvement). Strength: oral vocabulary, science curiosity,
- * peer relationships. Clinically coherent per directive §6. */
-const TEACHER_RESPONSES: Record<string, string | string[]> = {
-  "TCH-CORE-001": "gen_ed",
-  "TCH-CORE-002": "4th grade, all subjects",
-  "TCH-CORE-003": "6to12m",
-  "TCH-CORE-005": "Core ELA block plus a Tier 2 phonics small group three times weekly",
-  "TCH-CORE-006": "no",
-  "TCH-CORE-007": "Strong oral vocabulary; curious about science; helpful and well-liked by peers",
-  "TCH-CORE-008": ["reading"],
-  "TCH-CORE-010": "prior_year",
-  "TCH-CORE-011": "no",
-  "TCH-CORE-012": "no",
-  "TCH-RDG-001": ["decoding", "fluency"],
-  "TCH-RDG-005": ["independent", "content_area"],
-  "TCH-RDG-006": "well_below",
-  "TCH-INT-001": "Tier 2 phonics small group since October of grade 3; classroom partner reading supports",
-  "TCH-INT-004": "some_improve",
-  "TCH-IMP-001": "Avoids independent reading; needs adult support to access grade-level text in science and social studies",
-  "TCH-IMP-002": "Below expectations in ELA; work completion drops sharply on independent reading tasks",
-};
-
-const CAPTURE_NOTES = [
-  "Teacher interview — Ms. Rivera, 4th grade, Union Elementary (synthetic fixture).",
-  "Reading: decoding breaks down on multisyllabic words; oral reading is slow and effortful.",
-  "Comprehension improves markedly when text is read aloud to Avery.",
-  "Strengths: strong oral vocabulary; leads small-group science discussions; peers seek Avery out.",
-  "Tier 2 phonics group since Oct (gr 3); teacher reports slow but real gains on taught patterns.",
-  "No attendance, vision, or hearing concerns reported.",
-].join("\n");
-
-/* Evaluation-specific materials (VS-3, directive §6/§5.1 item 6). The three
- * WIAT-4 reading scores the directive authorizes. The set itself lives in
- * tools/fixtures/avery-scores.ts so that the session-fidelity live evaluation
- * replays its cases against the SAME object this seed writes, not a copy. */
-
-const CAPTURE_SUMMARY = [
-  "Teacher interview corroborates the referral concern: word-level reading (decoding of",
-  "multisyllabic words, oral reading fluency) well below grade expectations, with",
-  "comprehension substantially stronger when text is presented orally. Strengths in oral",
-  "vocabulary, science engagement, and peer relationships. Tier 2 phonics intervention in",
-  "place since third grade with modest response. No sensory or attendance concerns.",
-].join(" ");
+/* THE FIXTURE ITSELF LIVES IN tools/fixtures/avery.ts and is imported above.
+ * Nothing here defines case content. That is the process rule (JD,
+ * 2026-08-09): eval harnesses read the canonical fixture and never construct
+ * their own payloads — and the seed is held to the same standard, because a
+ * fixture the seed defines privately is one a harness can only copy. */
 
 async function main() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -187,18 +156,7 @@ async function main() {
   // ---- Case + informant ----------------------------------------------------
   const { data: caseRow, error: caseErr } = await svc
     .from("cases")
-    .insert({
-      psychologist_id: owner.id,
-      state: "SC",
-      eval_type: "initial",
-      referral_date: "2026-04-20",
-      status: "data_collection",
-      student_ref: FIXTURE_STUDENT_REF,
-      first_name: "Avery",
-      last_initial: "W",
-      display_initials: "A.W.",
-      grade: "4",
-    })
+    .insert({ psychologist_id: owner.id, ...AVERY_CASE })
     .select("id")
     .single();
   if (caseErr) throw caseErr;
@@ -208,9 +166,7 @@ async function main() {
     .from("informants")
     .insert({
       case_id: caseId,
-      role: "teacher",
-      relationship: "Classroom teacher, 4th grade",
-      months_known_student: 8,
+      ...AVERY_INFORMANT,
     })
     .select("id")
     .single();
@@ -261,7 +217,7 @@ async function main() {
     case_id: caseId,
     informant_id: informantId,
     kind: "referral_form",
-    collected_on: "2026-04-28",
+    collected_on: COLLECTED_ON.teacher,
     bank_id: locked.source.bank!.bankId,
     bank_version: locked.source.bank!.bankVersion,
     payload: locked.payload,
@@ -296,23 +252,14 @@ async function main() {
   await audit(owner.id, "capture_session_created", { captureSessionId, kind: "interview" });
 
   // Payload shape mirrors apps/intake/lib/capture-core.ts finalizeCapture.
-  const capturePayload = {
-    captureSessionId,
-    kind: "interview",
-    setting: "Union Elementary — teacher interview",
-    occurredOn: "2026-05-05",
-    notes: CAPTURE_NOTES,
-    summaryFinal: CAPTURE_SUMMARY,
-    summaryProvenance: null, // clinician-authored; no model proposal in play
-    finalizedAt: "2026-05-05T19:00:00.000Z",
-  };
+  const capturePayload = { captureSessionId, ...CAPTURE_PAYLOAD };
   const captureSourceId = randomUUID();
   const { error: cSrcErr } = await svc.from("sources").insert({
     id: captureSourceId,
     case_id: caseId,
     informant_id: informantId,
     kind: "interview",
-    collected_on: "2026-05-05",
+    collected_on: COLLECTED_ON.capture,
     instrument: "capture",
     payload: capturePayload,
     locked: true,
