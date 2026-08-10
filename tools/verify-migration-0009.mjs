@@ -121,7 +121,7 @@ const section = async (over = {}) => {
     case_id: CASE_ID,
     section_key: "assessment-results",
     mode: "DESCRIPTIVE_RESULTS",
-    content: "Word reading was an area of difficulty.",
+    blocks: JSON.stringify([{ kind: "prose", text: "Word reading was an area of difficulty." }]),
     generation_id: null,
     status: "proposed",
     version: 1,
@@ -144,8 +144,9 @@ console.log("═".repeat(76));
 
 await expectOk(
   "human-authored section, generation_id null",
-  `insert into report_sections (case_id, section_key, mode, content, generation_id, status)
-   values ($1, 'background', 'SOURCE_FAITHFUL', 'The clinician wrote this from scratch.', null, 'accepted')`,
+  `insert into report_sections (case_id, section_key, mode, blocks, generation_id, status)
+   values ($1, 'background', 'SOURCE_FAITHFUL',
+           '[{"kind":"prose","text":"The clinician wrote this from scratch."}]'::jsonb, null, 'accepted')`,
   [CASE_ID]
 );
 {
@@ -206,8 +207,9 @@ ok("generated section row created", generatedSectionId.slice(0, 8));
 
 await expectRefused(
   "a section cannot present text that differs from what was adjudicated",
-  `insert into report_sections (case_id, section_key, mode, content, generation_id)
-   values ($1,'assessment-results','DESCRIPTIVE_RESULTS','Something the gate never saw.', $2)`,
+  `insert into report_sections (case_id, section_key, mode, blocks, generation_id)
+   values ($1,'assessment-results','DESCRIPTIVE_RESULTS',
+           '[{"kind":"prose","text":"Something the gate never saw."}]'::jsonb, $2)`,
   [CASE_ID, passedGen],
   "differs from its adjudicated generation"
 );
@@ -220,19 +222,21 @@ console.log("═".repeat(76));
 const EDITED = "Word reading was an area of difficulty, and decoding was weaker still.";
 await expectOk(
   "the edit inserts a NEW human version superseding the generated one",
-  `insert into report_sections (case_id, section_key, mode, content, generation_id, status, version, supersedes_id)
-   values ($1,'assessment-results','DESCRIPTIVE_RESULTS',$2, null, 'accepted', 2, $3)`,
+  `insert into report_sections (case_id, section_key, mode, blocks, generation_id, status, version, supersedes_id)
+   values ($1,'assessment-results','DESCRIPTIVE_RESULTS',
+           jsonb_build_array(jsonb_build_object('kind','prose','text',$2::text)),
+           null, 'accepted', 2, $3)`,
   [CASE_ID, EDITED, generatedSectionId]
 );
 await expectRefused(
   "the generated version is now frozen — the edit cannot overwrite it",
-  `update report_sections set content = $1 where id = $2`,
+  `update report_sections set blocks = jsonb_build_array(jsonb_build_object('kind','prose','text',$1::text)) where id = $2`,
   ["overwritten", generatedSectionId],
   "superseded and immutable"
 );
 {
   const r = await db.query(
-    `select g.content as adjudicated, l.content as current
+    `select g.content as adjudicated, report_section_prose(l.blocks) as current
        from report_section_generations g
        join report_sections_latest l on l.section_key = g.section_key and l.case_id = g.case_id
       where g.id = $1`,
@@ -275,8 +279,9 @@ ok("the refused draft is stored in full", `${BAD_TEXT.slice(0, 42)}…`);
 
 await expectRefused(
   "a refused draft can never acquire a presented section row",
-  `insert into report_sections (case_id, section_key, mode, content, generation_id)
-   values ($1,'interpretation','INTEGRATED_INTERPRETATION',$2,$3)`,
+  `insert into report_sections (case_id, section_key, mode, blocks, generation_id)
+   values ($1,'interpretation','INTEGRATED_INTERPRETATION',
+           jsonb_build_array(jsonb_build_object('kind','prose','text',$2::text)),$3)`,
   [CASE_ID, BAD_TEXT, rejected],
   "gate-rejected generation"
 );
@@ -292,7 +297,9 @@ const retry = await gen({
 const retrySection = await section({
   section_key: "interpretation",
   mode: "INTEGRATED_INTERPRETATION",
-  content: "Reading comprehension was constrained by word-level difficulty.",
+  blocks: JSON.stringify([
+    { kind: "prose", text: "Reading comprehension was constrained by word-level difficulty." },
+  ]),
   generation_id: retry,
 });
 ok("the retry is presented instead", retrySection.slice(0, 8));
@@ -310,7 +317,9 @@ const unusable = await gen({
 const unusableSection = await section({
   section_key: "recommendations",
   mode: "RECOMMENDATION",
-  content: "Provide explicit decoding instruction in a small group.",
+  blocks: JSON.stringify([
+    { kind: "prose", text: "Provide explicit decoding instruction in a small group." },
+  ]),
   generation_id: unusable,
 });
 
@@ -356,6 +365,127 @@ await expectOk(
 }
 
 /* ------------------------------------------------------------------ */
+console.log("\n" + "═".repeat(76));
+console.log("BLOCKS — a section is an ordered array, validated by the database");
+console.log("═".repeat(76));
+
+await expectOk(
+  "a section may interleave a rendered table with generated prose",
+  `insert into report_sections (case_id, section_key, mode, blocks, generation_id, status)
+   values ($1,'assessment-results','DESCRIPTIVE_RESULTS',
+     jsonb_build_array(
+       jsonb_build_object('kind','table','table','score_summary',
+         'columns', jsonb_build_array('Subtest','SS','95% CI','%ile'),
+         'rows', jsonb_build_array(jsonb_build_array('Word Reading','71','66-76','3'))),
+       jsonb_build_object('kind','prose','text','Word reading was an area of difficulty.')
+     ), $2, 'proposed')`,
+  [CASE_ID, passedGen]
+);
+{
+  const r = await db.query(
+    `select report_section_prose(blocks) p, jsonb_array_length(blocks) n
+       from report_sections where generation_id = $1 order by created_at desc limit 1`,
+    [passedGen]
+  );
+  r.rows[0].n === 2 && r.rows[0].p === "Word reading was an area of difficulty."
+    ? ok("the table sits beside the prose, and the prose still matches the adjudicated text")
+    : bad("interleaved blocks", JSON.stringify(r.rows[0]));
+}
+
+await expectRefused(
+  "an unrecognized block kind is refused",
+  `insert into report_sections (case_id, section_key, mode, blocks)
+   values ($1,'background','SOURCE_FAITHFUL','[{"kind":"sidebar","text":"x"}]'::jsonb)`,
+  [CASE_ID],
+  "blocks_shape"
+);
+await expectRefused(
+  "a prose block with no text is refused",
+  `insert into report_sections (case_id, section_key, mode, blocks)
+   values ($1,'background','SOURCE_FAITHFUL','[{"kind":"prose","text":""}]'::jsonb)`,
+  [CASE_ID],
+  "blocks_shape"
+);
+await expectRefused(
+  "a table block with no rows is refused",
+  `insert into report_sections (case_id, section_key, mode, blocks)
+   values ($1,'background','SOURCE_FAITHFUL','[{"kind":"table","table":"t"}]'::jsonb)`,
+  [CASE_ID],
+  "blocks_shape"
+);
+await expectRefused(
+  "an empty block array is refused",
+  `insert into report_sections (case_id, section_key, mode, blocks)
+   values ($1,'background','SOURCE_FAITHFUL','[]'::jsonb)`,
+  [CASE_ID],
+  "blocks_shape"
+);
+await expectRefused(
+  "blocks must be an array, not an object",
+  `insert into report_sections (case_id, section_key, mode, blocks)
+   values ($1,'background','SOURCE_FAITHFUL','{"kind":"prose","text":"x"}'::jsonb)`,
+  [CASE_ID],
+  "blocks_shape"
+);
+// The interesting case: prose that CONCATENATES to exactly the adjudicated
+// text, split across two blocks with a table wedged between them. The
+// prose-match trigger is satisfied — the characters are identical — so only
+// the count constraint can catch it. Splitting adjudicated prose and
+// interleaving rendered content changes what the clinician reads while
+// passing every character-level check, which is why the constraint is not
+// redundant with the trigger.
+const splitGen = await gen({
+  section_key: "background",
+  mode: "SOURCE_FAITHFUL",
+  content: "First paragraph.\n\nSecond paragraph.",
+});
+await expectRefused(
+  "adjudicated prose cannot be split across two blocks, even when the text matches exactly",
+  `insert into report_sections (case_id, section_key, mode, blocks, generation_id)
+   values ($1,'background','SOURCE_FAITHFUL',
+     jsonb_build_array(
+       jsonb_build_object('kind','prose','text','First paragraph.'),
+       jsonb_build_object('kind','table','table','t','rows', jsonb_build_array()),
+       jsonb_build_object('kind','prose','text','Second paragraph.')
+     ), $2)`,
+  [CASE_ID, splitGen],
+  "one_generated_prose"
+);
+{
+  // Prove the trigger really was satisfied — i.e. the CHECK did the work.
+  const r = await db.query(
+    `select report_section_prose(
+       jsonb_build_array(
+         jsonb_build_object('kind','prose','text','First paragraph.'),
+         jsonb_build_object('kind','prose','text','Second paragraph.')
+       )) = 'First paragraph.' || chr(10) || chr(10) || 'Second paragraph.' as matches`
+  );
+  r.rows[0].matches
+    ? ok("…and the character-level check alone would have let it through")
+    : bad("prose concatenation", "expected the split text to reassemble exactly");
+}
+await expectRefused(
+  "a generated section cannot present a SECOND prose block the gate never judged",
+  `insert into report_sections (case_id, section_key, mode, blocks, generation_id)
+   values ($1,'assessment-results','DESCRIPTIVE_RESULTS',
+     jsonb_build_array(
+       jsonb_build_object('kind','prose','text','Word reading was an area of difficulty.'),
+       jsonb_build_object('kind','prose','text','And a second block the gate never judged.')
+     ), $2)`,
+  [CASE_ID, passedGen],
+  "one_generated_prose|differs from its adjudicated generation"
+);
+await expectOk(
+  "a HUMAN section may carry several prose blocks",
+  `insert into report_sections (case_id, section_key, mode, blocks, status)
+   values ($1,'recommendations','RECOMMENDATION',
+     jsonb_build_array(
+       jsonb_build_object('kind','prose','text','First recommendation.'),
+       jsonb_build_object('kind','prose','text','Second recommendation.')
+     ), 'accepted')`,
+  [CASE_ID]
+);
+
 console.log("\n" + "═".repeat(76));
 console.log("MODE INTEGRITY — a shadow verdict can never read as an enforced one");
 console.log("═".repeat(76));

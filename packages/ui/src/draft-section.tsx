@@ -90,6 +90,73 @@ export function DocumentBody({ text }: { text: string }) {
   );
 }
 
+/**
+ * A section is an ordered array of blocks (migration 0009), not a string.
+ * `prose` is written; `table` is rendered from verified data.
+ *
+ * EVERY KIND MUST RENDER. A block kind this component did not handle would be
+ * silently dropped from the document — the same silent-discard shape as
+ * `docs/defects/unreachable-source-kinds.md`. The default branch is loud on
+ * purpose rather than returning null.
+ */
+export type DocBlock =
+  | { kind: "prose"; text: string }
+  | { kind: "table"; table: string; columns: string[]; rows: string[][]; sourceId?: string };
+
+export function DocumentBlocks({ blocks }: { blocks: DocBlock[] }) {
+  return (
+    <div className="doc-blocks">
+      {blocks.map((b, i) => {
+        if (b.kind === "prose") return <DocumentBody key={i} text={b.text} />;
+        if (b.kind === "table") return <ScoreTable key={i} block={b} />;
+        return (
+          <p key={i} className="doc-blocks__unknown">
+            This section contains content this version of the writer cannot display
+            (<code>{(b as { kind: string }).kind}</code>). It has not been removed.
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * A rendered table. Deterministic — no model produced it, so the fidelity
+ * gate has nothing to police here. Column schema comes from the block, not
+ * from this component: table columns and order are a house convention
+ * (parameter block §11, layer 7), injected per district and never hardcoded.
+ */
+export function ScoreTable({
+  block,
+}: {
+  block: { table: string; columns: string[]; rows: string[][] };
+}) {
+  return (
+    <div className="doc-table-wrap">
+      <table className="doc-table">
+        <thead>
+          <tr>
+            {block.columns.map((c, i) => (
+              <th key={i} scope="col">
+                {c}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {block.rows.map((row, r) => (
+            <tr key={r}>
+              {row.map((cell, c) => (
+                <td key={c}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 /** Compact outline for the left rail (Stage E). */
 export function SectionOutline({
   items,

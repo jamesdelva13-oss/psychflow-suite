@@ -28,9 +28,12 @@ export { AIProposal, GateNoticeBlock, type GateNotice } from "./ai-proposal";
 export {
   DraftSection,
   DocumentBody,
+  DocumentBlocks,
+  ScoreTable,
   SectionOutline,
   wordCount,
   type DraftStatus,
+  type DocBlock,
 } from "./draft-section";
 export { CommandPalette, type PaletteItem } from "./command-palette";
 export {

@@ -137,8 +137,28 @@ Options, in increasing order of commitment:
    expensive later, and it means the table layer cannot ship until after a
    data migration.
 
-**Recommendation: option 2, decided before 0009 is applied.** Not built until
-JD rules.
+**Recommendation: option 2, decided before 0009 is applied.**
+
+> **RULED (JD, 2026-08-09): option 2 — adopted.** `report_sections.content
+> text` is replaced by `report_sections.blocks jsonb`, an ordered array.
+> Generations keep `content text`: one generation is one prose output, and the
+> composition lives on the section where the clinician's version chain is.
+>
+> Implemented in `migrations/0009_report_sections.sql` (still unapplied), with
+> the `table` kind defined and validated even though nothing emits one yet —
+> that is the point of deciding it before the DDL runs. Enforced by the
+> database, not by convention: `report_sections_blocks_valid` rejects an
+> unrecognized kind, an empty array, a prose block with no text, or a table
+> block with no rows; `report_sections_one_generated_prose` rejects a
+> generated section carrying more than one prose block; and the prose-match
+> trigger now compares `report_section_prose(blocks)` against the adjudicated
+> generation, so rendered blocks sit outside the comparison by construction.
+>
+> Verified against real Postgres — 48 checks, 0 failures — including the case
+> where prose is split across two blocks that *concatenate to exactly* the
+> adjudicated text with a table wedged between them. The character-level check
+> passes there; only the count constraint catches it. §2.3 remains the record
+> of why the shape was chosen.
 
 ---
 

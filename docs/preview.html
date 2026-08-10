@@ -363,6 +363,53 @@
   </div>
 </section>
 
+
+<section class="panel stack">
+  <h2 class="panel__title">Document blocks — migration 0009 (a section is an ordered array)</h2>
+  <p class="page-sub">Prose is <em>written</em> — by the model or the clinician. A table is
+  <em>rendered</em>: deterministic, no generation behind it, and therefore nothing the
+  session-fidelity gate has to police. Column schema arrives in the block, never hardcoded —
+  table columns and order are a house convention (parameter block §11, layer 7).</p>
+
+  <section class="draft-section" aria-label="Assessment results">
+    <header class="draft-section__head">
+      <span class="draft-section__dot draft-section__dot--reviewed"></span>
+      <h2 class="draft-section__title">Assessment results</h2>
+      <span class="draft-section__state">Accepted</span>
+      <span class="draft-section__words">61 words</span>
+    </header>
+    <div class="doc-blocks">
+      <div class="doc-table-wrap">
+        <table class="doc-table">
+          <thead>
+            <tr><th scope="col">Subtest</th><th scope="col">SS</th><th scope="col">95% CI</th><th scope="col">%ile</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Word Reading</td><td>71</td><td>66–76</td><td>3</td></tr>
+            <tr><td>Pseudoword Decoding</td><td>69</td><td>64–74</td><td>2</td></tr>
+            <tr><td>Reading Comprehension</td><td>76</td><td>70–82</td><td>5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="doc-body">
+        <p>Word-level reading was the consistent area of difficulty. Decoding of unfamiliar
+        words was weaker than reading of familiar words, and both fell well below age
+        expectations.</p>
+        <p>The gap between word-level skill and comprehension suggests comprehension is
+        currently constrained by the effort word identification demands.</p>
+      </div>
+    </div>
+    <footer class="draft-section__foot">Drew on 1 source on this case.</footer>
+  </section>
+
+  <p class="page-sub">A block kind the writer cannot display is stated, never dropped — the
+  same silent-discard shape as the unreachable-source-kinds defect:</p>
+  <div class="doc-blocks">
+    <p class="doc-blocks__unknown">This section contains content this version of the writer
+    cannot display (<code>figure</code>). It has not been removed.</p>
+  </div>
+</section>
+
 </div></main>
 </body>
 </html>

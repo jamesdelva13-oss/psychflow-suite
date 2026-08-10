@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, DocumentBody } from "@suite/ui";
+import { Button, DocumentBlocks, type DocBlock } from "@suite/ui";
 import { editSection } from "./actions";
 
 /**
@@ -18,19 +18,23 @@ import { editSection } from "./actions";
 export function SectionEditor({
   caseId,
   sectionKey,
-  content,
+  blocks,
+  prose,
 }: {
   caseId: string;
   sectionKey: string;
-  content: string;
+  /** The whole composition — rendered blocks included. */
+  blocks: DocBlock[];
+  /** Just the prose, which is the only part the clinician edits here. */
+  prose: string;
 }) {
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(content);
+  const [draft, setDraft] = useState(prose);
 
   if (!editing) {
     return (
       <>
-        <DocumentBody text={content} />
+        <DocumentBlocks blocks={blocks} />
         <Button variant="ghost" onClick={() => setEditing(true)}>
           Edit
         </Button>
@@ -45,11 +49,13 @@ export function SectionEditor({
       <label className="sr-only" htmlFor={`edit-${sectionKey}`}>
         Section text
       </label>
+      {/* Only prose is editable. Rendered blocks are re-rendered, never
+          hand-edited, and survive the edit (see replaceProse). */}
       <textarea
         id={`edit-${sectionKey}`}
         name="content"
         className="doc-editor"
-        rows={Math.max(8, content.split("\n").length + 4)}
+        rows={Math.max(8, prose.split("\n").length + 4)}
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
       />
@@ -61,7 +67,7 @@ export function SectionEditor({
           type="button"
           variant="ghost"
           onClick={() => {
-            setDraft(content);
+            setDraft(prose);
             setEditing(false);
           }}
         >

@@ -41,6 +41,35 @@
 --
 -- Generation provenance records the model that ACTUALLY served the text (a
 -- refusal fallback can substitute one), never the model requested.
+--
+-- ---------------------------------------------------------------------------
+-- A SECTION IS AN ORDERED ARRAY OF BLOCKS, NOT A STRING
+-- ---------------------------------------------------------------------------
+--
+-- A psychoeducational report section is prose AND rendered content — a score
+-- table beside the narrative that describes it. The parameter block §6 P1
+-- already assumes this: "Prose must not duplicate numerical information a
+-- table already communicates adequately." The prose rule was shipping against
+-- a table the product never rendered, so the numbers reached nobody.
+--
+-- `report_sections.blocks` is that composition. Two kinds today:
+--
+--   {"kind":"prose","text":"…"}                     generated or clinician-written
+--   {"kind":"table","table":"…","columns":[…],"rows":[…]}   rendered, deterministic
+--
+-- WHY NOW, AND ONLY NOW. This migration is unapplied. Adding blocks after it
+-- ships means a data migration over live report content; adding them here
+-- costs nothing. The `table` kind is defined and validated even though no code
+-- emits one yet — that is the entire point of deciding it before the DDL runs.
+--
+-- WHAT THE SPLIT BUYS THE FIDELITY GATE. A generation produces exactly ONE
+-- prose block; the gate judges that block. A rendered table has no generation
+-- and cannot fabricate — it is a deterministic projection of verified score
+-- rows. Moving numbers out of prose therefore shrinks the surface the
+-- adjudicator has to police rather than enlarging it.
+--
+-- Generations stay `content text`. One generation is one prose output. The
+-- composition lives on the section, where the clinician's version chain is.
 
 ---------------------------------------------------------------------------
 -- Generations
@@ -218,6 +247,44 @@ create trigger trg_gen_immutable
 -- Sections as presented
 ---------------------------------------------------------------------------
 
+-- Block validity, as a CHECK rather than an application convention. An
+-- unrecognized kind, a prose block with no text, or a table block with no rows
+-- is refused at insert.
+create or replace function report_sections_blocks_valid(blocks jsonb)
+returns boolean language sql immutable as $$
+  select jsonb_typeof(blocks) = 'array'
+     and jsonb_array_length(blocks) > 0
+     and not exists (
+       select 1
+         from jsonb_array_elements(blocks) b
+        where jsonb_typeof(b) <> 'object'
+           or b->>'kind' is null
+           or b->>'kind' not in ('prose','table')
+           or (b->>'kind' = 'prose' and coalesce(b->>'text', '') = '')
+           or (b->>'kind' = 'table'
+               and (b->'rows' is null or jsonb_typeof(b->'rows') <> 'array'))
+     );
+$$;
+
+-- The prose a section presents, in order. Exports, search, and the
+-- generated-text check all read through this rather than reaching into the
+-- array shape themselves.
+create or replace function report_section_prose(blocks jsonb)
+returns text language sql immutable as $$
+  select string_agg(b->>'text', E'\n\n' order by ord)
+    from jsonb_array_elements(blocks) with ordinality as t(b, ord)
+   where b->>'kind' = 'prose';
+$$;
+
+-- How many prose blocks a section carries. A generated section must carry
+-- exactly one, because one generation is one prose output.
+create or replace function report_section_prose_count(blocks jsonb)
+returns int language sql immutable as $$
+  select count(*)::int
+    from jsonb_array_elements(blocks) b
+   where b->>'kind' = 'prose';
+$$;
+
 create table report_sections (
   id uuid primary key default gen_random_uuid(),
   case_id uuid not null references cases(id),
@@ -229,7 +296,9 @@ create table report_sections (
     ('SOURCE_FAITHFUL','DIRECT_OBSERVATION','DESCRIPTIVE_RESULTS',
      'INTEGRATED_INTERPRETATION','RECOMMENDATION')),
 
-  content text not null,
+  -- Ordered composition. See the header note. Validated by
+  -- `report_sections_blocks_valid` below, not by convention.
+  blocks jsonb not null,
 
   -- THE DISCRIMINATOR. Non-null → this version is machine-written, and the
   -- referenced row necessarily carries a gate verdict (all gate columns are
@@ -252,7 +321,15 @@ create table report_sections (
   created_by uuid,
   accepted_at timestamptz,
   accepted_by uuid,
-  deleted_at timestamptz
+  deleted_at timestamptz,
+
+  constraint report_sections_blocks_shape
+    check (report_sections_blocks_valid(blocks)),
+
+  -- One generation is one prose output. A generated section presenting two
+  -- prose blocks would mean prose the gate never judged.
+  constraint report_sections_one_generated_prose
+    check (generation_id is null or report_section_prose_count(blocks) = 1)
 );
 
 create index idx_report_sections_case
@@ -287,8 +364,12 @@ begin
     raise exception 'report_section % references a missing generation', new.id
       using errcode = '23503';
   end if;
-  if new.content is distinct from gen_content then
-    raise exception 'report_section % content differs from its adjudicated generation; a clinician edit must insert a human version instead', new.id
+  -- The section's PROSE must be the adjudicated text, character for
+  -- character. Rendered blocks sit around it and are not the model's output,
+  -- so they are deliberately outside this comparison — a table cannot
+  -- fabricate and has no generation to match.
+  if report_section_prose(new.blocks) is distinct from gen_content then
+    raise exception 'report_section % prose differs from its adjudicated generation; a clinician edit must insert a human version instead', new.id
       using errcode = '23514';
   end if;
   if new.case_id is distinct from gen_case or new.section_key is distinct from gen_key then
@@ -319,7 +400,7 @@ returns trigger language plpgsql as $$
 begin
   if exists (select 1 from report_sections s
              where s.supersedes_id = old.id and s.deleted_at is null) then
-    if new.content is distinct from old.content
+    if new.blocks is distinct from old.blocks
        or new.mode is distinct from old.mode
        or new.generation_id is distinct from old.generation_id
        or new.status is distinct from old.status then

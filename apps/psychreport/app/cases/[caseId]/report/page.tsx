@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import {
   AIProposal,
   Button,
-  DocumentBody,
+  DocumentBlocks,
   DraftSection,
   Eyebrow,
   LinkButton,
@@ -103,7 +103,7 @@ export default async function ReportPage({
                 <DraftSection
                   title={plan.title}
                   status={status}
-                  text={stored?.content}
+                  text={stored?.prose}
                   sources={
                     stored?.generation
                       ? `Drew on ${stored.generation.sourceIds.length} source${
@@ -151,7 +151,7 @@ function SectionBody({ caseId, section }: { caseId: string; section: StoredSecti
   const g = section.generation;
 
   if (section.status === "accepted") {
-    return <DocumentBody text={section.content} />;
+    return <DocumentBlocks blocks={section.blocks} />;
   }
 
   // Shadow-mode verdicts never reach this function: `gateNoticeFor` returns
@@ -199,7 +199,8 @@ function SectionBody({ caseId, section }: { caseId: string; section: StoredSecti
       <SectionEditor
         caseId={caseId}
         sectionKey={section.sectionKey}
-        content={section.content}
+        blocks={section.blocks}
+        prose={section.prose}
       />
     </AIProposal>
   );

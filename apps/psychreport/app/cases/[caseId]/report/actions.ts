@@ -159,7 +159,9 @@ export async function editSection(formData: FormData): Promise<void> {
   const { user, rls } = await authorize(caseId);
   const prior = await latestFor(rls, caseId, sectionKey);
   if (!prior) throw new Error("editSection: nothing to edit");
-  if (content === prior.content) {
+  // Compare against the PROSE, not the whole composition — a rendered table
+  // is not something the clinician just typed.
+  if (content === prior.prose) {
     revalidatePath(`/cases/${caseId}/report`);
     return;
   }

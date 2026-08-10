@@ -511,3 +511,28 @@ h1, h2, h3, p, ul, dl, dd { margin: 0; }
   resize: vertical;
 }
 .doc-editor:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* ---------- document blocks (migration 0009) ---------- */
+.doc-blocks { display: flex; flex-direction: column; gap: var(--s-5); }
+.doc-blocks__unknown {
+  font-size: var(--text-sm); color: var(--warn-600);
+  border-left: var(--spine-width) solid var(--spine-review);
+  padding-left: var(--s-4);
+}
+/* Rendered, deterministic. Column schema is a house convention (parameter
+   block §11) and arrives in the block — never hardcoded here. */
+.doc-table-wrap { overflow-x: auto; max-width: var(--editor-col); }
+.doc-table {
+  border-collapse: collapse; width: 100%;
+  font-family: var(--font-ui); font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+.doc-table th, .doc-table td {
+  text-align: left; padding: var(--s-2) var(--s-3);
+  border-bottom: 1px solid var(--line);
+}
+.doc-table th {
+  font-size: var(--text-xs); font-weight: var(--weight-semibold);
+  color: var(--ink-700); border-bottom: 1px solid var(--line-strong);
+}
+.doc-table tbody tr:last-child td { border-bottom: none; }

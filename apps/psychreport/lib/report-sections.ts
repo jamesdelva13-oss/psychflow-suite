@@ -51,15 +51,63 @@ export interface StoredGeneration {
   sourceIds: string[];
 }
 
+/**
+ * One block of a section. A section is an ordered array of these, not a
+ * string (migration 0009). `prose` is written — by the model or the
+ * clinician; `table` is RENDERED — deterministic, no generation, and
+ * therefore nothing the fidelity gate has to police.
+ */
+export type SectionBlock =
+  | { kind: "prose"; text: string }
+  | {
+      kind: "table";
+      /** Which table this is, e.g. "score_summary". */
+      table: string;
+      columns: string[];
+      rows: string[][];
+      /** The Source it was rendered from, where there is one. */
+      sourceId?: string;
+    };
+
 export interface StoredSection {
   id: string;
   sectionKey: string;
   mode: string;
-  content: string;
+  blocks: SectionBlock[];
+  /**
+   * The prose this version presents, in order — the text the gate judged.
+   * Mirrors the `report_section_prose()` SQL function so both sides agree on
+   * what "the prose of a section" means.
+   */
+  prose: string;
   status: "proposed" | "accepted" | "dismissed";
   version: number;
   /** Null → the clinician wrote this version. */
   generation: StoredGeneration | null;
+}
+
+/** TypeScript twin of the SQL `report_section_prose(blocks)`. */
+export const sectionProse = (blocks: SectionBlock[]): string =>
+  blocks
+    .filter((b): b is Extract<SectionBlock, { kind: "prose" }> => b.kind === "prose")
+    .map((b) => b.text)
+    .join("\n\n");
+
+/** A section that is one prose block — what every generation produces today. */
+export const proseOnly = (text: string): SectionBlock[] => [{ kind: "prose", text }];
+
+/**
+ * Replace the prose of a block array while keeping rendered blocks in place.
+ * The clinician edits prose; tables are re-rendered, never hand-edited, so an
+ * edit must not silently drop one.
+ */
+export function replaceProse(blocks: SectionBlock[], text: string): SectionBlock[] {
+  const firstProse = blocks.findIndex((b) => b.kind === "prose");
+  const kept = blocks.filter((b) => b.kind !== "prose");
+  if (firstProse === -1) return [...kept, { kind: "prose", text }];
+  const before = blocks.slice(0, firstProse).filter((b) => b.kind !== "prose");
+  const after = blocks.slice(firstProse + 1).filter((b) => b.kind !== "prose");
+  return [...before, { kind: "prose", text }, ...after];
 }
 
 export type Loaded =
@@ -111,7 +159,7 @@ export async function loadReportSections(db: SupabaseLike, caseId: string): Prom
   const { data, error } = await db
     .from("report_sections_latest")
     .select(
-      `id, section_key, mode, content, status, version,
+      `id, section_key, mode, blocks, status, version,
        generation:report_section_generations!generation_id (${GEN_COLUMNS})`
     )
     .eq("case_id", caseId);
@@ -130,7 +178,7 @@ export async function loadReportSections(db: SupabaseLike, caseId: string): Prom
     id: string;
     section_key: string;
     mode: string;
-    content: string;
+    blocks: SectionBlock[];
     status: StoredSection["status"];
     version: number;
     generation: GenRow | GenRow[] | null;
@@ -142,7 +190,8 @@ export async function loadReportSections(db: SupabaseLike, caseId: string): Prom
       id: r.id,
       sectionKey: r.section_key,
       mode: r.mode,
-      content: r.content,
+      blocks: r.blocks ?? [],
+      prose: sectionProse(r.blocks ?? []),
       status: r.status,
       version: r.version,
       generation: toGeneration(Array.isArray(r.generation) ? r.generation[0] ?? null : r.generation),
@@ -239,8 +288,11 @@ export async function persistGeneration(
       case_id: caseId,
       section_key: section.sectionKey,
       mode: section.mode,
-      // The trigger requires this to equal the generation's content exactly.
-      content: section.content,
+      // The trigger requires the section's PROSE to equal the generation's
+      // content exactly, and the CHECK requires exactly one prose block.
+      // Rendered blocks are composed in later by the table layer; nothing
+      // emits one yet.
+      blocks: proseOnly(section.content),
       generation_id: surfacedGenerationId,
       status: "proposed",
       version: args.nextVersion,
@@ -308,6 +360,7 @@ export async function saveClinicianEdit(
   args: {
     caseId: string;
     prior: StoredSection;
+    /** The clinician's prose. Rendered blocks on the prior version survive. */
     content: string;
     actor: string;
   }
@@ -318,7 +371,7 @@ export async function saveClinicianEdit(
       case_id: args.caseId,
       section_key: args.prior.sectionKey,
       mode: args.prior.mode,
-      content: args.content,
+      blocks: replaceProse(args.prior.blocks, args.content),
       generation_id: null,
       status: "accepted",
       accepted_at: new Date().toISOString(),
