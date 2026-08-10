@@ -18,6 +18,11 @@
 
 import { PGlite } from "@electric-sql/pglite";
 import { readFileSync } from "node:fs";
+// The REAL table-layer output, not a hand-written approximation of it. If the
+// builder ever emits a shape the schema refuses, this file fails rather than
+// the writer failing in front of a clinician.
+import { buildScoreTableBlock } from "../apps/psychreport/lib/score-table.ts";
+import { WIAT4_SCORE_SET } from "./fixtures/avery.ts";
 
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -369,6 +374,38 @@ console.log("\n" + "═".repeat(76));
 console.log("BLOCKS — a section is an ordered array, validated by the database");
 console.log("═".repeat(76));
 
+// The table layer's genuine output, straight from buildScoreTableBlock.
+const realTable = buildScoreTableBlock({
+  payload: WIAT4_SCORE_SET,
+  sourceId: "33333333-3333-4333-8333-333333333333",
+  verifications: [],
+});
+await expectOk(
+  "the REAL table-layer output satisfies the block constraints",
+  `insert into report_sections (case_id, section_key, mode, blocks, generation_id, status)
+   values ($1,'assessment-results','DESCRIPTIVE_RESULTS',
+     jsonb_build_array($2::jsonb, jsonb_build_object('kind','prose','text',$3::text)),
+     $4, 'proposed')`,
+  [CASE_ID, JSON.stringify(realTable), "Word reading was an area of difficulty.", passedGen]
+);
+{
+  const r = await db.query(
+    `select blocks->0->>'table' as t,
+            jsonb_array_length(blocks->0->'rows') as rows,
+            blocks->0->'rows'->2->>'flag' as third_row_flag,
+            report_section_prose(blocks) as prose
+       from report_sections where generation_id = $1 order by created_at desc limit 1`,
+    [passedGen]
+  );
+  const row = r.rows[0];
+  row.t === "score_summary" && Number(row.rows) === 3 && row.third_row_flag === "unverified"
+    ? ok("all three scores stored, the unconfirmed one still marked", "Reading Comprehension flagged")
+    : bad("real table round-trip", JSON.stringify(row));
+  row.prose === "Word reading was an area of difficulty."
+    ? ok("…and the prose still matches the adjudicated text beside it")
+    : bad("prose beside a real table", row.prose);
+}
+
 await expectOk(
   "a section may interleave a rendered table with generated prose",
   `insert into report_sections (case_id, section_key, mode, blocks, generation_id, status)
@@ -376,7 +413,7 @@ await expectOk(
      jsonb_build_array(
        jsonb_build_object('kind','table','table','score_summary',
          'columns', jsonb_build_array('Subtest','SS','95% CI','%ile'),
-         'rows', jsonb_build_array(jsonb_build_array('Word Reading','71','66-76','3'))),
+         'rows', jsonb_build_array(jsonb_build_object('cells', jsonb_build_array('Word Reading','71','66-76','3')))),
        jsonb_build_object('kind','prose','text','Word reading was an area of difficulty.')
      ), $2, 'proposed')`,
   [CASE_ID, passedGen]

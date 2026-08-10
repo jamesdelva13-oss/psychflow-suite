@@ -21,7 +21,7 @@ const TABLE: SectionBlock = {
   kind: "table",
   table: "score_summary",
   columns: ["Subtest", "SS", "95% CI", "%ile"],
-  rows: [["Word Reading", "71", "66–76", "3"]],
+  rows: [{ cells: ["Word Reading", "71", "66–76", "3"], scoreKey: "word-reading" }],
   sourceId: "src-1",
 };
 

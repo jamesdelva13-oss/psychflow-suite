@@ -536,3 +536,16 @@ h1, h2, h3, p, ul, dl, dd { margin: 0; }
   color: var(--ink-700); border-bottom: 1px solid var(--line-strong);
 }
 .doc-table tbody tr:last-child td { border-bottom: none; }
+.doc-table__caption {
+  caption-side: top; text-align: left;
+  font-size: var(--text-xs); color: var(--ink-500);
+  padding-bottom: var(--s-2);
+}
+/* A score awaiting confirmation is shown and marked — never hidden. Amber is
+   the review meaning throughout the suite (§2 spine table). */
+.doc-table__row--unverified td { color: var(--warn-600); }
+.doc-table__row--unverified td:first-child { box-shadow: inset 2px 0 0 var(--spine-review); }
+.doc-table__pending {
+  font-size: var(--text-sm); color: var(--ink-700);
+  margin-top: var(--s-3); max-width: var(--editor-col);
+}

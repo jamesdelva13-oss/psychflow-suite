@@ -63,10 +63,17 @@ export type SectionBlock =
       kind: "table";
       /** Which table this is, e.g. "score_summary". */
       table: string;
+      caption?: string;
       columns: string[];
-      rows: string[][];
+      /**
+       * `flag` travels WITH the row rather than being re-derived at render
+       * time, so an export carries the same distinction the screen showed.
+       */
+      rows: { cells: string[]; flag?: "unverified"; scoreKey?: string }[];
       /** The Source it was rendered from, where there is one. */
       sourceId?: string;
+      /** Which house convention rendered it (parameter block §11). */
+      convention?: { id: string; version: string };
     };
 
 export interface StoredSection {
@@ -225,6 +232,8 @@ export async function persistGeneration(
     actor: string;
     supersedesSectionId?: string | null;
     nextVersion: number;
+    /** Rendered blocks composed ahead of the prose. See score-table.ts. */
+    tables?: SectionBlock[];
   }
 ): Promise<WriteResult> {
   const { caseId, section, actor } = args;
@@ -290,9 +299,9 @@ export async function persistGeneration(
       mode: section.mode,
       // The trigger requires the section's PROSE to equal the generation's
       // content exactly, and the CHECK requires exactly one prose block.
-      // Rendered blocks are composed in later by the table layer; nothing
-      // emits one yet.
-      blocks: proseOnly(section.content),
+      // Rendered blocks sit outside that comparison — a table has no
+      // generation and cannot fabricate.
+      blocks: [...(args.tables ?? []), ...proseOnly(section.content)],
       generation_id: surfacedGenerationId,
       status: "proposed",
       version: args.nextVersion,

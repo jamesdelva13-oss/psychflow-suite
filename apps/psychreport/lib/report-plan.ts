@@ -21,6 +21,13 @@ export interface SectionPlan {
   sourceKinds: string[];
   /** Shown when the case carries none of the eligible sources. */
   emptyReason: string;
+  /**
+   * Rendered tables this section carries, ahead of its prose. Declarative so
+   * the report plan owns placement — the table enumerates and the prose
+   * interprets one level coarser (parameter block §6 P1/P2), which only works
+   * if they sit in the same section.
+   */
+  tables?: string[];
 }
 
 /** Ordered to match the one synthetic district template (lib/templates.ts). */
@@ -53,6 +60,10 @@ export const REPORT_PLAN: SectionPlan[] = [
     mode: "DESCRIPTIVE_RESULTS",
     sourceKinds: ["score_set"],
     emptyReason: "No assessment results have been added to this case.",
+    // Interpretation also draws on score sets but carries no table: repeating
+    // it there would be the striped-screen failure, and P1 puts the numbers
+    // where the results are enumerated.
+    tables: ["score_summary"],
   },
   {
     key: "interpretation",

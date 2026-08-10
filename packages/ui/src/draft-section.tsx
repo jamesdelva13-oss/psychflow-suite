@@ -99,9 +99,28 @@ export function DocumentBody({ text }: { text: string }) {
  * `docs/defects/unreachable-source-kinds.md`. The default branch is loud on
  * purpose rather than returning null.
  */
+export interface DocTableRow {
+  cells: string[];
+  /**
+   * A score awaiting confirmation against the protocol. It is SHOWN, marked —
+   * the withholding is from the drafting model, never from the clinician, who
+   * has to see the value in order to confirm it.
+   */
+  flag?: "unverified";
+  scoreKey?: string;
+}
+
 export type DocBlock =
   | { kind: "prose"; text: string }
-  | { kind: "table"; table: string; columns: string[]; rows: string[][]; sourceId?: string };
+  | {
+      kind: "table";
+      table: string;
+      caption?: string;
+      columns: string[];
+      rows: DocTableRow[];
+      sourceId?: string;
+      convention?: { id: string; version: string };
+    };
 
 export function DocumentBlocks({ blocks }: { blocks: DocBlock[] }) {
   return (
@@ -129,11 +148,13 @@ export function DocumentBlocks({ blocks }: { blocks: DocBlock[] }) {
 export function ScoreTable({
   block,
 }: {
-  block: { table: string; columns: string[]; rows: string[][] };
+  block: { table: string; caption?: string; columns: string[]; rows: DocTableRow[] };
 }) {
+  const pending = block.rows.filter((r) => r.flag === "unverified").length;
   return (
     <div className="doc-table-wrap">
       <table className="doc-table">
+        {block.caption ? <caption className="doc-table__caption">{block.caption}</caption> : null}
         <thead>
           <tr>
             {block.columns.map((c, i) => (
@@ -145,14 +166,25 @@ export function ScoreTable({
         </thead>
         <tbody>
           {block.rows.map((row, r) => (
-            <tr key={r}>
-              {row.map((cell, c) => (
+            <tr
+              key={r}
+              className={row.flag === "unverified" ? "doc-table__row--unverified" : undefined}
+            >
+              {row.cells.map((cell, c) => (
                 <td key={c}>{cell}</td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
+      {pending > 0 ? (
+        <p className="doc-table__pending">
+          {pending === 1 ? "One score is" : `${pending} scores are`} awaiting your
+          confirmation against the protocol. Until then{" "}
+          {pending === 1 ? "it is" : "they are"} not available to the writer, and these
+          results can be described but not combined with other findings.
+        </p>
+      ) : null}
     </div>
   );
 }

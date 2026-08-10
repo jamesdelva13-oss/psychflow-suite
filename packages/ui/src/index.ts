@@ -34,6 +34,7 @@ export {
   wordCount,
   type DraftStatus,
   type DocBlock,
+  type DocTableRow,
 } from "./draft-section";
 export { CommandPalette, type PaletteItem } from "./command-palette";
 export {

@@ -365,7 +365,7 @@
 
 
 <section class="panel stack">
-  <h2 class="panel__title">Document blocks — migration 0009 (a section is an ordered array)</h2>
+  <h2 class="panel__title">Document blocks + the table layer — migration 0009 · proposal §2</h2>
   <p class="page-sub">Prose is <em>written</em> — by the model or the clinician. A table is
   <em>rendered</em>: deterministic, no generation behind it, and therefore nothing the
   session-fidelity gate has to police. Column schema arrives in the block, never hardcoded —
@@ -381,15 +381,17 @@
     <div class="doc-blocks">
       <div class="doc-table-wrap">
         <table class="doc-table">
-          <thead>
-            <tr><th scope="col">Subtest</th><th scope="col">SS</th><th scope="col">95% CI</th><th scope="col">%ile</th></tr>
-          </thead>
+          <caption class="doc-table__caption">WIAT-4 — score summary</caption>
+          <thead><tr><th scope="col">Subtest</th><th scope="col">Standard score</th><th scope="col">95% CI</th><th scope="col">Percentile</th><th scope="col">Status</th></tr></thead>
           <tbody>
-            <tr><td>Word Reading</td><td>71</td><td>66–76</td><td>3</td></tr>
-            <tr><td>Pseudoword Decoding</td><td>69</td><td>64–74</td><td>2</td></tr>
-            <tr><td>Reading Comprehension</td><td>76</td><td>70–82</td><td>5</td></tr>
+            <tr><td>Word Reading</td><td>71</td><td>66–76</td><td>3</td><td></td></tr>
+            <tr><td>Pseudoword Decoding</td><td>69</td><td>64–74</td><td>2</td><td></td></tr>
+            <tr class="doc-table__row--unverified"><td>Reading Comprehension</td><td>76</td><td>70–82</td><td>5</td><td>Awaiting confirmation</td></tr>
           </tbody>
         </table>
+        <p class="doc-table__pending">One score is awaiting your confirmation against the
+        protocol. Until then it is not available to the writer, and these results can be
+        described but not combined with other findings.</p>
       </div>
       <div class="doc-body">
         <p>Word-level reading was the consistent area of difficulty. Decoding of unfamiliar

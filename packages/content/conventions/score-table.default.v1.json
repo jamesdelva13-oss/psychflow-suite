@@ -1,0 +1,16 @@
+{
+  "id": "score-table.default",
+  "version": "1.0.0",
+  "label": "Default score table",
+  "caption": "{instrument} — score summary",
+  "columns": [
+    { "key": "subtest", "header": "Subtest" },
+    { "key": "standardScore", "header": "Standard score" },
+    { "key": "confidenceInterval", "header": "95% CI" },
+    { "key": "percentile", "header": "Percentile" },
+    { "key": "verificationStatus", "header": "Status" }
+  ],
+  "order": "as_reported",
+  "confidenceIntervalSeparator": "–",
+  "unverifiedMarker": "Awaiting confirmation"
+}

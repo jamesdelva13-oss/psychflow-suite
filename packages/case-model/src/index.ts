@@ -5,6 +5,7 @@ export * from "./contributors";
 export * from "./crosswalk.schema";
 export * from "./question-bank.schema";
 export * from "./block-scope.schema";
+export * from "./score-table.schema";
 export * from "./grade-bands";
 export { default as taxonomyV04 } from "./taxonomy.v0-4.json";
 

@@ -93,6 +93,27 @@ A deterministic render of `ScoreRow[]` — the same array `buildScoreRows()`
 already produces, joined to verification state. No model involvement, so no
 fidelity gate and no fabrication surface.
 
+> **BUILT (2026-08-09).** `apps/psychreport/lib/score-table.ts` is the
+> interpreter; `@suite/content/conventions/score-table.default.v1.json` is the
+> data; `ScoreTableConvention` in `@suite/case-model` is the contract (content
+> depends on contracts, never the reverse — D-018).
+>
+> All three §2.2 constraints hold and are tested. Unverified scores appear
+> **marked**, carrying `flag: "unverified"` on the row so an export shows what
+> the screen showed. Column set, order, CI separator, classification bands and
+> the unconfirmed-score marker all come from the convention — a district
+> convention changes the table with no code change, and that is a test. No
+> classification bands ship: cut points are authored clinical content and
+> inventing them would be an unratified clinical claim.
+>
+> Placement is declarative on `SectionPlan.tables`, so the report plan owns it.
+> Only Assessment results carries the table; repeating it under Interpretation
+> would be the striped-screen failure (DESIGN-SYSTEM §2), and P1 puts numbers
+> where results are enumerated.
+>
+> 12 unit tests, plus the migration verifier now imports the real builder and
+> round-trips its genuine output through Postgres — 51 checks, 0 failures.
+
 ### 2.2 Three constraints that shape it
 
 **Unverified scores appear in the table, marked.** The withholding is from the
