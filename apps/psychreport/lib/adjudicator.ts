@@ -28,8 +28,8 @@ import { renderSessionEvidence, type SessionEvidenceItem } from "./session-evide
  * result, or an ungrounded quote all mean the section does not pass.
  */
 
-export const ADJUDICATOR_SPEC_VERSION = "session-fidelity-adjudicator-v1.2";
-export const ADJUDICATOR_PROMPT_VERSION = "session-fidelity-adjudicator-prompt-v3";
+export const ADJUDICATOR_SPEC_VERSION = "session-fidelity-adjudicator-v1.3.1";
+export const ADJUDICATOR_PROMPT_VERSION = "session-fidelity-adjudicator-prompt-v5";
 const ADJUDICATOR_MODEL = "claude-opus-5";
 const ADJUDICATOR_EFFORT = "medium" as const;
 const MAX_TOKENS = 4000;
@@ -75,49 +75,74 @@ You cannot see the rest of the case file. A claim you cannot locate in an
 evaluator-conducted encounter may well be documented somewhere you were not
 given. That is somebody else's problem. Do not guess, and do not flag it.
 
-TEST 2 — MANNER, OR PERFORMANCE?
-Not every statement with the examinee as its subject is a session assertion.
-Describing WHAT the examinee achieved is a result. Describing HOW they went
-about it is an observation of the session.
+TEST 2 — SCORE-SUPPORTED PERFORMANCE, OR A TESTING-SESSION EVENT?
+An examinee serving as the grammatical subject of a finite verb does NOT, by
+itself, constitute an asserted observation. Judge what the predicate describes.
 
-  PERFORMANCE — OUT of scope. What was achieved: accuracy, level, standing
-  relative to age or peers, comparison between tasks or item types, which
-  skills are stronger or weaker, whether a pattern held across tasks.
+  SCORE-SUPPORTED PERFORMANCE — out of scope. Verified score or response data
+  may support statements describing the task performed, the level of
+  performance, and clinically appropriate comparisons or patterns.
 
-    "Avery read familiar printed words more accurately than nonwords"
-    "decoding fell well below age expectations"
-    "real words offered no advantage over invented ones"
-    "Avery read single words and decoded unfamiliar letter strings well below
-     the level typical for age"
+    "Avery read familiar printed words at a level well below age expectations."
+    "Avery demonstrated significant difficulty across familiar word reading and
+     pseudoword decoding."
+    "Avery performed similarly across the two word-level reading tasks."
+    "Avery's performance did not identify either word recognition or pseudoword
+     decoding as a relative strength."
+    "Avery read printed words and decoded unfamiliar letter strings with
+     comparable difficulty."
 
-  MANNER — IN scope. How the examinee went about it, beyond what taking the
-  task entails: strategy, approach, effort, pace, persistence, hesitation,
-  affect, self-correction, asking for help, giving up, response style.
+  REQUIRES SESSION EVIDENCE — in scope. Clinician-authored or
+  clinician-verified testing-session evidence is required for statements
+  describing administration mechanics, response process or strategy, manner,
+  pacing, effort, engagement, affect, prompting, examiner support,
+  self-correction, or other behavior occurring during the session.
 
-    "Avery sounded the words out letter by letter"
-    "Avery worked slowly and hesitated before responding"
-    "Avery self-corrected on several items"
-    "the same effortful approach carried across both tasks"
+    "Avery read slowly."                    (pacing)
+    "Avery read in a labored manner."       (manner)
+    "Avery frequently self-corrected."      (self-correction)
+    "Avery appeared frustrated."            (affect)
+    "Avery required repeated prompting."    (examiner support)
+    "Avery responded impulsively."          (response process)
+    "Avery persisted despite difficulty."   (engagement)
+    "Avery guessed based on initial sounds."(strategy)
+    "Avery established a basal after reversal."   (administration mechanics)
+    "Avery reached the discontinue criterion."    (administration mechanics)
+    "Avery's effort declined as the task progressed."  (effort over time)
+    "Avery relied inconsistently on sound-symbol correspondences."  (process)
+    "Avery's word-level reading was consistently effortful."        (effort)
 
-  NAMING THE TASK AN INSTRUMENT ADMINISTERS IS NAMING THE MEASURE, not
-  describing manner. Sounding out nonwords IS Pseudoword Decoding; saying the
-  examinee did it adds nothing observed. Saying they did it LETTER BY LETTER
-  does.
+  THE COMBINATION RULE. When a sentence combines supported performance with an
+  UNSUPPORTED PROCESS CHARACTERIZATION, THE ENTIRE SENTENCE FAILS until the
+  unsupported characterization is removed or supported. Quote the whole
+  sentence, not the fragment.
 
-  TIEBREAK. If the dimension is one the administered measures report —
-  accuracy, level, and rate where a fluency measure was given — it is
-  performance. If no supplied measure reports it, describing it is an
-  observation of the session.
+    FAILS: "Avery sounded out unfamiliar letter strings well below the level
+            typical for his age."
+            — the level is supported; "sounded out" is response process, and it
+              takes the sentence with it.
 
-  A gerund or nominal naming the activity is always the measure: "sounding out
-  unfamiliar letter strings proved difficult" is performance.
+  THE VERBS THAT NAME THE ADMINISTERED SUBTESTS ARE THE MEASURE, NOT PROCESS.
+  The SESSION EVIDENCE lists which subtests were administered. Saying the
+  examinee READ words or DECODED nonwords names those tasks; it asserts nothing
+  about how the response was produced, and it passes.
 
-  THIS TEST APPLIES ONLY TO STATEMENTS ABOUT THE EXAMINEE'S OWN DOING.
-  Administration mechanics (which items were given, how many were attempted or
-  answered, discontinue/basal/ceiling rules, timing, breaks), examiner actions,
-  and session conditions are in scope by their own definitions and are NOT
-  subject to the manner/performance distinction. "Avery answered twelve items
-  correctly" is an item count, not a performance description.
+    PASSES: "Avery read printed words and decoded unfamiliar letter strings
+             with comparable difficulty."
+    PASSES: "Avery read single printed words and decoded unfamiliar letter
+             strings at closely comparable levels."
+
+  A verb describing HOW the response was produced — sounded out, guessed,
+  relied on, self-corrected, sight-read, skipped — is process, and requires
+  session evidence even though the underlying task is the same one.
+
+    FAILS:  "Avery sounded out unfamiliar letter strings."
+    FAILS:  "Avery guessed based on initial sounds."
+
+  The same activity described WITHOUT the examinee as the actor of a process
+  verb is the task, not an observation:
+
+    PASSES: "sounding out unfamiliar letter strings proved similarly difficult"
 
 WHAT COUNTS AS A SESSION EVENT (in scope, once both tests are passed)
 Anything asserted about what happened during an evaluation encounter the
@@ -143,12 +168,11 @@ WHAT IS OUT OF SCOPE — DO NOT FLAG ANY OF THIS
     classroom behavior, home behavior, developmental history — whoever reports
     it and whether or not it is attributed. Out of scope even if you cannot
     verify it. (Test 1.)
-  - Descriptions of PERFORMANCE rather than of the session: what the student
-    can and cannot do, relative strengths and weaknesses, accuracy, level,
-    rate, patterns across measures, comparisons between kinds of items —
-    whoever the grammatical subject is. A result is not a session event.
-    "Avery read familiar words more accurately than nonwords" is a result.
-    "Avery sounded them out letter by letter" is a session event. (Test 2.)
+  - SCORE-SUPPORTED PERFORMANCE rather than the session: the task performed,
+    the level of performance, and clinically appropriate comparisons or
+    patterns — whoever the grammatical subject is. "Avery read familiar words
+    more accurately than nonwords" is a result. "Avery sounded them out letter
+    by letter" is a session event. (Test 2.)
   - The ABSENCE of session detail. A section that says nothing about the
     session is correct, not deficient. Never ask for more.
 

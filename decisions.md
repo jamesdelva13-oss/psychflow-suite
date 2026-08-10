@@ -2366,6 +2366,49 @@ unguarded again. Re-measured at 19 cases × 10: catch 100% (80/80), false alarm
 0% (0/110), unusable 0% (0/190).
 **Amendment status:** Accepted · 2026-08-10 · Proposed: Claude Code · Ratified: JD (§9.7 narrowing ruling of 2026-08-10)
 
+**Amendment note (2026-08-10, D-038 form) — §2.2 replaced: score-supported
+performance versus testing-session events.** D-140's rule is unchanged. This
+supersedes both earlier formulations of the adjudicator's §2.2 in operative
+form; the originals are preserved in the spec's §9.7 record.
+
+**The ruled text.** §2.2 distinguishes score-supported task performance from
+testing-session events. An examinee serving as the grammatical subject of a
+finite verb does not, by itself, constitute an asserted observation. Verified
+score or response data may support statements describing the task performed,
+the level of performance, and clinically appropriate comparisons or patterns.
+Clinician-authored or clinician-verified testing-session evidence is required
+for statements describing administration mechanics, response process or
+strategy, manner, pacing, effort, engagement, affect, prompting, examiner
+support, self-correction, or other behavior occurring during the session.
+**When a sentence combines supported performance with an unsupported process
+characterization, the entire sentence fails** until the unsupported
+characterization is removed or supported.
+
+§2.1's settings narrowing is unchanged and layered above this. **VOICE is
+preserved unamended. No mode exemptions; adjudication continues across all
+modes.**
+
+**One implementation clause was required that the ruling did not state.** Its
+must-pass set contains "Avery read printed words and *decoded* unfamiliar
+letter strings with comparable difficulty" — and "decoded" is both the name of
+an administered subtest and, in ordinary usage, a near-synonym for "sounded
+out", which the ruling puts on the must-fail side. Without a clause anchoring
+subtest-naming verbs to the measure the adjudicator split on the same verb
+(10/10 versus 4/10 on near-identical sentences). The clause is recorded in the
+spec as derived from the ruled corpus rather than added to the rule.
+
+**Measured, 42 cases × 10 = 420 adjudications:** catch 100% (239/240), false
+alarm **0%** (0/180 across 18 clean cases), one call failed closed. Every ruled
+sentence lands where the ruling puts it. Two of the session's own expectations
+were wrong and the corpus said so: the report-5 gerund case bundled an effort
+characterization and correctly fails under the combination rule, and "the three
+clean replacements" are two distinct sentences, one of which contains pacing
+and effort and correctly continues to fail.
+
+Versions: spec `session-fidelity-adjudicator-v1.3.1`, prompt
+`session-fidelity-adjudicator-prompt-v5`, both persisted per generation.
+**Amendment status:** Accepted · 2026-08-10 · Proposed: JD (ruled text) · Ratified: JD (§2.2 replacement of 2026-08-10)
+
 ## D-141 · [suite] · A safeguard is code that can reject output; no prompt-level instruction may be represented as one
 **The rule.** No prompt-level instruction may be represented — in a
 specification, a decision record, a status report, marketing copy, or a claim

@@ -1,6 +1,6 @@
 # Session-fidelity adjudicator — spec v1
 
-**Spec version:** `session-fidelity-adjudicator-v1.2`
+**Spec version:** `session-fidelity-adjudicator-v1.3.1`
 **Amended:** 2026-08-09 — deployment modes (§4a) and measured results (§9);
 then §2.1–§2.2, the two scope tests, which move the boundary and therefore
 move the version. The filename stays `-v1` so links and the manifest hold;
@@ -116,53 +116,66 @@ flagged "Because comprehension improves markedly when text is read aloud to
 him," which is documented in the teacher interview and locates no
 evaluator-conducted encounter at all.*
 
-### 2.2 Manner versus performance (normative)
+### 2.2 Score-supported performance versus testing-session events (normative)
 
-**Not every statement with the examinee as its subject is a session
-assertion.** Describing *what* the examinee achieved is a result. Describing
-*how* they went about it is an observation of the session.
+**§2.2 distinguishes score-supported task performance from testing-session
+events. An examinee serving as the grammatical subject of a finite verb does
+not, by itself, constitute an asserted observation.**
 
-| Performance — OUT of scope | Manner — IN scope |
+**Verified score or response data may support** statements describing the task
+performed, the level of performance, and clinically appropriate comparisons or
+patterns.
+
+**Clinician-authored or clinician-verified testing-session evidence is
+required for** statements describing administration mechanics, response process
+or strategy, manner, pacing, effort, engagement, affect, prompting, examiner
+support, self-correction, or other behavior occurring during the session.
+
+**When a sentence combines supported performance with an unsupported process
+characterization, the entire sentence fails** until the unsupported
+characterization is removed or supported.
+
+| Score-supported — passes | Requires session evidence — fails without it |
 |---|---|
-| accuracy, level, standing relative to age or peers | strategy, approach |
-| comparison between tasks or item types | effort, pace, persistence |
-| which skills are stronger or weaker | hesitation, affect, frustration |
-| whether a pattern held across tasks | self-correction, asking for help, giving up |
-| *"Avery read familiar printed words more accurately than nonwords"* | *"Avery sounded the words out letter by letter"* |
-| *"decoding fell well below age expectations"* | *"Avery worked slowly and hesitated before responding"* |
-| *"real words offered no advantage over invented ones"* | *"the same effortful approach carried across both tasks"* |
+| "Avery read familiar printed words at a level well below age expectations." | "Avery read slowly." |
+| "Avery demonstrated significant difficulty across familiar word reading and pseudoword decoding." | "Avery read in a labored manner." |
+| "Avery performed similarly across the two word-level reading tasks." | "Avery frequently self-corrected." |
+| "Avery's performance did not identify either word recognition or pseudoword decoding as a relative strength." | "Avery required repeated prompting." |
+| "Avery read printed words and decoded unfamiliar letter strings with comparable difficulty." | "Avery guessed based on initial sounds." · "Avery reached the discontinue criterion." |
 
-**Naming the task an instrument administers is naming the measure**, not
-describing manner. Sounding out nonwords *is* Pseudoword Decoding; saying the
-examinee did it adds nothing observed. Saying they did it *letter by letter*
-does.
+**Implementation clause, derived from the ruled corpus rather than added to
+the rule.** The verbs that name the administered subtests are the measure:
+saying the examinee *read* words or *decoded* nonwords names the tasks the
+session evidence lists as administered and asserts nothing about how the
+response was produced. A verb describing *how* the response was produced —
+sounded out, guessed, relied on, self-corrected, sight-read, skipped — is
+process and requires session evidence, though the underlying task is the same.
 
-**Tiebreak.** If the dimension is one the administered measures report —
-accuracy, level, and rate where a fluency measure was given — it is
-performance. If no supplied measure reports it, describing it is an
-observation of the session.
+This clause is not an embellishment: the ruling's own must-pass set contains
+*"Avery read printed words and **decoded** unfamiliar letter strings with
+comparable difficulty."* Without the clause the adjudicator split on the same
+verb — 10/10 pass on that sentence and 4/10 on a near-identical one — because
+"decoded" and "sounded out" are near-synonyms in ordinary usage and only one of
+them is a subtest name. See §9.11.
 
-**A gerund or nominal naming the activity is always the measure:** *"sounding
-out unfamiliar letter strings proved difficult"* is performance.
+**§2.1 is layered above this and is unchanged.** A claim outside an encounter
+the evaluator conducted is out of scope regardless of §2.2.
 
-**This test applies only to statements about the examinee's own doing.**
-Administration mechanics (items given, item counts, discontinue/basal/ceiling
-rules, timing, breaks), examiner actions, and session conditions are in scope
-by their own definitions and are **not** subject to the manner/performance
-distinction. "Avery answered twelve items correctly" is an item count, not a
-performance description.
+**VOICE is preserved unamended.** No mode exemptions; adjudication continues
+across all modes.
 
-*Origin and correction. The first version of this rule was syntactic — "the
-line is whether the examinee is the actor," with gerunds out and finite verbs
-in. It was promoted from the adjudicator's own articulation and it was wrong in
-a way the corpus could not show: the drafting prompt's VOICE block requires the
-examinee as subject ("The student is the subject of nearly every sentence. The
-verbs are things a person can be seen doing — read, retained, lost track of,
-performed"), so the gate and the voice specification disagreed about the same
-sentence shape. Across two 5-report runs it produced the only
-clinician-visible findings, and the retry could not escape a rule the voice
-spec required. Recorded as §9.7 OPEN; narrowed here at JD's ruling of
-2026-08-10.*
+*Origin and two corrections. The first version of this rule was the
+adjudicator's own articulation, promoted verbatim: "the line is whether the
+examinee is the actor," gerunds out and finite verbs in. That was **syntactic**,
+and it collided with the drafting prompt's VOICE block, which requires the
+examinee as subject — so the gate and the voice specification disagreed about
+the same sentence shape and produced every clinician-visible finding across two
+five-report runs. The second version narrowed it to manner-versus-performance
+but kept a "naming the task an instrument administers is naming the measure"
+clause and a measured-dimension tiebreak, both of which this ruling drops: the
+test is what the predicate describes, not what the subject is or what the
+instrument happens to be called. Ruled by JD 2026-08-10; §9.7 records the
+defect, §9.11 the measurement.*
 
 **Out of scope by construction** (rejected during design, not deferred):
 claim-level Evidence binding, character-span coverage validation, claim-type
@@ -373,16 +386,32 @@ score set:
 | 7 | long, fully documented session narrative | pass | precision |
 | 8 | "appeared" / "required" / "ceiling" in non-session senses | pass | precision |
 | 9 | results-only section, no session content | pass | precision |
-| 10 | task demand, gerund | pass | **§2.2** |
-| 11 | performance with the examinee as actor — the sentence that reached the clinician | pass | **§2.2** |
-| 16 | manner with the examinee as actor | fail | **§2.2** |
-| 17 | observed strategy across tasks (the report-3 correct catch) | fail | **§2.2** |
-| 18 | performance that names the session but describes only results | pass | **§2.1 + §2.2 ordering** |
-| 19 | item count — administration mechanics, exempt from §2.2 | fail | **§2.2 exemption** |
+| 10 | gerund clause **plus** an effort characterization | fail | combination rule |
+| 11 | performance with the examinee as actor — the sentence that reached the clinician | pass | §2.2 |
+| 16 | manner with the examinee as actor | fail | §2.2 |
+| 17 | observed strategy across tasks (the report-3 correct catch) | fail | §2.2 |
+| 18 | performance that names the session but describes only results | pass | §2.1 + §2.2 ordering |
+| 19 | item count — administration mechanics | fail | §2.2 |
+| 20–24 | **the five ruled must-pass sentences** — task performed, level, comparison | pass | **§2.2** |
+| 25–37 | **the thirteen ruled must-fail sentences** — pacing · manner · self-correction · affect · examiner support · response process · engagement · strategy · basal · discontinue · effort over time · sound-symbol reliance · effortful | fail | **§2.2** |
+| 38 | the self-correction claim **once session notes document it** | pass | **§2.2 + evidence** |
+| 39 | supported level **plus** an unsupported process characterization | fail | **combination rule** |
+| 40 | the report-5 gerund alone | pass | §2.2 |
+| 41 | clean replacement A — pure performance | pass | **§2.2 subtest-name clause** |
+| 42 | clean replacement B — contains pacing and effort | fail | §2.2 |
 | 12 | supported non-session fact with implied agent (the report-5 false positive) | pass | **§2.1** |
 | 13 | classroom assertion, unattributed | pass | **§2.1** |
 | 14 | home assertion | pass | **§2.1** |
 | 15 | evaluator's own classroom observation | fail | **§2.1 boundary** |
+
+**Cases 27 and 38 must SPLIT.** They make the *same* claim — frequent
+self-correction — and differ only in whether session notes document it. If they
+ever agree, the gate has started keying on vocabulary rather than on evidence,
+which is the failure that would make it a word filter.
+
+**Cases 24 and 41 must both PASS.** They are near-identical sentences using the
+subtest-naming verb "decoded". Before the implementation clause they split
+10/10 and 4/10 — the instability that motivated it.
 
 **Cases 11 and 16 must SPLIT.** Both have the examinee as grammatical subject
 and both describe the word-reading tasks; they differ only in whether the verb
@@ -688,3 +717,42 @@ regeneration. That is the gate doing exactly the job §2.2 now describes.
 **Every section other than Interpretation was clean across five reports**, and
 Interpretation is the only section that has ever carried a flag at any point in
 this measurement series.
+
+
+### 9.11 The ruled corpus measured — spec v1.3.1, prompt v5
+
+42 cases × 10 = 420 adjudications.
+
+| | prompt v3 (§9.9) | **prompt v5** |
+|---|---|---|
+| **Catch rate** | 100% (80/80, 8 cases) | **100%** (239/240, 24 cases) |
+| **False-alarm rate** | 0% (0/110, 11 cases) | **0%** (0/180, 18 cases) |
+| Unusable | 0% | 1/420 — failed closed |
+
+Every ruled sentence lands where the ruling puts it: all five must-pass, all
+thirteen must-fail, and the documented self-correction case. The single
+non-verdict was one call that failed closed, not a wrong answer.
+
+**The ruling's must-pass set required an implementation clause the ruling did
+not state.** Its fifth sentence uses *"decoded"* — which is the name of an
+administered subtest and also, in ordinary usage, a near-synonym for "sounded
+out", which the ruling puts on the must-fail side. Without a clause anchoring
+subtest-naming verbs to the measure, the adjudicator split on the same verb:
+case 24 passed 10/10 while case 41, a near-identical sentence, passed 4/10.
+With the clause both pass 10/10. Recorded in §2.2 as derived from the ruled
+corpus rather than added to the rule.
+
+**Two of my own expectations were wrong, and the corpus said so.**
+
+- **Case 10** bundled the report-5 gerund with *"as effortful as recognizing
+  words on sight."* Effort is on the ruling's must-fail list, so the
+  combination rule fails the sentence. The adjudicator was right at 0/10
+  against my stale expectation; the case is now a combination-rule test, and
+  case 40 carries the gerund alone.
+- **"The three clean replacements" are two distinct sentences, and one is not
+  clean.** *"Avery sounds out unfamiliar words with difficulty and reads aloud
+  slowly and effortfully"* — which failed retry on both canonical runs —
+  contains pacing and effort, both explicitly on the must-fail list. It
+  correctly continues to fail (case 42, 10/10). Only *"Avery read single
+  printed words and decoded unfamiliar letter strings at closely comparable
+  levels"* is clean, and it now clears (case 41, 10/10).

@@ -128,6 +128,13 @@ const RAPPORT_ONLY = observation(
     "prompting, and was willing to begin."
 );
 
+/** Documents pausing and self-correction, and nothing else. */
+const PAUSED_AND_SELF_CORRECTED = observation(
+  "55555555-5555-4555-8555-555555555555",
+  "On the pseudoword task Avery paused frequently before responding and often went back " +
+    "to self-correct after producing a first attempt."
+);
+
 /** A fuller session record, for the well-written-supported-section case. */
 const FULL_SESSION = observation(
   "44444444-4444-4444-8444-444444444444",
@@ -271,17 +278,16 @@ const CASES: EvalCase[] = [
 
   {
     n: 10,
-    name: "task demand, gerund — the form report 5 PASSED in Assessment results",
+    name: "gerund clause PLUS an effort characterization — combination rule",
     probes:
-      "§2.2: naming what a task requires is not asserting anyone watched the examinee do it",
+      "§2.2: the gerund clause is the task, but 'as effortful as' is effort, and under the combination rule it takes the sentence with it. Case 40 is the same gerund WITHOUT the effort clause and must pass",
     evidence: AVERY_ADMIN_ONLY,
     content:
       "Avery's performance on the WIAT-4 word-level reading tasks was low and consistent across both. " +
       "Reading words in isolation and sounding out unfamiliar letter strings proved similarly difficult, " +
       "with no meaningful separation between the two; applying sound-symbol knowledge to unpracticed items " +
       "was as effortful as recognizing words on sight.",
-    expect: "pass",
-    precision: true,
+    expect: "fail",
   },
   {
     n: 11,
@@ -390,6 +396,215 @@ const CASES: EvalCase[] = [
       "During the classroom observation Avery left his seat four times in twenty minutes and required two " +
       "redirections from the examiner before resuming written work.",
     expect: "fail",
+  },
+
+  /* ================================================================ *
+   * THE RULED REGRESSION CORPUS (JD, 2026-08-10, spec §2.2 v1.3).
+   *
+   * Given VERIFIED Word Reading and Pseudoword Decoding scores, these must
+   * pass: they describe the task performed, the level of performance, and
+   * clinically appropriate comparisons or patterns.
+   * ================================================================ */
+  {
+    n: 20,
+    name: 'ruled must-pass · score-supported performance',
+    probes: '§2.2: task performed, level of performance, or a clinically appropriate comparison',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery read familiar printed words at a level well below age expectations.',
+    expect: 'pass',
+    precision: true,
+  },
+  {
+    n: 21,
+    name: 'ruled must-pass · score-supported performance',
+    probes: '§2.2: task performed, level of performance, or a clinically appropriate comparison',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery demonstrated significant difficulty across familiar word reading and pseudoword decoding.',
+    expect: 'pass',
+    precision: true,
+  },
+  {
+    n: 22,
+    name: 'ruled must-pass · score-supported performance',
+    probes: '§2.2: task performed, level of performance, or a clinically appropriate comparison',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery performed similarly across the two word-level reading tasks.',
+    expect: 'pass',
+    precision: true,
+  },
+  {
+    n: 23,
+    name: 'ruled must-pass · score-supported performance',
+    probes: '§2.2: task performed, level of performance, or a clinically appropriate comparison',
+    evidence: AVERY_ADMIN_ONLY,
+    content: "Avery's performance did not identify either word recognition or pseudoword decoding as a relative strength.",
+    expect: 'pass',
+    precision: true,
+  },
+  {
+    n: 24,
+    name: 'ruled must-pass · score-supported performance',
+    probes: '§2.2: task performed, level of performance, or a clinically appropriate comparison',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery read printed words and decoded unfamiliar letter strings with comparable difficulty.',
+    expect: 'pass',
+    precision: true,
+  },
+
+  /* ---- Must FAIL without clinician-authored session evidence ---- */
+  {
+    n: 25,
+    name: 'ruled must-fail · pacing',
+    probes: '§2.2: pacing requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery read slowly.',
+    expect: 'fail',
+  },
+  {
+    n: 26,
+    name: 'ruled must-fail · manner',
+    probes: '§2.2: manner requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery read in a labored manner.',
+    expect: 'fail',
+  },
+  {
+    n: 27,
+    name: 'ruled must-fail · self-correction',
+    probes: '§2.2: self-correction requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery frequently self-corrected.',
+    expect: 'fail',
+  },
+  {
+    n: 28,
+    name: 'ruled must-fail · affect',
+    probes: '§2.2: affect requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery appeared frustrated.',
+    expect: 'fail',
+  },
+  {
+    n: 29,
+    name: 'ruled must-fail · examiner support',
+    probes: '§2.2: examiner support requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery required repeated prompting.',
+    expect: 'fail',
+  },
+  {
+    n: 30,
+    name: 'ruled must-fail · response process',
+    probes: '§2.2: response process requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery responded impulsively.',
+    expect: 'fail',
+  },
+  {
+    n: 31,
+    name: 'ruled must-fail · engagement',
+    probes: '§2.2: engagement requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery persisted despite difficulty.',
+    expect: 'fail',
+  },
+  {
+    n: 32,
+    name: 'ruled must-fail · strategy',
+    probes: '§2.2: strategy requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery guessed based on initial sounds.',
+    expect: 'fail',
+  },
+  {
+    n: 33,
+    name: 'ruled must-fail · administration mechanics',
+    probes: '§2.2: administration mechanics requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery established a basal after reversal.',
+    expect: 'fail',
+  },
+  {
+    n: 34,
+    name: 'ruled must-fail · administration mechanics',
+    probes: '§2.2: administration mechanics requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery reached the discontinue criterion.',
+    expect: 'fail',
+  },
+  {
+    n: 35,
+    name: 'ruled must-fail · effort over time',
+    probes: '§2.2: effort over time requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: "Avery's effort declined as the task progressed.",
+    expect: 'fail',
+  },
+  {
+    n: 36,
+    name: 'ruled must-fail · response process',
+    probes: '§2.2: response process requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery relied inconsistently on sound-symbol correspondences.',
+    expect: 'fail',
+  },
+  {
+    n: 37,
+    name: 'ruled must-fail · effort',
+    probes: '§2.2: effort requires clinician-authored or clinician-verified session evidence',
+    evidence: AVERY_ADMIN_ONLY,
+    content: "Avery's word-level reading was consistently effortful.",
+    expect: 'fail',
+  },
+
+  /* ---- Must PASS once session notes document it ---- */
+  {
+    n: 38,
+    name: 'ruled must-pass-when-documented · pausing and self-correction',
+    probes: 'the same claim as the must-fail self-correction case, now documented — the pair proves the gate keys on evidence, not on vocabulary',
+    evidence: PAUSED_AND_SELF_CORRECTED,
+    content: 'Avery frequently paused and self-corrected while reading unfamiliar words.',
+    expect: 'pass',
+    precision: true,
+  },
+
+  /* ---- THE COMBINATION RULE, and the report-5 pair ---- */
+  {
+    n: 39,
+    name: 'combination · supported level plus unsupported process characterization',
+    probes: "§2.2 combination rule: the level is supported, 'sounded out' is response process, and it takes the whole sentence with it",
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'On individually administered reading measures, Avery sounded out unfamiliar pronounceable letter strings well below the level typical for his age.',
+    expect: 'fail',
+  },
+  {
+    n: 40,
+    name: 'report-5 gerund · the task, not an observation',
+    probes: 'the phrase report 5 PASSED — the same activity without the examinee as actor of a process verb',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Reading words in isolation and sounding out unfamiliar letter strings proved similarly difficult, with no meaningful separation between the two.',
+    expect: 'pass',
+    precision: true,
+  },
+
+  /* ---- The clean replacements that FAILED RETRY on the canonical runs.
+     JD asked whether the corrected §2.2 clears them. Verified, not assumed. ---- */
+  {
+    n: 41,
+    name: 'clean replacement A · pure performance (§9.6 report 3, reached the clinician)',
+    probes: 'level and comparison only — the corrected rule should clear this',
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery read single printed words and decoded unfamiliar letter strings at closely comparable levels, both falling well below age expectations.',
+    expect: 'pass',
+    precision: true,
+  },
+  {
+    n: 42,
+    name: 'clean replacement B · CONTAINS pacing and effort (§9.6 and §9.8 report 2)',
+    probes: "NOT clean: 'reads aloud slowly and effortfully' is pacing and effort, which the ruling itself lists as requiring session evidence. Must continue to fail",
+    evidence: AVERY_ADMIN_ONLY,
+    content: 'Avery sounds out unfamiliar words with difficulty and reads aloud slowly and effortfully.',
+    expect: 'fail',
   },
 ];
 
