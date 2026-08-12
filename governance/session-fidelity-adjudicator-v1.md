@@ -849,3 +849,44 @@ structural rather than lucky — **none of the thirteen takes the relative-claus
 form.** Every one predicates the process directly of Avery ("Avery read
 slowly", "Avery guessed based on initial sounds"), so the clause has no purchase
 on them. Confirmed empirically here rather than by inspection.
+
+
+### 9.14 Full reports with the boundary in the drafting block — the series closes
+
+Drafting prompt v2.4 (the process boundary, stated as what score data
+supports), adjudicator spec v1.4 / prompt v6. Same fixture, same n=5, same
+enforce mode.
+
+| | §9.6 | §9.8 | §9.10 | §9.12 | **§9.14** |
+|---|---|---|---|---|---|
+| Flagged at first draft | 5/25 — 20% | 3/25 — 12% | 1/25 — 4% | 5/25 — 20% | **0/25 — 0%** |
+| Cleared on the retry | 3/5 | 2/3 | 1/1 | 5/5 | **0/0 — none needed** |
+| Reached the clinician | 2/25 | 1/25 | 0/25 | 0/25 | **0/25** |
+| Words per report | ~1,658 | ~1,609 | ~1,650 | ~1,598 | ~1,652 |
+
+**Not one section in five complete reports tripped the gate.** Retry clearance
+is undefined rather than perfect — there were no retries to clear.
+
+**This is not the gate going soft, and the corpus is what rules that out.** The
+same adjudicator, on the same day, scored **240/240 on 24 should-fail cases**
+including the original Avery discontinue-criterion sentence. A gate that has
+stopped catching things does not do that. What changed is the *writer*: it now
+knows the rule the gate applies, so it stops producing the sentences the gate
+was built to reject.
+
+**The predicted mechanism, confirmed.** §9.12 recorded that the drafting block
+said nothing about response process, so the model wrote "sounded out" on 20% of
+sections and the retry routed around a rule nobody had told it. Stating the
+boundary positively — what verified scores support, and what they do not —
+collapsed the retry rate to zero on the next run.
+
+**The n=5 caveat still applies to the count.** One run of 25 sections. What is
+not a small-sample artifact is the direction plus the mechanism: the corpus
+proves the gate still catches, and the drafting change explains why it now has
+nothing to catch.
+
+**Series summary for the deployment decision.** Across five measured
+configurations the clinician-visible finding rate went 0.4 → 0.2 → 0.0 → 0.0 →
+0.0 notices per complete report, while the adjudicator's catch rate stayed at
+100% on a corpus that grew from 6 cases to 44. The gate is not the thing a
+clinician will notice about this product.
