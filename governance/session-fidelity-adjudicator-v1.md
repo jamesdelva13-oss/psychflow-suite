@@ -1,6 +1,6 @@
 # Session-fidelity adjudicator — spec v1
 
-**Spec version:** `session-fidelity-adjudicator-v1.3.1`
+**Spec version:** `session-fidelity-adjudicator-v1.4`
 **Amended:** 2026-08-09 — deployment modes (§4a) and measured results (§9);
 then §2.1–§2.2, the two scope tests, which move the boundary and therefore
 move the version. The filename stays `-v1` so links and the manifest hold;
@@ -143,20 +143,32 @@ characterization is removed or supported.
 | "Avery's performance did not identify either word recognition or pseudoword decoding as a relative strength." | "Avery required repeated prompting." |
 | "Avery read printed words and decoded unfamiliar letter strings with comparable difficulty." | "Avery guessed based on initial sounds." · "Avery reached the discontinue criterion." |
 
-**Implementation clause, derived from the ruled corpus rather than added to
-the rule.** The verbs that name the administered subtests are the measure:
-saying the examinee *read* words or *decoded* nonwords names the tasks the
-session evidence lists as administered and asserts nothing about how the
-response was produced. A verb describing *how* the response was produced —
-sounded out, guessed, relied on, self-corrected, sight-read, skipped — is
-process and requires session evidence, though the underlying task is the same.
+**The stimulus/examinee clause (ruled 2026-08-10).** A process verb inside a
+**relative clause modifying the stimulus** describes item type and is supported
+by score data. **The same verb predicated of the examinee** describes process
+and requires session evidence.
 
-This clause is not an embellishment: the ruling's own must-pass set contains
+| Item type — supported by score data | Process — requires session evidence |
+|---|---|
+| "words that had to be sounded out" | "Avery sounded out the words" |
+| "words that required sounding out" | "Avery sounded them out letter by letter" |
+| "items requiring letter-sound application" | "Avery applied sound-symbol relationships" |
+
+The verbs that name the administered subtests — *read*, *decoded* — are the
+measure under the same principle: they name the task the session evidence lists
+as administered and assert nothing about how the response was produced.
+
+This clause is not an embellishment. The ruling's own must-pass set contains
 *"Avery read printed words and **decoded** unfamiliar letter strings with
-comparable difficulty."* Without the clause the adjudicator split on the same
-verb — 10/10 pass on that sentence and 4/10 on a near-identical one — because
-"decoded" and "sounded out" are near-synonyms in ordinary usage and only one of
-them is a subtest name. See §9.11.
+comparable difficulty."* Without it the adjudicator split on the same verb —
+10/10 on that sentence and 4/10 on a near-identical one — because "decoded" and
+"sounded out" are near-synonyms in ordinary usage and only one of them is a
+subtest name. §9.11 records that; §9.13 records the generalization to relative
+clauses, which resolved the two remaining live-run flags.
+
+**None of the thirteen must-fail sentences takes the relative-clause form.**
+Every one predicates the process directly of Avery, so the clause cannot reach
+them; §9.13 confirms this empirically rather than by inspection.
 
 **§2.1 is layered above this and is unchanged.** A claim outside an encounter
 the evaluator conducted is out of scope regardless of §2.2.
@@ -399,6 +411,7 @@ score set:
 | 40 | the report-5 gerund alone | pass | §2.2 |
 | 41 | clean replacement A — pure performance | pass | **§2.2 subtest-name clause** |
 | 42 | clean replacement B — contains pacing and effort | fail | §2.2 |
+| 43–44 | **the two live-run flags ruled clean** — process verb in a relative clause modifying the stimulus | pass | **§2.2 stimulus/examinee clause** |
 | 12 | supported non-session fact with implied agent (the report-5 false positive) | pass | **§2.1** |
 | 13 | classroom assertion, unattributed | pass | **§2.1** |
 | 14 | home assertion | pass | **§2.1** |
@@ -807,3 +820,32 @@ it, and the retry routes around it — 20% of sections paying one extra
 generation for a rule the writer was never told. Adding process verbs to the
 drafting block would likely collapse the retry rate. That is a prompt change
 with its own measurement, not something to fold in here.
+
+
+### 9.13 The stimulus/examinee clause measured — spec v1.4, prompt v6
+
+44 cases × 10 = 440 adjudications.
+
+| | prompt v5 (§9.11) | **prompt v6** |
+|---|---|---|
+| **Catch rate** | 100% (239/240) | **100%** (240/240, 24 cases) |
+| **False-alarm rate** | 0% (0/180, 18 cases) | **0%** (0/200, 20 cases) |
+| Unusable | 1/420 | **0/440** |
+
+**Every case 10/10. Nothing regressed and nothing failed closed.**
+
+**The two ruled-clean sentences now pass** (cases 43–44, 10/10 each). Both put
+the process verb inside a relative clause modifying the stimulus:
+
+> "…no meaningful separation between reading words that could be recognized and
+> **words that had to be sounded out**."
+> "Avery read **words that could be recognized on sight** somewhat more
+> successfully than **words that required sounding out**."
+
+**The thirteen must-fail sentences are unaffected — all thirteen 10/10.** This
+was the risk the clause carried: a rule that lets a process verb through in one
+syntactic position could leak it in others. It cannot, and the reason is
+structural rather than lucky — **none of the thirteen takes the relative-clause
+form.** Every one predicates the process directly of Avery ("Avery read
+slowly", "Avery guessed based on initial sounds"), so the clause has no purchase
+on them. Confirmed empirically here rather than by inspection.

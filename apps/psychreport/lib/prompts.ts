@@ -37,7 +37,7 @@ import type { GenerationInputs, PolicedSource } from "./source-policy";
  * section can be read against the rules that were in force when it was written
  * rather than the rules in force when it is read.
  */
-export const DRAFTING_PROMPT_VERSION = "psychreport-drafting-prompts-v2.3";
+export const DRAFTING_PROMPT_VERSION = "psychreport-drafting-prompts-v2.4";
 export const GENERATION_SPEC_VERSION = "operational-spec-v1";
 
 /**
@@ -47,7 +47,7 @@ export const GENERATION_SPEC_VERSION = "operational-spec-v1";
  * written during a baseline run can never be mistaken for a normal one.
  */
 export const DRAFTING_PROMPT_VERSION_BASELINE =
-  "psychreport-drafting-prompts-v2.3-baseline-no-session-rule";
+  "psychreport-drafting-prompts-v2.4-baseline-no-session-rule";
 
 export interface PromptOptions {
   /**
@@ -198,6 +198,26 @@ of that session.
 An administration record — an instrument, a date, a form, a set of scores —
 documents THAT a measure was given. It documents nothing about how the
 session went. Scores are results, not observations.
+
+WHAT SCORE DATA SUPPORTS, AND WHAT IT DOES NOT
+Verified scores support the task performed and the level of performance: what
+was administered, how the student did, how the results compare with one
+another, and what pattern they form. Write all of that freely.
+
+Verified scores do not support manner, strategy, pacing, effort, engagement, or
+response process — how the student went about producing the answers. Those need
+a clinician's record of the session.
+
+The line is what you predicate of the student, not which words you avoid.
+
+  Supported by the scores:
+    Avery read printed words and decoded unfamiliar letter strings at
+    comparable levels, both well below age expectations.
+  Needs a session record:
+    Avery sounded them out letter by letter, slowly and with visible effort.
+
+Describing the ITEMS this way is fine — "words that had to be sounded out"
+names a kind of word, not something anyone watched.
 
 Where a session record is supplied, summarize and rephrase it naturally, but
 keep what it documents. One request for a direction to be repeated does not

@@ -606,6 +606,35 @@ const CASES: EvalCase[] = [
     content: 'Avery sounds out unfamiliar words with difficulty and reads aloud slowly and effortfully.',
     expect: 'fail',
   },
+
+  /* ---- RULED PASS 2026-08-10: the two live-run flags JD ruled clean.
+     Both put the process verb in a relative clause modifying the STIMULUS.
+     None of the thirteen must-fail sentences takes that form — every one
+     predicates the process directly of Avery — so the clause cannot reach
+     them. Cases 25-37 re-running clean is the confirmation. ---- */
+  {
+    n: 43,
+    name: "ruled pass · process verb in a relative clause modifying the stimulus (report 2)",
+    probes: "§2.2 stimulus/examinee clause: 'words that had to be sounded out' names a kind of word",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "On direct testing, Avery identified printed single words and read invented words requiring " +
+      "letter-sound application at levels well below what is typical for age, with no meaningful " +
+      "separation between reading words that could be recognized and words that had to be sounded out.",
+    expect: "pass",
+    precision: true,
+  },
+  {
+    n: 44,
+    name: "ruled pass · stimulus relative clause, both halves (report 5)",
+    probes: "§2.2 stimulus/examinee clause: 'words that required sounding out' and 'recognized on sight' are item types",
+    evidence: AVERY_ADMIN_ONLY,
+    content:
+      "Avery read words that could be recognized on sight somewhat more successfully than words " +
+      "that required sounding out.",
+    expect: "pass",
+    precision: true,
+  },
 ];
 
 /* ------------------------------------------------------------------ *

@@ -28,8 +28,8 @@ import { renderSessionEvidence, type SessionEvidenceItem } from "./session-evide
  * result, or an ungrounded quote all mean the section does not pass.
  */
 
-export const ADJUDICATOR_SPEC_VERSION = "session-fidelity-adjudicator-v1.3.1";
-export const ADJUDICATOR_PROMPT_VERSION = "session-fidelity-adjudicator-prompt-v5";
+export const ADJUDICATOR_SPEC_VERSION = "session-fidelity-adjudicator-v1.4";
+export const ADJUDICATOR_PROMPT_VERSION = "session-fidelity-adjudicator-prompt-v6";
 const ADJUDICATOR_MODEL = "claude-opus-5";
 const ADJUDICATOR_EFFORT = "medium" as const;
 const MAX_TOKENS = 4000;
@@ -121,6 +121,17 @@ itself, constitute an asserted observation. Judge what the predicate describes.
             typical for his age."
             — the level is supported; "sounded out" is response process, and it
               takes the sentence with it.
+
+  A PROCESS VERB INSIDE A RELATIVE CLAUSE MODIFYING THE STIMULUS DESCRIBES ITEM
+  TYPE, and is supported by score data. The SAME VERB PREDICATED OF THE
+  EXAMINEE describes process and requires session evidence.
+
+    PASSES: "no meaningful separation between reading words that could be
+             recognized and words that had to be sounded out"
+    PASSES: "Avery read words that could be recognized on sight somewhat more
+             successfully than words that required sounding out"
+    FAILS:  "Avery sounded out the words"
+    FAILS:  "Avery applied sound-symbol relationships to unfamiliar forms"
 
   THE VERBS THAT NAME THE ADMINISTERED SUBTESTS ARE THE MEASURE, NOT PROCESS.
   The SESSION EVIDENCE lists which subtests were administered. Saying the
