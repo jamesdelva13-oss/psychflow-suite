@@ -57,6 +57,13 @@ API contracts, and AI output schemas derive from this package; schemas are
 never invented per-document or per-feature. Student ↔ Case is one-to-many.
 Minimal PII throughout.
 **Status:** Accepted · 2026-07-14 · Proposed: Claude · Ratified: JD
+> **Amendment note (2026-08-10, per D-142):** "Minimal PII throughout" governs
+> the **payload and logging path** — model payloads, logs, links, third-party
+> exports — not the **record**. A psychoeducational evaluation is a legal
+> record and must identify the student; identity is stored in a separate table
+> with independent access control per D-142. The five-entity model and the
+> never-invent-schemas-per-feature rule are unchanged. Original text preserved
+> above.
 
 ## D-007 · Source → Evidence → Claim is the required pipeline
 Raw responses are stored (Source) before any AI processing. Extraction
@@ -1581,6 +1588,13 @@ Design test recorded with this decision: safe specification requires the system 
 
 Respondent-facing student identity is first name plus last initial. The Case contract adds these as minimal identity fields; full name is never stored, and links, logs, and model payloads continue to exclude them. Supersedes initials-only display.
 **Status:** Accepted · 2026-07-29 · Proposed: Claude (handoff reconciliation, per handoff 01 respondent-experience requirement) · Ratified: JD
+> **Amendment note (2026-08-10, per D-142):** the **respondent-facing rule
+> stands unchanged** — first name plus last initial is what a respondent sees,
+> and links, logs, and model payloads still exclude full identity. Only the
+> absolute reading of "full name is never stored" is amended: the record layer
+> may hold full identity under D-142's separate table and access control.
+> **RIE's respondent-facing identity is not loosened by this**; any change
+> there needs its own ruling. Original text preserved above.
 
 ## D-121 · [suite] · Psych Suite v6 product architecture adopted (design package)
 *(v6 reconciliation session, 2026-08-04. Records a ratification JD made in the
@@ -2463,3 +2477,67 @@ deletion.
   (minimum-necessary prompt, preserve escape hatches) are unaffected. The
   claim being regulated is what a prompt *guarantees*, not whether it helps.
 **Status:** Accepted · 2026-08-09 · Proposed: Claude Code (VS-3 continuation, generalizing Rule 3.7 / D-099 at JD's instruction) · Ratified: JD (VS-3 fidelity-gate directive of 2026-08-09)
+
+## D-142 · [suite] · Identity is stored as a record, separately controlled; minimal-PII governs the payload and logging path
+**The ruling.** PsychReport stores student identifying information necessary to
+produce a psychoeducational evaluation as a legal record — full name, date of
+birth, school, district, dates of testing, examiner identity. Identity is
+stored in a **separate table with independent access control**, is **never
+included in model payloads, logs, links, or exports to third parties**, and is
+subject to retention/deletion terms (OPEN — see below). **D-006 and D-120 are
+amended: minimal-PII governs the payload and logging path, not the record.**
+
+**Why this was a ruling and not a schema task.** A psychoeducational evaluation
+is a legal record placed in a student's file; it must identify the student
+unambiguously. "Avery W., grade 4" is a privacy placeholder, not a report
+header. The architecture's minimal-PII posture and the document's basic
+requirements pointed in opposite directions, and no amount of schema design
+resolves that — it is a decision about what the product is.
+
+**Scope is `[suite]` because the amendment is.** The *storage* is PsychReport's.
+The *re-reading* of minimal-PII is not: D-006 is the canonical data model every
+product imports, and D-120 is RIE's. Under D-117 a product may not silently
+widen a suite rule, so the amendment is recorded at suite scope even though
+only PsychReport exercises it today.
+
+**What each amended decision now means:**
+- **D-006** ("Minimal PII throughout") — minimal-PII is a constraint on what
+  moves: model payloads, logs, links, third-party exports, and anything derived
+  for processing. It is not a constraint on what the record contains. The
+  five-entity model and the never-invent-schemas-per-feature rule are unchanged.
+- **D-120** ("first name + last initial … full name is never stored") — the
+  **respondent-facing** rule stands exactly as written. A teacher opening an
+  intake link still sees first name plus last initial, and invitation links,
+  logs, and model payloads still exclude full identity. What changes is only the
+  absolute reading of "never stored": the record layer may hold full identity
+  under this decision's controls. **RIE's respondent-facing identity is not
+  loosened by this entry**, and any change there needs its own ruling.
+
+**Boundary that needs confirming before the schema is written.** The case row
+today carries `first_name`, `last_initial`, `display_initials`, and the
+generation payload sends the student's first name (`renderCaseData`:
+"Student: Avery, grade 4"). Reading this decision strictly — identity is never
+included in model payloads — would remove the first name from the prompt. The
+reading assumed here is that the D-120 minimal identity stays where it is and
+stays permitted in the payload, and that this decision governs the *new*
+identity table (full name, DOB, school, district, testing dates, examiner),
+which never reaches a model. **Flagged rather than assumed; confirm before
+implementation.**
+
+**OPEN — retention/deletion terms.** The ruling carries the placeholder
+`[retention/deletion terms]` and it is preserved as an open item rather than
+filled in. D-004 already commits to per-case deletion, a configurable
+auto-purge window, and retention fields in the first schema; **D-135 records
+that the purge window, trigger event, and reach of auto-purge remain unruled,
+and that no deployment carrying real student data may occur until they are
+ruled in a numbered entry and the job is built and verified.** Identity is the
+most consequential thing that record can hold, so D-135's blocking condition
+now covers this table too: **identity storage may be built and exercised on
+synthetic data, and may not carry real student identity until D-135's gate
+clears.**
+
+**What this unblocks.** The identifying-information section — one of the three
+deterministic renders that need no model, no prompt, and no fidelity gate
+(`governance/report-architecture-proposal-v1.md` §1.1). It stays unbuilt until
+the boundary above is confirmed and the table is specified.
+**Status:** Accepted · 2026-08-10 · Proposed: JD (ruled text) · Ratified: JD (identity ruling of 2026-08-10)

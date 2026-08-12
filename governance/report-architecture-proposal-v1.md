@@ -51,6 +51,22 @@ only on the score set) · parent/guardian names · primary language · grade
 placement vs. age**. Several are minimal-PII decisions (D-006), not just
 columns — DOB in particular. **That is a ruling, not a schema task.**
 
+> **RULED (JD, 2026-08-10) — D-142.** Identity necessary to produce the
+> evaluation as a legal record is stored: full name, date of birth, school,
+> district, dates of testing, examiner identity. It lives in a **separate table
+> with independent access control**, and is **never** in model payloads, logs,
+> links, or third-party exports. D-006 and D-120 are amended — minimal-PII
+> governs the payload and logging path, not the record. RIE's respondent-facing
+> identity (first name + last initial) is unchanged.
+>
+> **Two things still gate the build.** The retention/deletion terms are the
+> ruling's own open placeholder, and D-135 already blocks any deployment
+> carrying real student data until purge semantics are ruled and the job is
+> built — which now covers this table. And the payload boundary needs
+> confirming: the case row's first name reaches the model today, and a strict
+> reading of "never in model payloads" would remove it. D-142 records the
+> assumed reading and flags it rather than assuming it silently.
+
 ### 1.2 Validity, split honestly
 
 - **Structured half — renderable today.** `validityStatus`,
